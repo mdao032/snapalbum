@@ -2,9 +2,45 @@
 @import "tw-animate-css";
 
 /*
- * Design tokens. The brand colors mirror `BRAND_COLORS` in packages/shared/src/brand.ts;
- * the full design system (type scale, spacing, motion) is built in ROADMAP step 0.4.
+ * Design system.
+ *
+ * Direction: calm and warm, the guests' photos are the star and the interface steps back.
+ * - Neutrals carry a hint of violet so white never feels clinical.
+ * - One strong accent (violet) for actions, one warm accent (coral) for moments of delight.
+ * - Large radii, soft layered shadows, generous spacing, fluid type.
+ *
+ * Brand colors mirror `BRAND_COLORS` in packages/shared/src/brand.ts (a unit test keeps them equal).
+ * Every text/background pair used by the UI meets WCAG AA (4.5:1).
  */
+
+/* ------------------------------------------------------------------ tokens */
+
+:root {
+  /* Surfaces */
+  --background: #faf9fd;
+  --foreground: #14121f;
+  --surface: #ffffff;
+  --muted: #efedf7;
+  --muted-foreground: #5b5870;
+  --border: #e3e0f0;
+
+  /* Accents */
+  --primary: #6d4aff;
+  --primary-hover: #5a37e8;
+  --primary-foreground: #ffffff;
+  --primary-soft: #f0ecff;
+  --warm: #ff7a59;
+  --warm-soft: #fff0eb;
+
+  /* Feedback (text on the matching soft background is >= 4.5:1) */
+  --success: #0f7a4c;
+  --success-soft: #e5f6ee;
+  --danger: #c0262d;
+  --danger-soft: #fdecec;
+
+  --ring: color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -13,24 +49,146 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
   --color-warm: var(--warm);
+  --color-warm-soft: var(--warm-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-ring: var(--ring);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Radii: friendly, never sharp */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+
+  /* Layered, slightly violet shadows */
+  --shadow-soft: 0 1px 2px rgb(20 18 31 / 0.04), 0 4px 16px rgb(60 40 140 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(20 18 31 / 0.04), 0 12px 32px rgb(60 40 140 / 0.12);
+  --shadow-float: 0 4px 8px rgb(20 18 31 / 0.05), 0 24px 56px rgb(60 40 140 / 0.2);
+  --shadow-glow: 0 8px 24px rgb(109 74 255 / 0.3);
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-delayed: float 7s ease-in-out 1.5s infinite;
+  --animate-fade-up: fade-up 0.7s var(--ease-out-soft) both;
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
+  --animate-pop: pop 0.5s var(--ease-out-soft) both;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(var(--tilt, 0deg));
+    }
+    50% {
+      transform: translateY(-10px) rotate(var(--tilt, 0deg));
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 }
 
-:root {
-  --background: #faf9fd;
-  --foreground: #14121f;
-  --surface: #ffffff;
-  --muted: #efedf7;
-  --muted-foreground: #5b5870;
-  --border: #e3e0f0;
-  --primary: #6d4aff;
-  --primary-foreground: #ffffff;
-  --warm: #ff7a59;
+/* ------------------------------------------------------------ type scale */
+
+/* Fluid type: scales smoothly from a 375 px phone to a 1 440 px desktop. */
+@utility text-display {
+  font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 650;
 }
+
+@utility text-headline {
+  font-size: clamp(1.75rem, 1.3rem + 2vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-weight: 650;
+}
+
+@utility text-title {
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+@utility text-lead {
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------- layout */
+
+@utility container-page {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+
+  @media (min-width: 40rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Soft colored light behind hero areas. */
+@utility bg-aurora {
+  background-image:
+    radial-gradient(60rem 32rem at 15% -10%, rgb(109 74 255 / 0.16), transparent 60%),
+    radial-gradient(48rem 28rem at 95% 5%, rgb(255 122 89 / 0.16), transparent 60%);
+}
+
+/* Loading placeholder that shimmers (frozen when motion is reduced, see below). */
+@utility skeleton {
+  background: linear-gradient(
+    100deg,
+    var(--muted) 30%,
+    color-mix(in srgb, var(--muted) 40%, white) 50%,
+    var(--muted) 70%
+  );
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+/* ----------------------------------------------------------------- base */
 
 @layer base {
   * {
@@ -48,6 +206,17 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+  }
+
+  /* Visible keyboard focus everywhere (NF-031). */
+  :focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 25%, transparent);
   }
 
   @media (prefers-reduced-motion: reduce) {
