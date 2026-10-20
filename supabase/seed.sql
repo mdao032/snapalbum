@@ -1,0 +1,3 @@
+-- Development data, loaded after the migrations by `supabase db reset`.
+-- Demo events and 3 000 demo media for the gallery tests are added in phases 1 to 3.
+-- Never put real data or real credentials here.
