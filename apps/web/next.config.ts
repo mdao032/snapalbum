@@ -19,7 +19,10 @@ const uploadSourceMaps = Boolean(process.env.SENTRY_AUTH_TOKEN);
 export default withSentryConfig(withNextIntl(nextConfig), {
   org: "ywa-d5",
   project: "snapalbum",
-  silent: true,
+  // Keep Sentry build messages visible in the deployment log.
+  silent: false,
+  // A Sentry problem (token, region, network) must never block a deployment.
+  errorHandler: (error) => console.warn(`[sentry] build step skipped: ${error.message}`),
   sourcemaps: { disable: !uploadSourceMaps },
   telemetry: false,
   webpack: { treeshake: { removeDebugLogging: true } },
