@@ -13,10 +13,14 @@ const nextConfig: NextConfig = {
   agentRules: false,
 };
 
+// Source maps are uploaded to Sentry only when a build has an auth token (Vercel production).
+const uploadSourceMaps = Boolean(process.env.SENTRY_AUTH_TOKEN);
+
 export default withSentryConfig(withNextIntl(nextConfig), {
+  org: "ywa-d5",
+  project: "snapalbum",
   silent: true,
-  // Source map upload needs a Sentry auth token (set up with the production deployment).
-  sourcemaps: { disable: true },
+  sourcemaps: { disable: !uploadSourceMaps },
   telemetry: false,
   webpack: { treeshake: { removeDebugLogging: true } },
 });
