@@ -1,0 +1,29 @@
+# Secrets and local environment
+environnement.txt
+.env
+.env.*
+!.env.example
+
+# Dependencies and build output
+node_modules/
+.next/
+.turbo/
+dist/
+build/
+coverage/
+out/
+
+# Tests
+playwright-report/
+test-results/
+
+# Supabase local
+supabase/.branches/
+supabase/.temp/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
