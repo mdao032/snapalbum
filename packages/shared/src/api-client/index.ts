@@ -1,0 +1,82 @@
+import type { z } from "zod";
+import {
+  apiErrorBodySchema,
+  completeUploadResponseSchema,
+  reserveUploadResponseSchema,
+  type ApiErrorCode,
+  type CompleteUploadRequest,
+  type CompleteUploadResponse,
+  type ReserveUploadRequest,
+  type ReserveUploadResponse,
+} from "../schemas";
+
+export interface ApiClientOptions {
+  /** Base URL of the API, without trailing slash. Empty string means same origin (web). */
+  baseUrl: string;
+  /** Returns a Supabase access token for `Authorization: Bearer` (mobile). Web uses cookies. */
+  getAccessToken?: () => Promise<string | null> | string | null;
+  /** Injectable for tests and for runtimes without a global `fetch`. */
+  fetch?: typeof fetch;
+}
+
+export class ApiError extends Error {
+  constructor(
+    readonly status: number,
+    readonly code: ApiErrorCode | "network_error" | "invalid_response",
+    message?: string,
+  ) {
+    super(message ?? code);
+    this.name = "ApiError";
+  }
+}
+
+export interface ApiClient {
+  reserveUpload(body: ReserveUploadRequest): Promise<ReserveUploadResponse>;
+  completeUpload(body: CompleteUploadRequest): Promise<CompleteUploadResponse>;
+}
+
+/** Typed client of the Next.js API routes, shared by the web, the mobile apps and the App Clip. */
+export function createApiClient(options: ApiClientOptions): ApiClient {
+  const doFetch = options.fetch ?? globalThis.fetch.bind(globalThis);
+
+  async function post<S extends z.ZodType>(
+    path: string,
+    body: unknown,
+    schema: S,
+  ): Promise<z.infer<S>> {
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    const token = await options.getAccessToken?.();
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    let response: Response;
+    try {
+      response = await doFetch(`${options.baseUrl}${path}`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body),
+      });
+    } catch {
+      throw new ApiError(0, "network_error");
+    }
+
+    const payload: unknown = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      const parsed = apiErrorBodySchema.safeParse(payload);
+      throw new ApiError(
+        response.status,
+        parsed.success ? parsed.data.error.code : "internal_error",
+        parsed.success ? parsed.data.error.message : undefined,
+      );
+    }
+
+    const result = schema.safeParse(payload);
+    if (!result.success) throw new ApiError(response.status, "invalid_response");
+    return result.data;
+  }
+
+  return {
+    reserveUpload: (body) => post("/api/uploads/reserve", body, reserveUploadResponseSchema),
+    completeUpload: (body) => post("/api/uploads/complete", body, completeUploadResponseSchema),
+  };
+}

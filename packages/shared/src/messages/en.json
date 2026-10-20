@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "title": "{appName}: every photo from your event, in one place",
+    "description": "Your guests scan a QR code and send their photos and videos to a shared album. No app, no account."
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Try again",
+    "close": "Close",
+    "back": "Back",
+    "language": "Language"
+  },
+  "home": {
+    "eyebrow": "Your event album",
+    "title": "Every photo from your event, finally together.",
+    "subtitle": "Your guests scan a QR code and share their photos and videos. No app, no account. You get everything, in full quality.",
+    "cta": "Create my album",
+    "ctaHint": "Free, ready in under a minute."
+  },
+  "notFound": {
+    "title": "This page can't be found",
+    "description": "The link may be incorrect, or the page may have moved.",
+    "cta": "Back to home"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "Don't worry, nothing is lost. You can try again."
+  },
+  "apiErrors": {
+    "validation_failed": "Some of the information isn't valid.",
+    "unauthorized": "Please sign in again.",
+    "forbidden": "You don't have access to this action.",
+    "not_found": "We couldn't find what you're looking for.",
+    "rate_limited": "Too many requests. Wait a moment, then try again.",
+    "album_full": "The album is full. The organiser has been notified.",
+    "video_limit_reached": "The maximum number of videos has been reached for this album.",
+    "video_too_long": "This video is too long.",
+    "file_too_large": "This file is too large.",
+    "upload_window_closed": "Photo uploads have ended for this event.",
+    "guest_blocked": "You can no longer send photos to this event.",
+    "event_suspended": "This event is temporarily suspended.",
+    "unsupported_format": "This file format isn't supported.",
+    "internal_error": "An error occurred. Try again in a moment.",
+    "network_error": "No connection. Your photos will be sent as soon as it returns.",
+    "invalid_response": "Unexpected response from the server. Try again."
+  },
+  "upload": {
+    "status": {
+      "queued": "Waiting",
+      "uploading": "Uploading",
+      "sent": "Sent",
+      "failed": "Retrying soon",
+      "rejected": "Rejected",
+      "waiting_quota": "Waiting for room in the album"
+    }
+  }
+}

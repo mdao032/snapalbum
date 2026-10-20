@@ -1,0 +1,9 @@
+node_modules
+.next
+.turbo
+coverage
+pnpm-lock.yaml
+packages/shared/src/db-types.generated.ts
+SPEC.md
+ROADMAP.md
+CLAUDE.md

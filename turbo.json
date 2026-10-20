@@ -1,0 +1,15 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "dev": { "cache": false, "persistent": true },
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env.example"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "lint": { "dependsOn": ["^lint"] },
+    "typecheck": { "dependsOn": ["^typecheck"] },
+    "test": { "outputs": ["coverage/**"] },
+    "test:e2e": { "cache": false }
+  }
+}

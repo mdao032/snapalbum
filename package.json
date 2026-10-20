@@ -1,0 +1,26 @@
+{
+  "name": "snapalbum",
+  "private": true,
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "test:load": "echo \"Tests de charge k6 : ajoutés en phase 2\" && exit 0",
+    "db:migrate": "supabase db push",
+    "db:types": "supabase gen types typescript --local > packages/shared/src/db-types.generated.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@snapalbum/config": "workspace:*",
+    "prettier": "3.9.10",
+    "turbo": "2.11.9"
+  }
+}

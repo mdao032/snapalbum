@@ -1,0 +1,35 @@
+{
+  "name": "@snapalbum/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./brand": "./src/brand.ts",
+    "./plans": "./src/plans.ts",
+    "./schemas": "./src/schemas/index.ts",
+    "./api-client": "./src/api-client/index.ts",
+    "./upload": "./src/upload/index.ts",
+    "./messages": "./src/messages/index.ts",
+    "./messages/fr.json": "./src/messages/fr.json",
+    "./messages/en.json": "./src/messages/en.json",
+    "./db-types": "./src/db-types.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@snapalbum/config": "workspace:*",
+    "@types/node": "24.10.1",
+    "@vitest/coverage-v8": "5.0.5",
+    "eslint": "9.39.5",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5"
+  }
+}

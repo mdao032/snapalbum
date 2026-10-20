@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.heic binary
+*.mov binary
+*.mp4 binary
