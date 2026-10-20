@@ -1,0 +1,5 @@
+# Runs before every commit: format staged files, then lint the whole monorepo (turbo caches it).
+PM="pnpm"
+pnpm --version >/dev/null 2>&1 || PM="corepack pnpm"
+
+$PM exec lint-staged && $PM lint

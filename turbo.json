@@ -10,6 +10,6 @@
     "lint": { "dependsOn": ["^lint"] },
     "typecheck": { "dependsOn": ["^typecheck"] },
     "test": { "outputs": ["coverage/**"] },
-    "test:e2e": { "cache": false }
+    "test:e2e": { "dependsOn": ["build"], "cache": false }
   }
 }

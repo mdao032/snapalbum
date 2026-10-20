@@ -16,11 +16,18 @@
     "db:migrate": "supabase db push",
     "db:types": "supabase gen types typescript --local > packages/shared/src/db-types.generated.ts",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@snapalbum/config": "workspace:*",
+    "husky": "9.1.7",
+    "lint-staged": "17.6.0",
     "prettier": "3.9.10",
     "turbo": "2.11.9"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,json,css,yml,yaml}": "prettier --write",
+    "*.md": "prettier --write"
   }
 }
