@@ -13,24 +13,29 @@
   "home": {
     "eyebrow": "Your event album",
     "title": "Every photo from your event, finally together.",
-    "subtitle": "Your guests scan a QR code and share their photos and videos. No app, no account. You get everything, in full quality.",
+    "subtitle": "Your guests scan a QR code and share their photos and videos. No app, no account. You find everything in a single album.",
     "cta": "Create my album",
-    "ctaHint": "Free, ready in under a minute."
+    "ctaHint": "Free, ready in under a minute.",
+    "pillNoApp": "No app",
+    "pillNoAccount": "No account",
+    "pillMedia": "Photos and videos",
+    "visualCounter": "{count} photos received",
+    "visualNew": "New photo from Léa"
   },
   "notFound": {
-    "title": "This page can't be found",
+    "title": "This page can’t be found",
     "description": "The link may be incorrect, or the page may have moved.",
     "cta": "Back to home"
   },
   "error": {
     "title": "Something went wrong",
-    "description": "Don't worry, nothing is lost. You can try again."
+    "description": "Don’t worry, nothing is lost. You can try again."
   },
   "apiErrors": {
-    "validation_failed": "Some of the information isn't valid.",
+    "validation_failed": "Some of the information isn’t valid.",
     "unauthorized": "Please sign in again.",
-    "forbidden": "You don't have access to this action.",
-    "not_found": "We couldn't find what you're looking for.",
+    "forbidden": "You don’t have access to this action.",
+    "not_found": "We couldn’t find what you’re looking for.",
     "rate_limited": "Too many requests. Wait a moment, then try again.",
     "album_full": "The album is full. The organiser has been notified.",
     "video_limit_reached": "The maximum number of videos has been reached for this album.",
@@ -39,7 +44,7 @@
     "upload_window_closed": "Photo uploads have ended for this event.",
     "guest_blocked": "You can no longer send photos to this event.",
     "event_suspended": "This event is temporarily suspended.",
-    "unsupported_format": "This file format isn't supported.",
+    "unsupported_format": "This file format isn’t supported.",
     "internal_error": "An error occurred. Try again in a moment.",
     "network_error": "No connection. Your photos will be sent as soon as it returns.",
     "invalid_response": "Unexpected response from the server. Try again."
@@ -53,5 +58,22 @@
       "rejected": "Rejected",
       "waiting_quota": "Waiting for room in the album"
     }
+  },
+  "layout": {
+    "skipToContent": "Skip to content",
+    "homeLink": "{appName}, back to home",
+    "createAlbum": "Create my album",
+    "footerTagline": "Every memory from your event, all in one place.",
+    "copyright": "© {year} {appName}"
+  },
+  "language": {
+    "label": "Language",
+    "fr": "Français",
+    "en": "English"
+  },
+  "states": {
+    "emptyTitle": "Nothing to see yet",
+    "emptyDescription": "What you are looking for will show up here.",
+    "loadingLabel": "Loading"
   }
 }

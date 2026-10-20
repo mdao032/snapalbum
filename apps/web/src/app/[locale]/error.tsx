@@ -1,22 +1,41 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
+import { EmptyState } from "@/components/feedback/empty-state";
+import { PageShell } from "@/components/layout/page-shell";
 import { Button } from "@/components/ui/button";
 
 export default function ErrorPage({
+  error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
   const t = useTranslations();
+
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
+
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center gap-4 px-4 text-center">
-      <h1 className="text-3xl font-semibold tracking-tight">{t("error.title")}</h1>
-      <p className="max-w-md text-muted-foreground">{t("error.description")}</p>
-      <Button type="button" onClick={reset}>
-        {t("common.retry")}
-      </Button>
-    </main>
+    <PageShell>
+      <div className="container-page flex flex-1 items-center justify-center">
+        <EmptyState
+          as="h1"
+          tone="warm"
+          mark="alert"
+          title={t("error.title")}
+          description={t("error.description")}
+          action={
+            <Button type="button" onClick={reset}>
+              {t("common.retry")}
+            </Button>
+          }
+        />
+      </div>
+    </PageShell>
   );
 }

@@ -14,6 +14,8 @@ export default defineConfig({
     // next-intl detects the browser language: tests run as a French visitor unless they say otherwise.
     locale: "fr-FR",
     timezoneId: "Europe/Paris",
+    // Entrance animations would otherwise be mid-fade when axe measures color contrast.
+    reducedMotion: "reduce",
     trace: "on-first-retry",
   },
   // Chromium and WebKit on desktop, plus the two mobile profiles required by NF-020.
