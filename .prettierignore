@@ -3,7 +3,7 @@ node_modules
 .turbo
 coverage
 pnpm-lock.yaml
-packages/shared/src/db-types.generated.ts
+packages/shared/src/db-types.ts
 SPEC.md
 ROADMAP.md
 CLAUDE.md

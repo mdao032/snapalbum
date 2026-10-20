@@ -59,10 +59,6 @@ jobs:
           restore-keys: turbo-e2e-${{ runner.os }}-
       - run: pnpm install --frozen-lockfile
       - run: cp .env.example apps/web/.env.local
-      # Local Supabase (Docker) starts here as soon as the project has a config (ROADMAP 0.3).
-      - name: Start local Supabase
-        if: ${{ hashFiles('supabase/config.toml') != '' }}
-        run: pnpm exec supabase start
       - name: Install browsers
         run: pnpm --filter web exec playwright install --with-deps chromium webkit
       - run: pnpm test:e2e
@@ -72,3 +68,25 @@ jobs:
           name: playwright-report
           path: apps/web/playwright-report
           retention-days: 7
+
+  database:
+    name: Base de données (migrations, RLS, types)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Start local Supabase (applies every migration)
+        run: pnpm exec supabase start -x studio,imgproxy,edge-runtime,logflare,vector,supavisor
+      - name: RLS tests (S-001)
+        run: pnpm test:db
+      - name: Generated types are up to date
+        run: |
+          pnpm db:types
+          git diff --exit-code packages/shared/src/db-types.ts

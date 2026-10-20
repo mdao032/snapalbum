@@ -27,3 +27,6 @@ supabase/.temp/
 .DS_Store
 Thumbs.db
 *.log
+
+# TypeScript incremental build info
+*.tsbuildinfo
