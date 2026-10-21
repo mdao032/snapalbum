@@ -4,6 +4,7 @@ import { localeSchema } from "@snapalbum/shared";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { clientEnv } from "@/config/env";
+import { clientIpFrom } from "@/server/client-ip";
 import { requestMagicLink, startGoogleSignIn, type MagicLinkError } from "@/server/auth";
 import { createSupabaseServerClient } from "@/server/supabase/server";
 
@@ -18,8 +19,7 @@ export type LoginFormState =
     };
 
 async function clientIp(): Promise<string | undefined> {
-  const requestHeaders = await headers();
-  return requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() || undefined;
+  return clientIpFrom(await headers());
 }
 
 function textField(formData: FormData, name: string): string | undefined {

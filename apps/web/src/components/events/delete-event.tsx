@@ -1,6 +1,6 @@
 "use client";
 
-import { purgeDeadline } from "@snapalbum/shared";
+import { purgeDeadline } from "@snapalbum/shared/lifecycle";
 import { Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";

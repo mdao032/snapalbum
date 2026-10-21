@@ -6,6 +6,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { clientEnv } from "@/config/env";
+import { clientMessagesFor } from "@/i18n/client-messages";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 
@@ -41,7 +42,9 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   return (
     <html lang={locale} className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="min-h-dvh antialiased">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider messages={clientMessagesFor(locale)}>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

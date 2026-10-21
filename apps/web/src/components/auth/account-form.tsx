@@ -1,6 +1,6 @@
 "use client";
 
-import { DISPLAY_NAME_MAX_LENGTH, LOCALES, type Locale } from "@snapalbum/shared";
+import { DISPLAY_NAME_MAX_LENGTH, LOCALES, type Locale } from "@snapalbum/shared/constants";
 import { useLocale, useTranslations } from "next-intl";
 import { useActionState, useEffect } from "react";
 import { updateProfileAction, type AccountFormState } from "@/app/[locale]/(app)/account/actions";

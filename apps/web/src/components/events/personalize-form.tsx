@@ -6,11 +6,10 @@ import {
   EVENT_TYPES,
   LOCALES,
   WELCOME_MESSAGE_MAX_LENGTH,
-  isAccentReadable,
-  makeAccentReadable,
   type EventType,
   type Locale,
-} from "@snapalbum/shared";
+} from "@snapalbum/shared/constants";
+import { isAccentReadable, makeAccentReadable } from "@snapalbum/shared/color";
 import { BRAND_COLORS } from "@snapalbum/shared/brand";
 import { useTranslations } from "next-intl";
 import { useActionState, useState } from "react";

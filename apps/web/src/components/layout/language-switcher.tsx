@@ -1,6 +1,6 @@
 "use client";
 
-import { LOCALES } from "@snapalbum/shared/messages";
+import { LOCALES } from "@snapalbum/shared/constants";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";

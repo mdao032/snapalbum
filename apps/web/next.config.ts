@@ -1,6 +1,7 @@
 import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { securityHeaders } from "./src/config/security-headers";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -9,6 +10,7 @@ const nextConfig: NextConfig = {
   // `@snapalbum/shared` ships TypeScript sources, compiled by Next.js.
   transpilePackages: ["@snapalbum/shared"],
   poweredByHeader: false,
+  headers: async () => securityHeaders,
   // Do not let Next.js write an AGENTS.md file into the repository.
   agentRules: false,
 };

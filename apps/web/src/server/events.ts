@@ -26,6 +26,19 @@ export type CreateEventResult =
 const UNIQUE_VIOLATION = "23505";
 const MAX_CODE_ATTEMPTS = 5;
 
+/** Free events of an organiser that are still running (the quota counts these, see `plans.ts`). */
+async function countActiveFreeEvents(admin: Client, ownerId: string, now: Date): Promise<number> {
+  const { count, error } = await admin
+    .from("events")
+    .select("id", { count: "exact", head: true })
+    .eq("owner_id", ownerId)
+    .eq("plan", "free")
+    .eq("status", "active")
+    .or(`expires_at.is.null,expires_at.gt.${now.toISOString()}`);
+  if (error) throw error;
+  return count ?? 0;
+}
+
 /**
  * Creates an event for an organiser (F-010 to F-012). Uses the ADMIN client on purpose: the
  * database refuses organisers direct inserts so the quota, the plan, the expiry and the public
@@ -39,16 +52,9 @@ export async function createEvent(
 ): Promise<CreateEventResult> {
   const input = createEventSchema.parse(rawInput);
 
-  const { count, error: countError } = await admin
-    .from("events")
-    .select("id", { count: "exact", head: true })
-    .eq("owner_id", ownerId)
-    .eq("plan", "free")
-    .eq("status", "active")
-    .or(`expires_at.is.null,expires_at.gt.${now.toISOString()}`);
-  if (countError) throw countError;
-
-  const decision = checkEventCreationQuota({ activeFreeEvents: count ?? 0 });
+  const decision = checkEventCreationQuota({
+    activeFreeEvents: await countActiveFreeEvents(admin, ownerId, now),
+  });
   if (!decision.ok) return decision;
 
   const expiresAt = computeExpiresAt({ plan: "free", eventDate: input.eventDate });
@@ -73,7 +79,19 @@ export async function createEvent(
       .select()
       .single();
 
-    if (!error) return { ok: true, event: data };
+    if (!error) {
+      // Two requests can both pass the check above before either writes. Count again now that
+      // this event exists: if the quota is exceeded, the later one takes its event back. When both
+      // see the excess, both retreat: the account never ends up over quota, and retrying works.
+      const total = await countActiveFreeEvents(admin, ownerId, now);
+      const recheck = checkEventCreationQuota({ activeFreeEvents: total - 1 });
+      if (!recheck.ok) {
+        const { error: deleteError } = await admin.from("events").delete().eq("id", data.id);
+        if (deleteError) throw deleteError;
+        return recheck;
+      }
+      return { ok: true, event: data };
+    }
     // A code collision is astronomically unlikely, but handled: draw another code.
     if (error.code !== UNIQUE_VIOLATION || !error.message.includes("public_code")) throw error;
   }

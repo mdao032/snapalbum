@@ -4,11 +4,9 @@ import {
   EVENT_TITLE_MAX_LENGTH,
   EVENT_TYPES,
   LOCALES,
-  createEventSchema,
-  toFieldErrors,
-  type FieldErrorCode,
   type Locale,
-} from "@snapalbum/shared";
+} from "@snapalbum/shared/constants";
+import { createEventSchema, toFieldErrors, type FieldErrorCode } from "@snapalbum/shared/schemas";
 import { useLocale, useTranslations } from "next-intl";
 import { useActionState, useState, type FormEvent } from "react";
 import { createEventAction, type CreateEventState } from "@/app/[locale]/(app)/events/new/actions";
