@@ -26,7 +26,21 @@ export type Database = {
           }
         },"public": {
           Tables: {
-            "profiles": {
+            "events": {
+                  Row: {
+                    "accent_color": string | null,"bytes_used": number,"cover_media_key": string | null,"created_at": string,"deleted_at": string | null,"event_date": string,"expires_at": string | null,"id": string,"locale": string,"media_count": number,"owner_id": string,"plan": string,"public_code": string,"settings": NonNullable<Json>,"status": string,"title": string,"type": string,"updated_at": string,"welcome_message": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "accent_color"?: string | null,"bytes_used"?: number,"cover_media_key"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"event_date": string,"expires_at"?: string | null,"id"?: string,"locale"?: string,"media_count"?: number,"owner_id": string,"plan"?: string,"public_code": string,"settings"?: NonNullable<Json>,"status"?: string,"title": string,"type": string,"updated_at"?: string,"welcome_message"?: string | null
+                  }
+                  Update: {
+                    "accent_color"?: string | null,"bytes_used"?: number,"cover_media_key"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"event_date"?: string,"expires_at"?: string | null,"id"?: string,"locale"?: string,"media_count"?: number,"owner_id"?: string,"plan"?: string,"public_code"?: string,"settings"?: NonNullable<Json>,"status"?: string,"title"?: string,"type"?: string,"updated_at"?: string,"welcome_message"?: string | null
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"profiles": {
                   Row: {
                     "created_at": string,"deleted_at": string | null,"display_name": string | null,"id": string,"locale": string,"role": string,"updated_at": string,"user_id": string
                   }

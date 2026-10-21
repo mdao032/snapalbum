@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomInt, randomUUID } from "node:crypto";
 import pg from "pg";
 
 /**
@@ -36,6 +36,8 @@ export interface TestDb extends Queryable {
     anonymous?: boolean;
     metadata?: Record<string, unknown>;
   }): Promise<string>;
+  /** Inserts an event as the database owner (like the server does) and returns its id. */
+  createEvent(ownerId: string, overrides?: Record<string, unknown>): Promise<string>;
   /** Makes `userId` an administrator (done as the database owner, like the server would). */
   makeAdmin(userId: string): Promise<void>;
   /** Runs `fn` with the permissions of `actor`. A failed statement does not abort the test. */
@@ -83,6 +85,28 @@ export async function withTestDb(fn: (db: TestDb) => Promise<void>): Promise<voi
           ],
         );
         return id;
+      },
+
+      async createEvent(ownerId, overrides = {}) {
+        const values = {
+          owner_id: ownerId,
+          public_code: Array.from(
+            { length: 10 },
+            () => "23456789abcdefghjkmnpqrstuvwxyz"[randomInt(31)],
+          ).join(""),
+          title: "Mariage de Léa et Tom",
+          event_date: "2026-09-12",
+          type: "wedding",
+          expires_at: "2026-10-13T00:00:00Z",
+          ...overrides,
+        };
+        const columns = Object.keys(values);
+        const { rows } = await client.query<{ id: string }>(
+          `insert into public.events (${columns.join(", ")})
+           values (${columns.map((_, i) => `$${i + 1}`).join(", ")}) returning id`,
+          Object.values(values),
+        );
+        return rows[0]!.id;
       },
 
       async makeAdmin(userId) {
