@@ -284,6 +284,26 @@
         "copy": "Copy link",
         "copied": "Link copied. Paste it into Safari or Chrome."
       }
+    },
+    "mine": {
+      "open": "My photos",
+      "close": "Hide my photos",
+      "title": "My photos",
+      "loading": "Loading your photos…",
+      "empty": "You have not sent any photos yet.",
+      "error": "Your photos could not be loaded. Try again in a moment.",
+      "retry": "Try again",
+      "video": "Video",
+      "awaiting": "Waiting for the organiser’s approval",
+      "delete": "Delete",
+      "deleteLabel": "Delete this photo",
+      "confirm": "Delete this photo for everyone?",
+      "confirmYes": "Yes, delete",
+      "confirmNo": "No, keep it",
+      "deleted": "Photo deleted.",
+      "deleteFailed": "Deleting failed. Try again.",
+      "photoAlt": "Photo sent on {date}",
+      "videoAlt": "Video sent on {date}"
     }
   },
   "dashboard": {

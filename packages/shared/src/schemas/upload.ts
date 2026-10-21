@@ -135,6 +135,30 @@ export const multipartResponseSchema = z.discriminatedUnion("action", [
 ]);
 export type MultipartResponse = z.infer<typeof multipartResponseSchema>;
 
+/** `POST /api/uploads/mine`: the guest's own uploads, and deleting one of them (F-038, G-005). */
+export const myMediaRequestSchema = z.discriminatedUnion("action", [
+  z.object({ action: z.literal("list"), eventCode: publicCodeSchema }),
+  z.object({ action: z.literal("delete"), mediaId: uuidSchema }),
+]);
+export type MyMediaRequest = z.infer<typeof myMediaRequestSchema>;
+
+export const myMediaItemSchema = z.object({
+  mediaId: uuidSchema,
+  kind: mediaKindSchema,
+  /** `pending`: the organiser has not approved it yet, so it is not in the gallery. */
+  moderation: z.enum(["approved", "pending"]),
+  createdAt: z.iso.datetime({ offset: true }),
+  /** Short-lived address of the thumbnail. */
+  thumbUrl: z.url().nullable(),
+});
+export type MyMediaItem = z.infer<typeof myMediaItemSchema>;
+
+export const myMediaResponseSchema = z.discriminatedUnion("action", [
+  z.object({ action: z.literal("list"), items: z.array(myMediaItemSchema) }),
+  z.object({ action: z.literal("delete") }),
+]);
+export type MyMediaResponse = z.infer<typeof myMediaResponseSchema>;
+
 /** Stable error codes returned by the API so every client can translate them. */
 export const API_ERROR_CODES = [
   "validation_failed",

@@ -284,6 +284,26 @@
         "copy": "Copier le lien",
         "copied": "Lien copié. Collez-le dans Safari ou Chrome."
       }
+    },
+    "mine": {
+      "open": "Mes photos",
+      "close": "Masquer mes photos",
+      "title": "Mes photos",
+      "loading": "Chargement de vos photos…",
+      "empty": "Vous n’avez pas encore envoyé de photo.",
+      "error": "Impossible de charger vos photos. Réessayez dans un instant.",
+      "retry": "Réessayer",
+      "video": "Vidéo",
+      "awaiting": "En attente de validation par l’organisateur",
+      "delete": "Supprimer",
+      "deleteLabel": "Supprimer cette photo",
+      "confirm": "Supprimer cette photo pour tout le monde ?",
+      "confirmYes": "Oui, supprimer",
+      "confirmNo": "Non, garder",
+      "deleted": "Photo supprimée.",
+      "deleteFailed": "La suppression a échoué. Réessayez.",
+      "photoAlt": "Photo envoyée le {date}",
+      "videoAlt": "Vidéo envoyée le {date}"
     }
   },
   "dashboard": {

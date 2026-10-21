@@ -16,6 +16,8 @@ import {
   type CompleteUploadResponse,
   type MultipartRequest,
   type MultipartResponse,
+  type MyMediaRequest,
+  type MyMediaResponse,
   type ParsedReserveUploadRequest,
   type PlanId,
   type ReserveUploadResponse,
@@ -429,4 +431,71 @@ export async function multipartAction(
       return { ok: true, body: { action: "abort" } };
     }
   }
+}
+
+/** Most recent uploads shown in "Mes photos". */
+const MY_MEDIA_LIMIT = 200;
+
+/**
+ * The guest's own uploads and deletion of one of them (F-038, G-005). Only the guest's own media
+ * is ever reachable: someone else's looks like a missing one. A deletion frees the quota slot (the
+ * counters ignore deleted media) and removes the files from the storage; the same file can be sent
+ * again later.
+ */
+export async function myMedia(
+  deps: UploadDeps,
+  user: { id: string },
+  request: MyMediaRequest,
+): Promise<UploadResult<MyMediaResponse>> {
+  if (request.action === "delete") {
+    const media = await loadOwnMedia(deps.admin, user.id, request.mediaId);
+    if (!media) return fail(404, "not_found");
+    // Deleting twice is harmless.
+    if (media.status === "deleted") return { ok: true, body: { action: "delete" } };
+    const { error } = await deps.admin
+      .from("media")
+      .update({ status: "deleted" })
+      .eq("id", media.id);
+    if (error) throw error;
+    await Promise.all(
+      keysOf(media).map((key) => deps.storage.deleteObject(key).catch(() => undefined)),
+    );
+    return { ok: true, body: { action: "delete" } };
+  }
+
+  const { data: event, error: eventError } = await deps.admin
+    .from("events")
+    .select("id")
+    .eq("public_code", request.eventCode)
+    .maybeSingle();
+  if (eventError) throw eventError;
+  if (!event) return fail(404, "not_found");
+  const { data: guest, error: guestError } = await deps.admin
+    .from("guests")
+    .select("id")
+    .eq("event_id", event.id)
+    .eq("auth_user_id", user.id)
+    .maybeSingle();
+  if (guestError) throw guestError;
+  if (!guest) return { ok: true, body: { action: "list", items: [] } };
+
+  const { data: rows, error } = await deps.admin
+    .from("media")
+    .select("id, kind, moderation, created_at, key_thumb")
+    .eq("guest_id", guest.id)
+    .eq("status", "ready")
+    .order("created_at", { ascending: false })
+    .limit(MY_MEDIA_LIMIT);
+  if (error) throw error;
+
+  const items = await Promise.all(
+    (rows ?? []).map(async (row) => ({
+      mediaId: row.id,
+      kind: row.kind as "photo" | "video",
+      moderation: row.moderation === "pending" ? ("pending" as const) : ("approved" as const),
+      createdAt: new Date(row.created_at).toISOString(),
+      thumbUrl: row.key_thumb ? await deps.storage.presignRead(row.key_thumb) : null,
+    })),
+  );
+  return { ok: true, body: { action: "list", items } };
 }

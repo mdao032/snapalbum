@@ -4,6 +4,7 @@ import {
   completeUploadResponseSchema,
   joinEventResponseSchema,
   multipartResponseSchema,
+  myMediaResponseSchema,
   reserveUploadResponseSchema,
   type ApiErrorCode,
   type CompleteUploadRequest,
@@ -12,6 +13,8 @@ import {
   type JoinEventResponse,
   type MultipartRequest,
   type MultipartResponse,
+  type MyMediaRequest,
+  type MyMediaResponse,
   type ReserveUploadRequest,
   type ReserveUploadResponse,
 } from "../schemas";
@@ -43,6 +46,8 @@ export interface ApiClient {
   completeUpload(body: CompleteUploadRequest): Promise<CompleteUploadResponse>;
   /** Large videos, sent in parts (NF-013). The answer carries the same `action` as the request. */
   multipart(body: MultipartRequest): Promise<MultipartResponse>;
+  /** The guest's own uploads (F-038) and deletion of one of them (G-005). */
+  myMedia(body: MyMediaRequest): Promise<MyMediaResponse>;
 }
 
 /** Typed client of the Next.js API routes, shared by the web, the mobile apps and the App Clip. */
@@ -90,5 +95,6 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     reserveUpload: (body) => post("/api/uploads/reserve", body, reserveUploadResponseSchema),
     completeUpload: (body) => post("/api/uploads/complete", body, completeUploadResponseSchema),
     multipart: (body) => post("/api/uploads/multipart", body, multipartResponseSchema),
+    myMedia: (body) => post("/api/uploads/mine", body, myMediaResponseSchema),
   };
 }

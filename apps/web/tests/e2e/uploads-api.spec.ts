@@ -1,7 +1,7 @@
 import { expect, test } from "./fixtures";
 
 test.describe("API d'envoi", () => {
-  for (const path of ["reserve", "complete", "multipart"]) {
+  for (const path of ["reserve", "complete", "multipart", "mine"]) {
     test(`S-001: POST /api/uploads/${path} refuse un appel sans session (401, JSON)`, async ({
       page,
     }) => {

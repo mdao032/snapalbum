@@ -7,7 +7,13 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { Database } from "@snapalbum/shared/db-types";
 import { createEvent } from "@/server/events";
 import { createStorage, type Storage } from "@/server/storage";
-import { completeUpload, multipartAction, reserveUpload, type UploadDeps } from "@/server/uploads";
+import {
+  completeUpload,
+  multipartAction,
+  myMedia,
+  reserveUpload,
+  type UploadDeps,
+} from "@/server/uploads";
 
 /**
  * The whole upload pipeline against the real local database (Supabase) and a local S3 emulator:
@@ -491,4 +497,98 @@ describe("NF-013: vidéo de plus de 50 Mo en morceaux, de bout en bout", () => {
     expect(result).toMatchObject({ ok: false, code: "video_too_long" });
     expect((await counters(event.id)).count).toBe(0);
   });
+});
+
+async function sendPhoto(user: string, eventCode: string) {
+  const reserved = await reserveOk(user, request(eventCode));
+  await put(reserved.display!, WEBP(4000));
+  await put(reserved.thumb, WEBP(800));
+  await completeUpload(deps, { id: user }, reserved.mediaId);
+  return reserved.mediaId;
+}
+
+describe("F-038, G-005: Mes photos", () => {
+  it("F-038: l'invité voit ses propres envois prêts, avec une adresse de miniature lisible, et jamais ceux des autres", async () => {
+    const event = await newEvent();
+    const alice = await newGuest(event.id);
+    const bob = await newGuest(event.id);
+    const mine = await sendPhoto(alice, event.public_code);
+    await sendPhoto(bob, event.public_code);
+    // Réservé mais jamais confirmé : pas encore une photo de la liste.
+    await reserveOk(alice, request(event.public_code));
+
+    const listed = await myMedia(
+      deps,
+      { id: alice },
+      { action: "list", eventCode: event.public_code },
+    );
+    if (!listed.ok || listed.body.action !== "list") throw new Error("not listed");
+    expect(listed.body.items.map((item) => item.mediaId)).toEqual([mine]);
+    const thumb = listed.body.items[0]?.thumbUrl;
+    expect(thumb).toBeTruthy();
+    expect((await fetch(thumb ?? "")).status).toBe(200);
+  }, 60_000);
+
+  it("F-038: quelqu'un qui n'a pas participé à l'événement a une liste vide", async () => {
+    const event = await newEvent();
+    const stranger = await newUser({ anonymous: true });
+    const listed = await myMedia(
+      deps,
+      { id: stranger },
+      { action: "list", eventCode: event.public_code },
+    );
+    expect(listed).toEqual({ ok: true, body: { action: "list", items: [] } });
+  });
+
+  it("G-005: supprimer son média libère la place, retire les fichiers et permet de le renvoyer", async () => {
+    const event = await newEvent();
+    const user = await newGuest(event.id);
+    const body = request(event.public_code);
+    const reserved = await reserveOk(user, body);
+    await put(reserved.display!, WEBP(4000));
+    await put(reserved.thumb, WEBP(800));
+    await completeUpload(deps, { id: user }, reserved.mediaId);
+    expect(await counters(event.id)).toEqual({ count: 1, bytes: 4800 });
+    const { data: row } = await admin
+      .from("media")
+      .select("key_display, key_thumb")
+      .eq("id", reserved.mediaId)
+      .single();
+
+    const deleted = await myMedia(
+      deps,
+      { id: user },
+      { action: "delete", mediaId: reserved.mediaId },
+    );
+    expect(deleted).toEqual({ ok: true, body: { action: "delete" } });
+    expect(await counters(event.id)).toEqual({ count: 0, bytes: 0 });
+    expect(await storage.head(row?.key_display ?? "")).toBeNull();
+    expect(await storage.head(row?.key_thumb ?? "")).toBeNull();
+    const listed = await myMedia(
+      deps,
+      { id: user },
+      { action: "list", eventCode: event.public_code },
+    );
+    expect(listed).toEqual({ ok: true, body: { action: "list", items: [] } });
+
+    // Supprimer deux fois est sans effet, et le même fichier peut être renvoyé.
+    expect(
+      await myMedia(deps, { id: user }, { action: "delete", mediaId: reserved.mediaId }),
+    ).toEqual({ ok: true, body: { action: "delete" } });
+    const again = await reserveUpload(deps, { id: user }, body as never);
+    expect(again.ok && again.body.status).toBe("reserved");
+  }, 60_000);
+
+  it("G-005, S-001: on ne peut pas supprimer le média d'un autre invité (il paraît inexistant)", async () => {
+    const event = await newEvent();
+    const alice = await newGuest(event.id);
+    const bob = await newGuest(event.id);
+    const aliceMedia = await sendPhoto(alice, event.public_code);
+
+    const attempt = await myMedia(deps, { id: bob }, { action: "delete", mediaId: aliceMedia });
+    expect(attempt).toEqual({ ok: false, status: 404, code: "not_found" });
+    const { data } = await admin.from("media").select("status").eq("id", aliceMedia).single();
+    expect(data?.status).toBe("ready");
+    expect(await counters(event.id)).toEqual({ count: 1, bytes: 4800 });
+  }, 60_000);
 });

@@ -19,6 +19,7 @@ import { readPendingFlag } from "@/lib/upload/pending-flag";
 const LOOKS_IN_APP =
   /; wv\)|Instagram|FB|WhatsApp|Snapchat|TikTok|Bytedance|Micro|Line\/|LinkedIn|Twitter/i;
 const noopSubscribe = () => () => undefined;
+const MyPhotos = dynamic(() => import("./my-photos").then((module) => module.MyPhotos));
 const InAppNotice = dynamic(() => import("./in-app-notice").then((module) => module.InAppNotice));
 const JoinForm = dynamic(() => import("./join-form").then((module) => module.JoinForm));
 
@@ -71,6 +72,7 @@ export function GuestExperience({
   const [online, setOnline] = useState(true);
   const [storageProblem, setStorageProblem] = useState<StorageProblem | null>(null);
   const [resumed, setResumed] = useState(0);
+  const [showMine, setShowMine] = useState(false);
   // A browser built into another app is only recognised once the page runs (NF-023); the quick
   // test keeps the full detection out of the first load. False on the server and while hydrating.
   const inApp = useSyncExternalStore(
@@ -206,6 +208,13 @@ export function GuestExperience({
           </label>
         </Button>
       </div>
+
+      {joined ? (
+        <Button variant="secondary" aria-expanded={showMine} onClick={() => setShowMine(!showMine)}>
+          {t(showMine ? "mine.close" : "mine.open")}
+        </Button>
+      ) : null}
+      {joined && showMine ? <MyPhotos eventCode={eventCode} refreshKey={summary.sent} /> : null}
 
       {inApp ? <InAppNotice /> : null}
 
