@@ -19,6 +19,9 @@ vi.mock("@/server/supabase/server", () => ({
 vi.mock("@/server/supabase/admin", () => ({ createSupabaseAdminClient: () => ({ admin: true }) }));
 vi.mock("next-intl/server", () => ({ getLocale: async () => "fr" }));
 
+const revalidatePath = vi.fn();
+vi.mock("next/cache", () => ({ revalidatePath }));
+
 const redirect = vi.fn((_target: unknown): never => {
   throw new Error("NEXT_REDIRECT");
 });
@@ -57,6 +60,8 @@ describe("F-015, F-016: réglages (action)", () => {
       form({ gallery_visible: "on", ...window }),
     );
     expect(result).toEqual({ status: "saved" });
+    // The dashboard is refreshed so what depends on the saved value (the access code) is current.
+    expect(revalidatePath).toHaveBeenCalledWith("/[locale]/events/[id]", "page");
     expect(updateEventSettings).toHaveBeenCalledWith({ user: true }, EVENT_ID, {
       gallery_visible: true,
       require_approval: false,

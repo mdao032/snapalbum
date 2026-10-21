@@ -37,3 +37,16 @@ export async function setEventColumns(
   });
   if (!response.ok) throw new Error(`Could not update the event: ${response.status}`);
 }
+
+/** Rows of a table read with the service role (local test database only), PostgREST query string. */
+export async function getRows(table: string, query: string): Promise<Record<string, unknown>[]> {
+  const env = localEnv();
+  const response = await fetch(`${env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${table}?${query}`, {
+    headers: {
+      apikey: env.SUPABASE_SERVICE_ROLE_KEY ?? "",
+      Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+    },
+  });
+  if (!response.ok) throw new Error(`Could not read ${table}: ${response.status}`);
+  return (await response.json()) as Record<string, unknown>[];
+}

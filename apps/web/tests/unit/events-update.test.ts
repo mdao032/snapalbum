@@ -90,10 +90,20 @@ describe("F-012: événement vu par un invité", () => {
   });
 
   it("F-012: ne demande que les champs de présentation, jamais le propriétaire ni l'offre", async () => {
-    const { client, chain } = fakeClient({ data: { title: "Fête" }, error: null });
-    expect(await getPublicEvent(client, "k7m2x9qvbr")).toEqual({ title: "Fête" });
+    const { client, chain } = fakeClient({
+      data: {
+        title: "Fête",
+        settings: { access_code_hash: "scrypt$x", upload_opens_at: "2026-01-01" },
+      },
+      error: null,
+    });
+    // The hash and the other settings never leave: only "a code is required".
+    expect(await getPublicEvent(client, "k7m2x9qvbr")).toEqual({
+      title: "Fête",
+      requiresAccessCode: true,
+    });
     const columns = (chain.select as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as string;
-    expect(columns).not.toMatch(/owner_id|plan|settings|bytes_used/);
+    expect(columns).not.toMatch(/owner_id|plan|bytes_used/);
     expect(chain.eq).toHaveBeenCalledWith("public_code", "k7m2x9qvbr");
   });
 

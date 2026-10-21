@@ -309,7 +309,7 @@ test.describe("partage de l'événement", () => {
     const guest = await newVisitor(browser);
     await guest.goto(`/${code}`);
     await expect(guest).toHaveURL(new RegExp(`/en/e/${code}$`));
-    await expect(guest.getByRole("heading", { level: 2 })).toHaveText("Photo uploads open soon");
+    await expect(guest.getByRole("heading", { level: 2 })).toHaveText("Join the album");
     await guest.context().close();
   });
 
