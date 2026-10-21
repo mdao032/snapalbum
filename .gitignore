@@ -31,3 +31,5 @@ Thumbs.db
 # TypeScript incremental build info
 *.tsbuildinfo
 .vitest/
+
+tests/load/state.json
