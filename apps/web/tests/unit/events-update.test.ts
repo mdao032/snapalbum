@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { describe, expect, it, vi } from "vitest";
-import { getOwnEvent, updateEventPresentation } from "@/server/events";
+import { getOwnEvent, getPublicEvent, updateEventPresentation } from "@/server/events";
 
 const EVENT_ID = "3f2b8c1e-5d4a-4b7e-9c1d-2a6f8e0b4d11";
 
@@ -79,5 +79,26 @@ describe("F-011: lecture et mise à jour d'un événement", () => {
     const { client } = fakeClient({ data: null, error: new Error("db down") });
     await expect(updateEventPresentation(client, EVENT_ID, input)).rejects.toThrow("db down");
     await expect(getOwnEvent(client, EVENT_ID)).rejects.toThrow("db down");
+  });
+});
+
+describe("F-012: événement vu par un invité", () => {
+  it("F-012: un code mal formé est refusé sans requête", async () => {
+    const { client, from } = fakeClient({ data: null, error: null });
+    expect(await getPublicEvent(client, "abc")).toBeNull();
+    expect(from).not.toHaveBeenCalled();
+  });
+
+  it("F-012: ne demande que les champs de présentation, jamais le propriétaire ni l'offre", async () => {
+    const { client, chain } = fakeClient({ data: { title: "Fête" }, error: null });
+    expect(await getPublicEvent(client, "k7m2x9qvbr")).toEqual({ title: "Fête" });
+    const columns = (chain.select as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as string;
+    expect(columns).not.toMatch(/owner_id|plan|settings|bytes_used/);
+    expect(chain.eq).toHaveBeenCalledWith("public_code", "k7m2x9qvbr");
+  });
+
+  it("F-012: remonte une erreur de la base", async () => {
+    const { client } = fakeClient({ data: null, error: new Error("db down") });
+    await expect(getPublicEvent(client, "k7m2x9qvbr")).rejects.toThrow("db down");
   });
 });

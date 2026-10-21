@@ -182,3 +182,131 @@ test.describe("personnalisation", () => {
     }
   });
 });
+
+test.describe("partage de l'événement", () => {
+  async function shortCode(page: Page): Promise<string> {
+    const link = await page.getByLabel("Lien de l’événement").inputValue();
+    return link.split("/").pop() ?? "";
+  }
+
+  test("F-013: affiche le QR code et le lien court construit sur la base configurée", async ({
+    page,
+  }) => {
+    await signIn(page);
+    await createEvent(page, "Mariage de Léa et Tom");
+
+    const qr = page.getByRole("img", { name: /QR code de l’événement Mariage de Léa et Tom/ });
+    await expect(qr).toBeVisible();
+    await expect
+      .poll(() => qr.evaluate((img: HTMLImageElement) => img.naturalWidth))
+      .toBeGreaterThan(0);
+
+    const link = await page.getByLabel("Lien de l’événement").inputValue();
+    expect(link).toMatch(/^https?:\/\/[^/]+\/[23456789abcdefghjkmnpqrstuvwxyz]{10,}$/);
+    await expectNoAccessibilityViolations(page);
+    await expectNoHorizontalScroll(page);
+  });
+
+  test("F-013: le QR code peut prendre les couleurs de l'événement", async ({ page }) => {
+    await signIn(page);
+    await createEvent(page, "Fête");
+    const qr = page.getByRole("img", { name: /QR code/ });
+    await expect(qr).toHaveAttribute("src", /format=svg$/);
+    await page.getByLabel("QR code aux couleurs de l’événement").check();
+    await expect(qr).toHaveAttribute("src", /color=accent/);
+  });
+
+  test("F-013: copie le lien", async ({ page, browserName, context }) => {
+    test.skip(browserName !== "chromium", "Le presse-papiers n'est testable que dans Chromium");
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await signIn(page);
+    await createEvent(page, "Fête");
+    await page.getByRole("button", { name: "Copier le lien" }).click();
+    await expect(page.getByRole("button", { name: "Lien copié" })).toBeVisible();
+    const copied = await page.evaluate(() => navigator.clipboard.readText());
+    expect(copied).toBe(await page.getByLabel("Lien de l’événement").inputValue());
+  });
+
+  test("F-013, F-014: les fichiers se téléchargent pour l'organisateur et seulement pour lui", async ({
+    page,
+    browser,
+  }) => {
+    await signIn(page);
+    await createEvent(page, "Mariage de Léa et Tom");
+    const id = page.url().split("/").pop();
+
+    const png = await page.request.get(`/api/events/${id}/qr?format=png&download=1`);
+    expect(png.status()).toBe(200);
+    expect(png.headers()["content-type"]).toBe("image/png");
+    expect(png.headers()["content-disposition"]).toContain("attachment");
+    expect((await png.body()).subarray(1, 4).toString()).toBe("PNG");
+
+    const svg = await page.request.get(`/api/events/${id}/qr?format=svg`);
+    expect(svg.headers()["content-type"]).toContain("image/svg+xml");
+
+    for (const format of ["a6", "a5", "tent"]) {
+      const pdf = await page.request.get(`/api/events/${id}/card?format=${format}`);
+      expect(pdf.status(), format).toBe(200);
+      expect(pdf.headers()["content-type"]).toBe("application/pdf");
+      expect((await pdf.body()).subarray(0, 5).toString()).toBe("%PDF-");
+    }
+
+    const stranger = await newVisitor(browser);
+    expect((await stranger.request.get(`/api/events/${id}/qr`)).status()).toBe(401);
+    await signIn(stranger);
+    expect((await stranger.request.get(`/api/events/${id}/qr`)).status()).toBe(404);
+    expect((await stranger.request.get(`/api/events/${id}/card?format=a6`)).status()).toBe(404);
+    await stranger.context().close();
+  });
+
+  test("F-014: les liens de téléchargement des cartes existent", async ({ page }) => {
+    await signIn(page);
+    await createEvent(page, "Fête");
+    for (const name of [
+      "QR code (SVG)",
+      "QR code (PNG, 1 024 px)",
+      "Carte A6 (PDF)",
+      "Carte A5 (PDF)",
+      "Chevalet de table (PDF, A4 à plier)",
+    ]) {
+      await expect(page.getByRole("link", { name })).toHaveAttribute("href", /\/api\/events\//);
+    }
+  });
+
+  test("F-012: scanner le lien court mène à la page de l'événement, dans sa langue", async ({
+    page,
+    browser,
+  }) => {
+    await signIn(page);
+    await createEvent(page, "Mariage de Léa et Tom");
+    const code = await shortCode(page);
+
+    const guest = await newVisitor(browser);
+    await guest.goto(`/${code}`);
+    await expect(guest).toHaveURL(new RegExp(`/e/${code}$`));
+    await expect(guest.getByRole("heading", { level: 1 })).toHaveText("Mariage de Léa et Tom");
+    await expectNoAccessibilityViolations(guest);
+    await expectNoHorizontalScroll(guest);
+    await guest.context().close();
+  });
+
+  test("F-012: un événement anglais mène à la page anglaise", async ({ page, browser }) => {
+    await signIn(page, "/en/login");
+    await page.goto("/en/events/new");
+    await page.getByLabel("Event name").fill("Léa and Tom’s wedding");
+    await page.getByRole("button", { name: "Create my event" }).click();
+    await expect(page).toHaveURL(/\/en\/events\/[0-9a-f-]{36}$/);
+    const code = (await page.getByLabel("Event link").inputValue()).split("/").pop();
+
+    const guest = await newVisitor(browser);
+    await guest.goto(`/${code}`);
+    await expect(guest).toHaveURL(new RegExp(`/en/e/${code}$`));
+    await expect(guest.getByRole("heading", { level: 2 })).toHaveText("Photo uploads open soon");
+    await guest.context().close();
+  });
+
+  test("F-012: un code inconnu donne une page introuvable", async ({ page }) => {
+    const response = await page.goto("/k7m2x9qvbr");
+    expect(response?.status()).toBe(404);
+  });
+});

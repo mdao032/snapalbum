@@ -102,3 +102,19 @@ describe("F-001: pages publiques", () => {
     expect(response.cookies.get("sb-127-auth-token")?.value).toBe("fresh");
   });
 });
+
+describe("F-012: lien court dans le proxy", () => {
+  it("F-012: un code d'événement seul est réécrit vers la route de recherche", async () => {
+    const response = await proxy(request("/k7m2x9qvbr"));
+    expect(response.headers.get("x-middleware-rewrite")).toContain("/s/k7m2x9qvbr");
+    expect(i18nResponse).not.toHaveBeenCalled();
+    expect(createServerClient).not.toHaveBeenCalled();
+  });
+
+  it("F-012: les pages ordinaires ne sont jamais prises pour un lien court", async () => {
+    for (const path of ["/", "/login", "/events", "/en/login", "/dashboard"]) {
+      const response = await proxy(request(path));
+      expect(response.headers.get("x-middleware-rewrite") ?? "").not.toContain("/s/");
+    }
+  });
+});
