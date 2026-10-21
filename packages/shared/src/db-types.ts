@@ -62,14 +62,14 @@ isOneToOne: false
                   ]
                 },"media": {
                   Row: {
-                    "blurhash": string | null,"bytes_display": number | null,"bytes_original": number | null,"bytes_thumb": number | null,"created_at": string,"duration_s": number | null,"event_id": string,"guest_id": string,"height": number | null,"id": string,"is_favorite": boolean,"key_display": string | null,"key_original": string | null,"key_thumb": string | null,"kind": string,"mime_type": string,"moderation": string,"sha256": string,"status": string,"taken_at": string | null,"updated_at": string,"width": number | null
+                    "blurhash": string | null,"bytes_display": number | null,"bytes_original": number | null,"bytes_thumb": number | null,"captured_at": string | null,"created_at": string,"duration_s": number | null,"event_id": string,"guest_id": string,"height": number | null,"id": string,"is_favorite": boolean,"key_display": string | null,"key_original": string | null,"key_thumb": string | null,"kind": string,"mime_type": string,"moderation": string,"sha256": string,"status": string,"taken_at": string | null,"updated_at": string,"width": number | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "blurhash"?: string | null,"bytes_display"?: number | null,"bytes_original"?: number | null,"bytes_thumb"?: number | null,"created_at"?: string,"duration_s"?: number | null,"event_id": string,"guest_id": string,"height"?: number | null,"id"?: string,"is_favorite"?: boolean,"key_display"?: string | null,"key_original"?: string | null,"key_thumb"?: string | null,"kind": string,"mime_type": string,"moderation"?: string,"sha256": string,"status"?: string,"taken_at"?: string | null,"updated_at"?: string,"width"?: number | null
+                    "blurhash"?: string | null,"bytes_display"?: number | null,"bytes_original"?: number | null,"bytes_thumb"?: number | null,"captured_at"?: never,"created_at"?: string,"duration_s"?: number | null,"event_id": string,"guest_id": string,"height"?: number | null,"id"?: string,"is_favorite"?: boolean,"key_display"?: string | null,"key_original"?: string | null,"key_thumb"?: string | null,"kind": string,"mime_type": string,"moderation"?: string,"sha256": string,"status"?: string,"taken_at"?: string | null,"updated_at"?: string,"width"?: number | null
                   }
                   Update: {
-                    "blurhash"?: string | null,"bytes_display"?: number | null,"bytes_original"?: number | null,"bytes_thumb"?: number | null,"created_at"?: string,"duration_s"?: number | null,"event_id"?: string,"guest_id"?: string,"height"?: number | null,"id"?: string,"is_favorite"?: boolean,"key_display"?: string | null,"key_original"?: string | null,"key_thumb"?: string | null,"kind"?: string,"mime_type"?: string,"moderation"?: string,"sha256"?: string,"status"?: string,"taken_at"?: string | null,"updated_at"?: string,"width"?: number | null
+                    "blurhash"?: string | null,"bytes_display"?: number | null,"bytes_original"?: number | null,"bytes_thumb"?: number | null,"captured_at"?: never,"created_at"?: string,"duration_s"?: number | null,"event_id"?: string,"guest_id"?: string,"height"?: number | null,"id"?: string,"is_favorite"?: boolean,"key_display"?: string | null,"key_original"?: string | null,"key_thumb"?: string | null,"kind"?: string,"mime_type"?: string,"moderation"?: string,"sha256"?: string,"status"?: string,"taken_at"?: string | null,"updated_at"?: string,"width"?: number | null
                   }
                   Relationships: [
                     {
@@ -99,6 +99,26 @@ isOneToOne: false
                   }
                   Relationships: [
                     
+                  ]
+                },"share_links": {
+                  Row: {
+                    "created_at": string,"created_by": string | null,"event_id": string,"id": string,"revoked_at": string | null,"token": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"created_by"?: string | null,"event_id": string,"id"?: string,"revoked_at"?: string | null,"token": string
+                  }
+                  Update: {
+                    "created_at"?: string,"created_by"?: string | null,"event_id"?: string,"id"?: string,"revoked_at"?: string | null,"token"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "share_links_event_id_fkey"
+      columns: ["event_id"]
+isOneToOne: false
+      referencedRelation: "events"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"uploads": {
                   Row: {
@@ -132,6 +152,11 @@ isOneToOne: true
 "event_upload_window":
 { Args: { "p_settings": Json }; Returns: {
               "closes_at": string,"opens_at": string
+            }[]
+                           },
+"gallery_guests":
+{ Args: { "p_event_id": string }; Returns: {
+              "display_name": string,"guest_id": string,"media_count": number
             }[]
                            },
 "is_admin":
