@@ -23,6 +23,18 @@ export const EVENT_CREATION_RATE_LIMIT: RateLimitRule = {
   windowSeconds: 60 * 60,
 };
 
+/** Upload reservations: 60 per minute per guest and 1 000 per minute per event (S-003). */
+export const GUEST_RESERVE_RATE_LIMIT: RateLimitRule = {
+  name: "upload-reserve-guest",
+  limit: 60,
+  windowSeconds: 60,
+};
+export const EVENT_RESERVE_RATE_LIMIT: RateLimitRule = {
+  name: "upload-reserve-event",
+  limit: 1000,
+  windowSeconds: 60,
+};
+
 type Fetcher = typeof fetch;
 
 const memoryWindows = new Map<string, { count: number; resetAt: number }>();
