@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 
-/** Standard page frame: skip link, header, main landmark, footer. */
-export function PageShell({ children }: { children: ReactNode }) {
+/** Standard page frame: skip link, header, main landmark, footer. `actions` replaces the header button. */
+export function PageShell({ children, actions }: { children: ReactNode; actions?: ReactNode }) {
   const t = useTranslations("layout");
 
   return (
@@ -15,7 +15,7 @@ export function PageShell({ children }: { children: ReactNode }) {
       >
         {t("skipToContent")}
       </a>
-      <SiteHeader />
+      <SiteHeader actions={actions} />
       <main id="contenu" className="flex flex-1 flex-col">
         {children}
       </main>

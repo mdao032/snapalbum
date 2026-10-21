@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { HeroVisual } from "@/components/marketing/hero-visual";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
@@ -36,9 +37,11 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             className="animate-fade-up mt-9 flex flex-col items-center gap-3 lg:items-start"
             style={{ animationDelay: "240ms" }}
           >
-            <Button size="lg" type="button">
-              {t("cta")}
-              <ArrowRight aria-hidden />
+            <Button asChild size="lg">
+              <Link href="/login">
+                {t("cta")}
+                <ArrowRight aria-hidden />
+              </Link>
             </Button>
             <p className="text-sm text-muted-foreground">{t("ctaHint")}</p>
           </div>

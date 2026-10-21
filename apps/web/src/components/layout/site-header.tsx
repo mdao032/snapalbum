@@ -1,11 +1,12 @@
 import { APP_NAME } from "@snapalbum/shared/brand";
 import { useTranslations } from "next-intl";
+import type { ReactNode } from "react";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "./language-switcher";
 
-export function SiteHeader() {
+export function SiteHeader({ actions }: { actions?: ReactNode }) {
   const t = useTranslations("layout");
 
   return (
@@ -20,10 +21,11 @@ export function SiteHeader() {
         </Link>
         <div className="flex items-center gap-2 sm:gap-3">
           <LanguageSwitcher />
-          {/* Account pages arrive in phase 1: until then the button is shown but inactive. */}
-          <Button type="button" className="hidden sm:inline-flex">
-            {t("createAlbum")}
-          </Button>
+          {actions ?? (
+            <Button asChild className="hidden sm:inline-flex">
+              <Link href="/login">{t("createAlbum")}</Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>
