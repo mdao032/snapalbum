@@ -243,6 +243,33 @@
       "failed": "We couldn’t add you to the album right now. Try again in a moment.",
       "joinedAs": "You are taking part as {name}.",
       "joinedAnonymous": "You are taking part in the album."
+    },
+    "upload": {
+      "title": "Send your photos",
+      "camera": "Take a photo",
+      "gallery": "Choose from gallery",
+      "keepOpen": "Keep this page open until sending is finished.",
+      "pendingBanner": "{count, plural, one {# file is waiting to be sent} other {# files are waiting to be sent}}. Keep this page open.",
+      "progress": "{sent} of {total} sent",
+      "allSent": "Everything is sent, thank you!",
+      "offline": "No connection: sending will resume by itself when it is back.",
+      "leaveWarning": "Some files have not been sent yet.",
+      "status": {
+        "queued": "Waiting",
+        "uploading": "Sending",
+        "sent": "Sent",
+        "failed": "Trying again soon",
+        "rejected": "Refused",
+        "waiting_quota": "Waiting for room"
+      },
+      "reasons": {
+        "unsupported_format": "This format is not supported on this device.",
+        "corrupted": "This file seems damaged.",
+        "album_full": "The album is full for now.",
+        "upload_failed": "Sending failed, trying again soon.",
+        "network_error": "Connection lost, trying again soon."
+      },
+      "retry": "Try again now"
     }
   },
   "dashboard": {

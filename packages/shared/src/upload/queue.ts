@@ -28,11 +28,11 @@ export function createQueueItem(id: string, now: number): QueueItem {
 }
 
 /** Items that can start now, oldest first, never exceeding the concurrency limit. */
-export function pickNextItems(
-  items: readonly QueueItem[],
+export function pickNextItems<T extends QueueItem>(
+  items: readonly T[],
   now: number,
   maxConcurrent: number = MAX_CONCURRENT_UPLOADS,
-): QueueItem[] {
+): T[] {
   const running = items.filter((i) => i.status === "uploading").length;
   const slots = Math.max(0, maxConcurrent - running);
   return items
@@ -41,17 +41,17 @@ export function pickNextItems(
     .slice(0, slots);
 }
 
-export function markUploading(item: QueueItem): QueueItem {
+export function markUploading<T extends QueueItem>(item: T): T {
   return { ...item, status: "uploading" };
 }
 
 /** The server confirmed the file: it may now be removed from local storage (NF-010). */
-export function markSent(item: QueueItem): QueueItem {
+export function markSent<T extends QueueItem>(item: T): T {
   return { ...item, status: "sent" };
 }
 
 /** Temporary failure (network, expired URL): schedule an exponential retry. */
-export function markFailed(item: QueueItem, now: number): QueueItem {
+export function markFailed<T extends QueueItem>(item: T, now: number): T {
   return {
     ...item,
     status: "failed",
@@ -60,16 +60,16 @@ export function markFailed(item: QueueItem, now: number): QueueItem {
   };
 }
 
-export function markRejected(item: QueueItem): QueueItem {
+export function markRejected<T extends QueueItem>(item: T): T {
   return { ...item, status: "rejected" };
 }
 
-export function markWaitingQuota(item: QueueItem): QueueItem {
+export function markWaitingQuota<T extends QueueItem>(item: T): T {
   return { ...item, status: "waiting_quota" };
 }
 
 /** Back to the queue when the connection returns or the organiser upgrades. */
-export function resetForRetry(item: QueueItem): QueueItem {
+export function resetForRetry<T extends QueueItem>(item: T): T {
   if (item.status === "sent" || item.status === "rejected") return item;
   return { ...item, status: "queued", retryAt: 0 };
 }

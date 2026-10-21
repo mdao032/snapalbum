@@ -243,6 +243,33 @@
       "failed": "Impossible de rejoindre l’album pour le moment. Réessayez dans un instant.",
       "joinedAs": "Vous participez en tant que {name}.",
       "joinedAnonymous": "Vous participez à l’album."
+    },
+    "upload": {
+      "title": "Envoyez vos photos",
+      "camera": "Prendre une photo",
+      "gallery": "Choisir dans la galerie",
+      "keepOpen": "Gardez cette page ouverte jusqu’à la fin de l’envoi.",
+      "pendingBanner": "{count, plural, one {# fichier attend d’être envoyé} other {# fichiers attendent d’être envoyés}}. Gardez cette page ouverte.",
+      "progress": "{sent} sur {total} envoyées",
+      "allSent": "Tout est envoyé, merci !",
+      "offline": "Pas de connexion : l’envoi reprendra tout seul dès son retour.",
+      "leaveWarning": "Des fichiers ne sont pas encore envoyés.",
+      "status": {
+        "queued": "En attente",
+        "uploading": "Envoi en cours",
+        "sent": "Envoyée",
+        "failed": "Nouvel essai bientôt",
+        "rejected": "Refusée",
+        "waiting_quota": "En attente de place"
+      },
+      "reasons": {
+        "unsupported_format": "Ce format n’est pas pris en charge sur cet appareil.",
+        "corrupted": "Ce fichier semble abîmé.",
+        "album_full": "L’album est plein pour le moment.",
+        "upload_failed": "L’envoi a échoué, nouvel essai bientôt.",
+        "network_error": "Connexion perdue, nouvel essai bientôt."
+      },
+      "retry": "Réessayer maintenant"
     }
   },
   "dashboard": {
