@@ -224,5 +224,51 @@
   "guest": {
     "comingSoonTitle": "L’envoi de photos ouvre bientôt",
     "comingSoonDescription": "L’organisateur prépare l’album. Repassez scanner le QR code dans quelques instants."
+  },
+  "dashboard": {
+    "stats": {
+      "title": "En un coup d’œil",
+      "photos": "Photos",
+      "videos": "Vidéos",
+      "guests": "Invités",
+      "space": "Espace utilisé",
+      "quotaTitle": "Place dans l’album",
+      "quotaUsed": "{used} sur {quota} fichiers",
+      "quotaRemaining": "{remaining, plural, =0 {Plus aucune place} one {Encore # place} other {Encore # places}}",
+      "videoLimit": "Cette offre accepte jusqu’à {max} vidéos.",
+      "warning": "L’album approche de sa limite.",
+      "full": "L’album est plein : les nouveaux envois sont refusés.",
+      "progressLabel": "Place utilisée dans l’album"
+    },
+    "settings": {
+      "title": "Paramètres de l’album",
+      "subtitle": "Qui voit les photos, et quand vos invités peuvent en envoyer.",
+      "galleryLabel": "Les invités peuvent voir la galerie",
+      "galleryHint": "Désactivé, chaque invité ne voit que ses propres photos.",
+      "approvalLabel": "Valider les photos avant leur affichage",
+      "approvalHint": "Les nouveaux envois attendent votre accord pour apparaître dans la galerie.",
+      "windowTitle": "Période d’envoi",
+      "opens": "Début des envois",
+      "closes": "Fin des envois",
+      "windowHint": "En dehors de cette période, les invités ne peuvent plus envoyer de photos. Heures de votre appareil.",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "saved": "Paramètres enregistrés.",
+      "invalid": "La fin des envois doit être après leur début.",
+      "failed": "Les paramètres n’ont pas pu être enregistrés. Réessayez.",
+      "loading": "Chargement des dates…"
+    },
+    "danger": {
+      "title": "Supprimer l’événement",
+      "description": "L’album, les photos et les vidéos sont supprimés définitivement au bout de 7 jours. Pendant ce délai, vous pouvez annuler.",
+      "start": "Supprimer l’événement",
+      "confirmTitle": "Supprimer « {title} » ?",
+      "confirmDescription": "Les invités ne pourront plus envoyer ni voir de photos. Tout sera supprimé définitivement le {date}. Vous pouvez annuler d’ici là.",
+      "confirm": "Oui, supprimer",
+      "keep": "Non, garder l’événement",
+      "pendingTitle": "Suppression prévue le {date}",
+      "pendingDescription": "Cet événement n’est plus accessible aux invités. Tout sera supprimé définitivement à cette date.",
+      "cancel": "Annuler la suppression"
+    }
   }
 }

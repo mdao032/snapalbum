@@ -54,3 +54,21 @@ export function isUploadWindowOpen(settings: EventSettings, now: Date): boolean 
     time >= Date.parse(settings.upload_opens_at) && time < Date.parse(settings.upload_closes_at)
   );
 }
+
+/**
+ * "Settings" form of the dashboard (F-015, F-016). The two instants come from the browser as ISO
+ * dates (the organiser's own time zone is applied there); the access code hash is never touched.
+ */
+export const updateEventSettingsSchema = z
+  .object({
+    gallery_visible: z.boolean(),
+    require_approval: z.boolean(),
+    upload_opens_at: z.iso.datetime(),
+    upload_closes_at: z.iso.datetime(),
+  })
+  .refine((s) => Date.parse(s.upload_opens_at) < Date.parse(s.upload_closes_at), {
+    message: "The upload window must open before it closes",
+    path: ["upload_closes_at"],
+  });
+
+export type UpdateEventSettingsInput = z.infer<typeof updateEventSettingsSchema>;

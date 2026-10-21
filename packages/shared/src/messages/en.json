@@ -224,5 +224,51 @@
   "guest": {
     "comingSoonTitle": "Photo uploads open soon",
     "comingSoonDescription": "The organiser is preparing the album. Scan the QR code again in a few moments."
+  },
+  "dashboard": {
+    "stats": {
+      "title": "At a glance",
+      "photos": "Photos",
+      "videos": "Videos",
+      "guests": "Guests",
+      "space": "Space used",
+      "quotaTitle": "Room in the album",
+      "quotaUsed": "{used} of {quota} files",
+      "quotaRemaining": "{remaining, plural, =0 {No room left} one {# place left} other {# places left}}",
+      "videoLimit": "This plan accepts up to {max} videos.",
+      "warning": "The album is getting close to its limit.",
+      "full": "The album is full: new uploads are refused.",
+      "progressLabel": "Room used in the album"
+    },
+    "settings": {
+      "title": "Album settings",
+      "subtitle": "Who sees the photos, and when your guests can upload.",
+      "galleryLabel": "Guests can see the gallery",
+      "galleryHint": "When off, each guest only sees their own photos.",
+      "approvalLabel": "Approve photos before they appear",
+      "approvalHint": "New uploads wait for your approval before showing in the gallery.",
+      "windowTitle": "Upload period",
+      "opens": "Uploads open",
+      "closes": "Uploads close",
+      "windowHint": "Outside this period guests can no longer upload. Times are from your device.",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Settings saved.",
+      "invalid": "Uploads must close after they open.",
+      "failed": "The settings couldn’t be saved. Try again.",
+      "loading": "Loading the dates…"
+    },
+    "danger": {
+      "title": "Delete the event",
+      "description": "The album, photos and videos are permanently deleted after 7 days. You can cancel during that time.",
+      "start": "Delete the event",
+      "confirmTitle": "Delete “{title}”?",
+      "confirmDescription": "Guests will no longer be able to upload or see photos. Everything is permanently deleted on {date}. You can cancel until then.",
+      "confirm": "Yes, delete",
+      "keep": "No, keep the event",
+      "pendingTitle": "Deletion scheduled for {date}",
+      "pendingDescription": "This event is no longer available to guests. Everything is permanently deleted on that date.",
+      "cancel": "Cancel the deletion"
+    }
   }
 }
