@@ -6,6 +6,7 @@ const valid = {
   NEXT_PUBLIC_SHORT_LINK_BASE: "https://s.example.test",
   NEXT_PUBLIC_SUPABASE_URL: "https://project.supabase.test",
   NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon",
+  NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: undefined,
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: undefined,
   NEXT_PUBLIC_SENTRY_DSN: "",
   NEXT_PUBLIC_POSTHOG_KEY: undefined,
