@@ -1,13 +1,25 @@
 "use client";
 
 import type { PlanId } from "@snapalbum/shared/plans";
-import type { UploadEngine, UploadItem } from "@snapalbum/shared/upload";
+import type { StorageProblem, UploadEngine, UploadItem } from "@snapalbum/shared/upload";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useRef, useState, type ChangeEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ChangeEvent,
+} from "react";
 import { Button } from "@/components/ui/button";
+import { readPendingFlag } from "@/lib/upload/pending-flag";
 
 // The join step (and its bot check) is only needed by a guest who has not joined yet.
+const LOOKS_IN_APP =
+  /; wv\)|Instagram|FB|WhatsApp|Snapchat|TikTok|Bytedance|Micro|Line\/|LinkedIn|Twitter/i;
+const noopSubscribe = () => () => undefined;
+const InAppNotice = dynamic(() => import("./in-app-notice").then((module) => module.InAppNotice));
 const JoinForm = dynamic(() => import("./join-form").then((module) => module.JoinForm));
 
 /** Reasons that have a message of their own; anything else falls back to a generic one. */
@@ -57,6 +69,15 @@ export function GuestExperience({
   const [showJoin, setShowJoin] = useState(false);
   const [items, setItems] = useState<readonly UploadItem[]>([]);
   const [online, setOnline] = useState(true);
+  const [storageProblem, setStorageProblem] = useState<StorageProblem | null>(null);
+  const [resumed, setResumed] = useState(0);
+  // A browser built into another app is only recognised once the page runs (NF-023); the quick
+  // test keeps the full detection out of the first load. False on the server and while hydrating.
+  const inApp = useSyncExternalStore(
+    noopSubscribe,
+    () => LOOKS_IN_APP.test(navigator.userAgent),
+    () => false,
+  );
   const engineRef = useRef<Promise<UploadEngine<File>> | null>(null);
   const engineSync = useRef<UploadEngine<File> | null>(null);
 
@@ -66,6 +87,7 @@ export function GuestExperience({
         eventCode,
         plan,
         onNeedJoin: () => setShowJoin(true),
+        onStorageProblem: setStorageProblem,
       });
       engineSync.current = engine;
       engine.subscribe(() => setItems(engine.getItems()));
@@ -96,6 +118,24 @@ export function GuestExperience({
     sent: items.filter((item) => item.status === "sent").length,
     waiting: items.filter((item) => item.status !== "sent" && item.status !== "rejected").length,
   };
+
+  // Files left on the device by an earlier visit (closed tab, crash) are taken back and sent (NF-010).
+  useEffect(() => {
+    if (!readPendingFlag(eventCode)) return;
+    getEngine()
+      .then((engine) => engine.restore())
+      .then((count) => setResumed(count))
+      .catch(() => undefined);
+  }, [eventCode, getEngine]);
+
+  // Back on the page: try what was waiting again right away (NF-011).
+  useEffect(() => {
+    const show = () => {
+      if (document.visibilityState === "visible") engineSync.current?.retryNow();
+    };
+    document.addEventListener("visibilitychange", show);
+    return () => document.removeEventListener("visibilitychange", show);
+  }, []);
 
   // Connection back: try everything that was waiting again right away (NF-011).
   useEffect(() => {
@@ -166,6 +206,24 @@ export function GuestExperience({
           </label>
         </Button>
       </div>
+
+      {inApp ? <InAppNotice /> : null}
+
+      {storageProblem ? (
+        <p role="status" className="rounded-xl bg-warm-soft px-4 py-3 text-center font-medium">
+          {t(
+            storageProblem === "storage_full"
+              ? "upload.storage.full"
+              : "upload.storage.unavailable",
+          )}
+        </p>
+      ) : null}
+
+      {resumed > 0 ? (
+        <p role="status" className="text-center font-medium">
+          {t("upload.resumed", { count: resumed })}
+        </p>
+      ) : null}
 
       {!online ? (
         <p role="status" className="rounded-xl bg-warm-soft px-4 py-3 text-center font-medium">

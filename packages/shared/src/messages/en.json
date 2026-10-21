@@ -271,7 +271,19 @@
         "upload_failed": "Sending failed, trying again soon.",
         "network_error": "Connection lost, trying again soon."
       },
-      "retry": "Try again now"
+      "retry": "Try again now",
+      "resumed": "{count, plural, one {Resuming # upload left in progress.} other {Resuming # uploads left in progress.}}",
+      "storage": {
+        "full": "This phone’s storage is full. Send fewer files at a time.",
+        "unavailable": "A backup copy cannot be kept here: keep this page open until the upload is finished."
+      },
+      "inApp": {
+        "title": "Open this link in your browser",
+        "text": "Inside an app, uploads can be limited or stop when you leave it. To send your photos without trouble, open this page in your phone’s browser.",
+        "open": "Open in browser",
+        "copy": "Copy link",
+        "copied": "Link copied. Paste it into Safari or Chrome."
+      }
     }
   },
   "dashboard": {

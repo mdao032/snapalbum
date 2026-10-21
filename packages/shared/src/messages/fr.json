@@ -271,7 +271,19 @@
         "upload_failed": "L’envoi a échoué, nouvel essai bientôt.",
         "network_error": "Connexion perdue, nouvel essai bientôt."
       },
-      "retry": "Réessayer maintenant"
+      "retry": "Réessayer maintenant",
+      "resumed": "{count, plural, one {Reprise de # envoi laissé en cours.} other {Reprise de # envois laissés en cours.}}",
+      "storage": {
+        "full": "Le stockage de ce téléphone est plein. Envoyez moins de fichiers à la fois.",
+        "unavailable": "Impossible de garder une copie de sauvegarde ici : gardez cette page ouverte jusqu’à la fin de l’envoi."
+      },
+      "inApp": {
+        "title": "Ouvrez ce lien dans votre navigateur",
+        "text": "Dans une appli, l’envoi peut être limité ou s’arrêter si vous la quittez. Pour envoyer vos photos sans souci, ouvrez cette page dans le navigateur de votre téléphone.",
+        "open": "Ouvrir dans le navigateur",
+        "copy": "Copier le lien",
+        "copied": "Lien copié. Collez-le dans Safari ou Chrome."
+      }
     }
   },
   "dashboard": {
