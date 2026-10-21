@@ -25,11 +25,11 @@ export function LogoMark({ className }: { className?: string }) {
   );
 }
 
-export function Logo({ className }: { className?: string }) {
+export function Logo({ className, nameClassName }: { className?: string; nameClassName?: string }) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <LogoMark />
-      <span className="text-lg font-semibold tracking-tight">{APP_NAME}</span>
+      <span className={cn("text-lg font-semibold tracking-tight", nameClassName)}>{APP_NAME}</span>
     </span>
   );
 }

@@ -1,4 +1,4 @@
-import { LogOut, UserRound } from "lucide-react";
+import { CalendarDays, LogOut, UserRound } from "lucide-react";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -22,6 +22,12 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
     <PageShell
       actions={
         <nav aria-label={t("primary")} className="flex items-center gap-1 sm:gap-2">
+          <Button asChild variant="ghost" className="px-3 sm:px-5">
+            <Link href="/events">
+              <CalendarDays aria-hidden />
+              <span className="sr-only sm:not-sr-only">{t("events")}</span>
+            </Link>
+          </Button>
           <Button asChild variant="ghost" className="px-3 sm:px-5">
             <Link href="/account">
               <UserRound aria-hidden />

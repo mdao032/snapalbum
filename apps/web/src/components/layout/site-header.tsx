@@ -17,7 +17,8 @@ export function SiteHeader({ actions }: { actions?: ReactNode }) {
           aria-label={t("homeLink", { appName: APP_NAME })}
           className="-ml-1 rounded-lg p-1"
         >
-          <Logo />
+          {/* With the signed-in menu, the name gives way to the mark on narrow screens. */}
+          <Logo nameClassName={actions ? "hidden min-[560px]:inline" : undefined} />
         </Link>
         <div className="flex items-center gap-2 sm:gap-3">
           <LanguageSwitcher />

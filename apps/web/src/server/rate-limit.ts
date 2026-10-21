@@ -16,6 +16,13 @@ export interface RateLimitResult {
 /** Sign-in requests: 5 per 15 minutes per IP address (S-003). */
 export const LOGIN_RATE_LIMIT: RateLimitRule = { name: "login", limit: 5, windowSeconds: 15 * 60 };
 
+/** Event creation: 10 per hour per account (S-003). */
+export const EVENT_CREATION_RATE_LIMIT: RateLimitRule = {
+  name: "event-creation",
+  limit: 10,
+  windowSeconds: 60 * 60,
+};
+
 type Fetcher = typeof fetch;
 
 const memoryWindows = new Map<string, { count: number; resetAt: number }>();

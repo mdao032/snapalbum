@@ -6,6 +6,7 @@ import {
   defaultEventSettings,
   generatePublicCode,
   makeAccentReadable,
+  updateEventSchema,
   type CreateEventInput,
 } from "@snapalbum/shared";
 import type { Database } from "@snapalbum/shared/db-types";
@@ -84,4 +85,40 @@ export async function listOwnEvents(client: Client): Promise<EventRow[]> {
     .order("event_date", { ascending: false });
   if (error) throw error;
   return data;
+}
+
+/** One of the organiser's events, or null (also when it belongs to someone else: RLS hides it). */
+export async function getOwnEvent(client: Client, eventId: string): Promise<EventRow | null> {
+  const { data, error } = await client.from("events").select("*").eq("id", eventId).maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export type UpdateEventResult = { ok: true; event: EventRow } | { ok: false; reason: "not_found" };
+
+/**
+ * Saves the presentation of an event (F-011). Pass the USER client: RLS and column privileges
+ * decide what may change, and an event that is not active or not theirs updates zero rows.
+ */
+export async function updateEventPresentation(
+  client: Client,
+  eventId: string,
+  rawInput: unknown,
+): Promise<UpdateEventResult> {
+  const input = updateEventSchema.parse(rawInput);
+  const { data, error } = await client
+    .from("events")
+    .update({
+      title: input.title,
+      type: input.type,
+      locale: input.locale,
+      welcome_message: input.welcomeMessage,
+      // White text on the accent must stay readable (F-011): darken it if needed.
+      accent_color: input.accentColor ? makeAccentReadable(input.accentColor) : null,
+    })
+    .eq("id", eventId)
+    .select()
+    .maybeSingle();
+  if (error) throw error;
+  return data ? { ok: true, event: data } : { ok: false, reason: "not_found" };
 }

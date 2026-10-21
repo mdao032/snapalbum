@@ -1,7 +1,7 @@
 import { stripLocalePrefix } from "@snapalbum/shared";
 
 /** Pages reserved to signed-in organisers: the `(app)` route group, without the language prefix. */
-const APP_PREFIXES = ["/account"] as const;
+const APP_PREFIXES = ["/account", "/events"] as const;
 /** Pages reserved to administrators: the `(admin)` route group. The role check lives in the page. */
 const ADMIN_PREFIXES = ["/admin"] as const;
 
