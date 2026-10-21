@@ -15,7 +15,8 @@
     "./messages/fr.json": "./src/messages/fr.json",
     "./messages/en.json": "./src/messages/en.json",
     "./db-types": "./src/db-types.ts",
-    "./events": "./src/events/index.ts"
+    "./events": "./src/events/index.ts",
+    "./auth": "./src/auth/index.ts"
   },
   "scripts": {
     "lint": "eslint .",

@@ -76,5 +76,56 @@
     "emptyTitle": "Rien à voir pour le moment",
     "emptyDescription": "Ce que vous cherchez apparaîtra ici.",
     "loadingLabel": "Chargement en cours"
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion à votre espace",
+      "subtitle": "Entrez votre adresse e-mail : nous vous envoyons un lien pour vous connecter, sans mot de passe.",
+      "emailLabel": "Adresse e-mail",
+      "emailPlaceholder": "vous@exemple.fr",
+      "submit": "Recevoir mon lien de connexion",
+      "sending": "Envoi en cours…",
+      "or": "ou",
+      "google": "Continuer avec Google",
+      "googleOpening": "Ouverture de Google…",
+      "newHere": "Première visite ? Votre compte est créé automatiquement à la première connexion.",
+      "guestHint": "Vous êtes invité à un événement ? Scannez simplement le QR code, aucun compte n’est nécessaire."
+    },
+    "checkEmail": {
+      "title": "Vérifiez vos e-mails",
+      "description": "Un lien de connexion vient d’être envoyé à {email}. Il reste valable 1 heure.",
+      "resent": "Un nouveau lien vient d’être envoyé à {email}.",
+      "hint": "Rien reçu ? Regardez dans vos courriers indésirables, puis demandez un nouveau lien.",
+      "resend": "Renvoyer le lien",
+      "change": "Utiliser une autre adresse"
+    },
+    "errors": {
+      "invalid_email": "Cette adresse e-mail ne semble pas valide.",
+      "link_expired": "Ce lien de connexion a expiré ou a déjà été utilisé. Demandez-en un nouveau ci-dessous.",
+      "oauth_failed": "La connexion avec Google n’a pas abouti. Réessayez ou recevez un lien par e-mail.",
+      "captcha_failed": "La vérification de sécurité a échoué. Rechargez la page puis réessayez.",
+      "send_failed": "Impossible d’envoyer le lien pour le moment. Réessayez dans un instant."
+    }
+  },
+  "account": {
+    "title": "Mon compte",
+    "subtitle": "Vos informations personnelles.",
+    "emailLabel": "Adresse e-mail",
+    "emailHint": "Elle sert à vous connecter et ne peut pas être modifiée ici.",
+    "nameLabel": "Nom affiché",
+    "nameHint": "Facultatif.",
+    "namePlaceholder": "Léa Martin",
+    "localeLabel": "Langue préférée",
+    "localeHint": "Langue de l’interface et des e-mails que nous vous envoyons.",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "saved": "Vos modifications sont enregistrées.",
+    "saveError": "Vos modifications n’ont pas pu être enregistrées. Réessayez.",
+    "signOut": "Se déconnecter"
+  },
+  "nav": {
+    "signIn": "Se connecter",
+    "account": "Mon compte",
+    "primary": "Navigation principale"
   }
 }

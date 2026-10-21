@@ -76,5 +76,56 @@
     "emptyTitle": "Nothing to see yet",
     "emptyDescription": "What you are looking for will show up here.",
     "loadingLabel": "Loading"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in to your space",
+      "subtitle": "Enter your email address: we send you a link to sign in, no password needed.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "submit": "Email me a sign-in link",
+      "sending": "Sending…",
+      "or": "or",
+      "google": "Continue with Google",
+      "googleOpening": "Opening Google…",
+      "newHere": "First visit? Your account is created automatically the first time you sign in.",
+      "guestHint": "Invited to an event? Just scan the QR code, no account needed."
+    },
+    "checkEmail": {
+      "title": "Check your email",
+      "description": "A sign-in link has just been sent to {email}. It stays valid for 1 hour.",
+      "resent": "A new link has just been sent to {email}.",
+      "hint": "Nothing yet? Look in your spam folder, then ask for a new link.",
+      "resend": "Send the link again",
+      "change": "Use another address"
+    },
+    "errors": {
+      "invalid_email": "This email address doesn’t look valid.",
+      "link_expired": "This sign-in link has expired or was already used. Ask for a new one below.",
+      "oauth_failed": "Signing in with Google didn’t work. Try again or get a link by email.",
+      "captcha_failed": "The security check failed. Reload the page and try again.",
+      "send_failed": "We couldn’t send the link right now. Try again in a moment."
+    }
+  },
+  "account": {
+    "title": "My account",
+    "subtitle": "Your personal information.",
+    "emailLabel": "Email address",
+    "emailHint": "It is used to sign you in and can’t be changed here.",
+    "nameLabel": "Display name",
+    "nameHint": "Optional.",
+    "namePlaceholder": "Léa Martin",
+    "localeLabel": "Preferred language",
+    "localeHint": "Language of the interface and of the emails we send you.",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Your changes are saved.",
+    "saveError": "Your changes couldn’t be saved. Try again.",
+    "signOut": "Sign out"
+  },
+  "nav": {
+    "signIn": "Sign in",
+    "account": "My account",
+    "primary": "Main navigation"
   }
 }
