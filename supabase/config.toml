@@ -197,7 +197,7 @@ password_requirements = ""
 
 [auth.rate_limit]
 # Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
-email_sent = 2
+email_sent = 200
 # Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
 sms_sent = 30
 # Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
@@ -243,6 +243,17 @@ otp_expiry = 3600
 # pass = "env(SENDGRID_API_KEY)"
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
+
+# Sign-in e-mails (F-001). New people receive the "confirmation" template, returning ones the
+# "magic_link" template: both use the same file. The link carries a `token_hash` so it works from
+# any device. Production uses the same HTML, pasted in Supabase (docs/setup.md).
+[auth.email.template.confirmation]
+subject = "Votre lien de connexion Snapalbum / Your Snapalbum sign-in link"
+content_path = "./supabase/templates/magic_link.html"
+
+[auth.email.template.magic_link]
+subject = "Votre lien de connexion Snapalbum / Your Snapalbum sign-in link"
+content_path = "./supabase/templates/magic_link.html"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]
@@ -333,6 +344,17 @@ url = ""
 # If enabled, the nonce check will be skipped. Required for local sign in with Google auth.
 skip_nonce_check = false
 # If enabled, it will allow the user to successfully authenticate when the provider does not return an email address.
+email_optional = false
+
+# Google sign-in (F-002). Disabled locally; production values are set in the Supabase dashboard.
+# To try it locally, export the two variables below and set enabled = true.
+[auth.external.google]
+enabled = false
+client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
+redirect_uri = ""
+url = ""
+skip_nonce_check = false
 email_optional = false
 
 # Allow Solana wallet holders to sign in to your project via the Sign in with Solana (SIWS, EIP-4361) standard.
