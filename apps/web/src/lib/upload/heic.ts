@@ -4,7 +4,7 @@ import type { HeifModule } from "./libheif-types";
  * HEIC decoding for the browsers that cannot read it themselves (everything but Safari). It runs
  * libheif compiled to WebAssembly (`libheif-js`, LGPL-3.0, about 1.9 MB), which is loaded here and
  * nowhere else: a guest whose browser reads HEIC natively, and every other format, never download
- * it (SPEC 8.1, `docs/decisions.md`).
+ * it (SPEC 8.1, `decisions.md`).
  */
 
 export interface DecodedHeic {

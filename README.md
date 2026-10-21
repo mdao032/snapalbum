@@ -6,7 +6,7 @@ Snapalbum est un nom provisoire, défini dans `packages/shared/src/brand.ts`.
 
 ## Démarrage en 5 commandes
 
-Prérequis : Node.js 22+, pnpm 12, Git, Docker (voir [docs/setup.md](docs/setup.md)).
+Prérequis : Node.js 22+, pnpm 12, Git, Docker (guide d'installation tenu hors du dépôt).
 
 ```bash
 git clone https://github.com/mdao032/snapalbum && cd snapalbum
@@ -47,5 +47,3 @@ docs             décisions, journal, installation, tests manuels, RGPD
 - [SPEC.md](SPEC.md) : cahier des charges
 - [ROADMAP.md](ROADMAP.md) : plan de réalisation par phases
 - [CLAUDE.md](CLAUDE.md) : règles de travail
-- [docs/setup.md](docs/setup.md) : installation pas à pas
-- [docs/decisions.md](docs/decisions.md) : décisions techniques

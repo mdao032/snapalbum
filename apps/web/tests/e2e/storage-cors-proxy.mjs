@@ -1,4 +1,4 @@
-// Puts the CORS answers of a real bucket (see docs/r2-cors.json) in front of the local S3 emulator,
+// Puts the CORS answers of a real bucket (see r2-cors.json) in front of the local S3 emulator,
 // which has none: the browser sends photos to it from another origin during the end-to-end tests.
 import http from "node:http";
 

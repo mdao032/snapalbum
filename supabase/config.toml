@@ -246,7 +246,7 @@ otp_expiry = 3600
 
 # Sign-in e-mails (F-001). New people receive the "confirmation" template, returning ones the
 # "magic_link" template: both use the same file. The link carries a `token_hash` so it works from
-# any device. Production uses the same HTML, pasted in Supabase (docs/setup.md).
+# any device. Production uses the same HTML, pasted in Supabase (setup.md).
 [auth.email.template.confirmation]
 subject = "Votre lien de connexion Snapalbum / Your Snapalbum sign-in link"
 content_path = "./supabase/templates/magic_link.html"
