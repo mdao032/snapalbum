@@ -32,3 +32,32 @@ export function defaultCoverBackground(accentColor: string | null): string {
 export function todayIsoDate(now: Date = new Date()): string {
   return now.toISOString().slice(0, 10);
 }
+
+/** An instant as a long calendar date in the viewer's language (UTC, like event dates). */
+export function formatInstantDate(instant: string | Date, locale: string): string {
+  return new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(
+    typeof instant === "string" ? new Date(instant) : instant,
+  );
+}
+
+const BYTE_UNITS = {
+  fr: ["o", "Ko", "Mo", "Go", "To"],
+  en: ["B", "KB", "MB", "GB", "TB"],
+} as const;
+
+/** `1536` as "1,5 Ko" / "1.5 KB": binary steps, one decimal from the megabyte up. */
+export function formatBytes(bytes: number, locale: string): string {
+  const units = locale === "en" ? BYTE_UNITS.en : BYTE_UNITS.fr;
+  let value = Math.max(0, bytes);
+  let unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit += 1;
+  }
+  const digits = unit >= 2 ? 1 : 0;
+  const number = new Intl.NumberFormat(locale, {
+    maximumFractionDigits: digits,
+    minimumFractionDigits: 0,
+  }).format(value);
+  return `${number}\u00a0${units[unit]}`;
+}

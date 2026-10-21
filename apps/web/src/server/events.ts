@@ -1,5 +1,7 @@
 import "server-only";
 import {
+  canCancelDeletion,
+  canRequestDeletion,
   checkEventCreationQuota,
   computeExpiresAt,
   createEventSchema,
@@ -8,6 +10,7 @@ import {
   makeAccentReadable,
   publicCodeSchema,
   updateEventSchema,
+  updateEventSettingsSchema,
   type CreateEventInput,
 } from "@snapalbum/shared";
 import type { Database } from "@snapalbum/shared/db-types";
@@ -146,4 +149,111 @@ export async function getPublicEvent(
     .maybeSingle();
   if (error) throw error;
   return data;
+}
+
+export type SettingsResult = { ok: true; event: EventRow } | { ok: false; reason: "not_found" };
+
+/**
+ * Saves the visibility and upload-window settings (F-015, F-016). Pass the USER client (RLS). The
+ * organiser's form never carries the access code hash, so the stored settings are merged, not
+ * replaced.
+ */
+export async function updateEventSettings(
+  client: Client,
+  eventId: string,
+  rawInput: unknown,
+): Promise<SettingsResult> {
+  const input = updateEventSettingsSchema.parse(rawInput);
+  const current = await getOwnEvent(client, eventId);
+  if (!current) return { ok: false, reason: "not_found" };
+
+  const existing =
+    current.settings && typeof current.settings === "object" && !Array.isArray(current.settings)
+      ? current.settings
+      : {};
+  const { data, error } = await client
+    .from("events")
+    .update({ settings: { ...existing, ...input } })
+    .eq("id", eventId)
+    .select()
+    .maybeSingle();
+  if (error) throw error;
+  return data ? { ok: true, event: data } : { ok: false, reason: "not_found" };
+}
+
+export type DeletionResult = { ok: true } | { ok: false; reason: "not_found" | "not_allowed" };
+
+async function findOwnedEvent(admin: Client, ownerId: string, eventId: string) {
+  const { data, error } = await admin
+    .from("events")
+    .select("id, status, deleted_at")
+    .eq("id", eventId)
+    .eq("owner_id", ownerId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Starts the deletion of an event (R5): it disappears for guests at once and is purged after 7
+ * days unless cancelled. Uses the ADMIN client because organisers cannot write `status`; the
+ * ownership check is part of the query. The purge itself is a scheduled job (phase 4).
+ */
+export async function requestEventDeletion(
+  admin: Client,
+  ownerId: string,
+  eventId: string,
+  now: Date = new Date(),
+): Promise<DeletionResult> {
+  const event = await findOwnedEvent(admin, ownerId, eventId);
+  if (!event) return { ok: false, reason: "not_found" };
+  if (!canRequestDeletion(event)) return { ok: false, reason: "not_allowed" };
+
+  const { data, error } = await admin
+    .from("events")
+    .update({ status: "pending_deletion", deleted_at: now.toISOString() })
+    .eq("id", eventId)
+    .eq("owner_id", ownerId)
+    .eq("status", "active")
+    .select("id");
+  if (error) throw error;
+  return data.length > 0 ? { ok: true } : { ok: false, reason: "not_allowed" };
+}
+
+/** Cancels a pending deletion while the 7 days have not run out (R5). */
+export async function cancelEventDeletion(
+  admin: Client,
+  ownerId: string,
+  eventId: string,
+  now: Date = new Date(),
+): Promise<DeletionResult> {
+  const event = await findOwnedEvent(admin, ownerId, eventId);
+  if (!event) return { ok: false, reason: "not_found" };
+  if (!canCancelDeletion(event, now)) return { ok: false, reason: "not_allowed" };
+
+  const { data, error } = await admin
+    .from("events")
+    .update({ status: "active", deleted_at: null })
+    .eq("id", eventId)
+    .eq("owner_id", ownerId)
+    .eq("status", "pending_deletion")
+    .select("id");
+  if (error) throw error;
+  return data.length > 0 ? { ok: true } : { ok: false, reason: "not_allowed" };
+}
+
+export interface EventStats {
+  photos: number;
+  videos: number;
+  guests: number;
+  bytesUsed: number;
+}
+
+/**
+ * The dashboard counters (F-018). Until the media and guest tables arrive with phase 2, nothing
+ * can be uploaded, so the counters come from the columns of `events` and videos and guests are 0.
+ * Phase 2 replaces this body with real counts; callers do not change.
+ */
+export function getEventStats(event: Pick<EventRow, "media_count" | "bytes_used">): EventStats {
+  return { photos: event.media_count, videos: 0, guests: 0, bytesUsed: event.bytes_used };
 }
