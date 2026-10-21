@@ -56,6 +56,8 @@ test.describe("connexion par lien magique", () => {
     expect(mail.html).toContain("Me connecter");
     await page.goto(linkOnTestServer(mail.link, test.info().project.use.baseURL));
 
+    await expect(page).toHaveURL(/\/events$/);
+    await page.getByRole("link", { name: "Mon compte" }).click();
     await expect(page).toHaveURL(/\/account$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Mon compte");
     await expect(page.getByLabel("Adresse e-mail")).toHaveValue(email);
@@ -80,7 +82,7 @@ test.describe("connexion par lien magique", () => {
     const phone = await browser.newContext();
     const phonePage = await phone.newPage();
     await phonePage.goto(linkOnTestServer(mail.link, test.info().project.use.baseURL));
-    await expect(phonePage).toHaveURL(/\/account$/);
+    await expect(phonePage).toHaveURL(/\/events$/);
     await phone.close();
   });
 
@@ -95,7 +97,7 @@ test.describe("connexion par lien magique", () => {
     );
 
     await page.goto(link);
-    await expect(page).toHaveURL(/\/account$/);
+    await expect(page).toHaveURL(/\/events$/);
     await page.getByRole("button", { name: "Se déconnecter" }).click();
     await expect(page).toHaveURL(/\/$/);
 
@@ -135,8 +137,8 @@ test.describe("connexion par lien magique", () => {
     expect(mail.subject).toContain("sign-in link");
     expect(mail.html).toContain("Your sign-in link");
     await page.goto(linkOnTestServer(mail.link, test.info().project.use.baseURL));
-    await expect(page).toHaveURL(/\/en\/account$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("My account");
+    await expect(page).toHaveURL(/\/en\/events$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("My events");
   });
 
   test("F-001: on peut redemander un lien ou changer d'adresse", async ({ page }) => {
@@ -181,7 +183,8 @@ test.describe("page Mon compte", () => {
     await requestLink(page, email);
     const mail = await waitForSignInEmail(email);
     await page.goto(linkOnTestServer(mail.link, test.info().project.use.baseURL));
-    await expect(page).toHaveURL(/\/account$/);
+    await expect(page).toHaveURL(/\/events$/);
+    await page.goto("/account");
 
     await page.getByLabel("Nom affiché").fill("Léa Martin");
     await page.getByRole("button", { name: "Enregistrer" }).click();
@@ -203,6 +206,8 @@ test.describe("page Mon compte", () => {
     await page.goto(
       linkOnTestServer((await waitForSignInEmail(email)).link, test.info().project.use.baseURL),
     );
+    await expect(page).toHaveURL(/\/events$/);
+    await page.goto("/account");
     for (const name of ["Mon compte", "Se déconnecter", "Enregistrer"]) {
       const box = await page
         .getByRole(name === "Mon compte" ? "link" : "button", { name })

@@ -57,9 +57,9 @@ describe("F-001: lien de retour de connexion", () => {
 
   it("F-001: n'accepte jamais une redirection vers un autre site", () => {
     const url = new URL(buildConfirmUrl(SITE, "fr", "https://evil.example"));
-    expect(url.searchParams.get("next")).toBe("/account");
+    expect(url.searchParams.get("next")).toBe("/events");
     const english = new URL(buildConfirmUrl(SITE, "en", "//evil.example"));
-    expect(english.searchParams.get("next")).toBe("/en/account");
+    expect(english.searchParams.get("next")).toBe("/en/events");
   });
 });
 

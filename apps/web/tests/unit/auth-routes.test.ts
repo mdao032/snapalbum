@@ -6,6 +6,8 @@ describe("F-001: pages protégées", () => {
     expect(protectedAreaOf("/account")).toBe("app");
     expect(protectedAreaOf("/en/account")).toBe("app");
     expect(protectedAreaOf("/account/delete")).toBe("app");
+    expect(protectedAreaOf("/events")).toBe("app");
+    expect(protectedAreaOf("/en/events/new")).toBe("app");
   });
 
   it("F-001: l'administration est une zone à part", () => {

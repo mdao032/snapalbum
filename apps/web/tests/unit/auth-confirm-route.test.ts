@@ -31,9 +31,9 @@ describe("F-001: retour du lien magique", () => {
     expect(location(response).pathname + location(response).search).toBe("/account?tab=1");
   });
 
-  it("F-001: sans page demandée, va à Mon compte dans la langue de la demande", async () => {
+  it("F-001: sans page demandée, va à Mes événements dans la langue de la demande", async () => {
     const response = await call("token_hash=abc&type=email&locale=en");
-    expect(location(response).pathname).toBe("/en/account");
+    expect(location(response).pathname).toBe("/en/events");
   });
 
   it("F-001: un lien expiré ou déjà utilisé ramène à la connexion avec un message", async () => {
@@ -51,7 +51,7 @@ describe("F-001: retour du lien magique", () => {
         `token_hash=abc&type=email&locale=fr&next=${encodeURIComponent(next)}`,
       );
       expect(location(response).origin).toBe("https://app.example.test");
-      expect(location(response).pathname).toBe("/account");
+      expect(location(response).pathname).toBe("/events");
     }
   });
 

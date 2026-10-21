@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test as base, type Page } from "@playwright/test";
+import { expect, test as base, type Browser, type Page } from "@playwright/test";
 
 /** NF-030: every page checked by an end-to-end test must have no detectable WCAG A/AA issue. */
 export async function expectNoAccessibilityViolations(page: Page): Promise<void> {
@@ -85,3 +85,22 @@ export const test = base.extend({
 });
 
 export { expect };
+
+/** Signs a fresh organiser in through the real flow (form, e-mail, link) and returns the address. */
+export async function signIn(page: Page, loginPath = "/login"): Promise<string> {
+  const email = uniqueEmail();
+  await page.goto(loginPath);
+  await page.getByLabel(/Adresse e-mail|Email address/).fill(email);
+  await page.getByRole("button", { name: /Recevoir mon lien|Email me a sign-in link/ }).click();
+  const mail = await waitForSignInEmail(email);
+  await page.goto(linkOnTestServer(mail.link, test.info().project.use.baseURL));
+  await expect(page).toHaveURL(/\/events$/);
+  return email;
+}
+
+/** A page of a brand-new browser context: another person, on another connection. */
+export async function newVisitor(browser: Browser): Promise<Page> {
+  const context = await browser.newContext({ locale: "fr-FR", reducedMotion: "reduce" });
+  await context.setExtraHTTPHeaders({ "x-forwarded-for": randomIp() });
+  return context.newPage();
+}
