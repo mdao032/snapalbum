@@ -2,11 +2,14 @@ import type { z } from "zod";
 import {
   apiErrorBodySchema,
   completeUploadResponseSchema,
+  joinEventResponseSchema,
   multipartResponseSchema,
   reserveUploadResponseSchema,
   type ApiErrorCode,
   type CompleteUploadRequest,
   type CompleteUploadResponse,
+  type JoinEventRequest,
+  type JoinEventResponse,
   type MultipartRequest,
   type MultipartResponse,
   type ReserveUploadRequest,
@@ -34,6 +37,8 @@ export class ApiError extends Error {
 }
 
 export interface ApiClient {
+  /** A guest joins an event: opens the anonymous session and records the guest (F-033 to F-035). */
+  joinEvent(body: JoinEventRequest): Promise<JoinEventResponse>;
   reserveUpload(body: ReserveUploadRequest): Promise<ReserveUploadResponse>;
   completeUpload(body: CompleteUploadRequest): Promise<CompleteUploadResponse>;
   /** Large videos, sent in parts (NF-013). The answer carries the same `action` as the request. */
@@ -81,6 +86,7 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
   }
 
   return {
+    joinEvent: (body) => post("/api/guests/join", body, joinEventResponseSchema),
     reserveUpload: (body) => post("/api/uploads/reserve", body, reserveUploadResponseSchema),
     completeUpload: (body) => post("/api/uploads/complete", body, completeUploadResponseSchema),
     multipart: (body) => post("/api/uploads/multipart", body, multipartResponseSchema),

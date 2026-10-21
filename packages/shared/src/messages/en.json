@@ -50,7 +50,10 @@
     "invalid_response": "Unexpected response from the server. Try again.",
     "terms_required": "You need to accept the terms first.",
     "upload_incomplete": "The upload isn’t finished. We’re trying again.",
-    "invalid_file": "This file isn’t a valid photo or video."
+    "invalid_file": "This file isn’t a valid photo or video.",
+    "access_code_required": "This event asks for an access code.",
+    "access_code_invalid": "That code isn’t right.",
+    "captcha_failed": "The security check failed. Reload the page and try again."
   },
   "upload": {
     "status": {
@@ -225,7 +228,22 @@
   },
   "guest": {
     "comingSoonTitle": "Photo uploads open soon",
-    "comingSoonDescription": "The organiser is preparing the album. Scan the QR code again in a few moments."
+    "comingSoonDescription": "The organiser is preparing the album. Scan the QR code again in a few moments.",
+    "join": {
+      "title": "Join the album",
+      "subtitle": "It takes a few seconds, no account and no app.",
+      "nameLabel": "Your first name (optional)",
+      "nameHint": "It is shown to the organiser next to your photos.",
+      "codeLabel": "Access code",
+      "codeHint": "The organiser gave it to you.",
+      "termsLabel": "I agree that my photos and videos are kept during the event and visible to the organiser.",
+      "termsRequired": "Tick the box to continue.",
+      "submit": "Join",
+      "submitting": "One moment…",
+      "failed": "We couldn’t add you to the album right now. Try again in a moment.",
+      "joinedAs": "You are taking part as {name}.",
+      "joinedAnonymous": "You are taking part in the album."
+    }
   },
   "dashboard": {
     "stats": {
@@ -258,7 +276,12 @@
       "saved": "Settings saved.",
       "invalid": "Uploads must close after they open.",
       "failed": "The settings couldn’t be saved. Try again.",
-      "loading": "Loading the dates…"
+      "loading": "Loading the dates…",
+      "accessCodeLabel": "Access code (optional)",
+      "accessCodeHint": "4 to 6 digits, asked from your guests before their first upload. Write it down: it can’t be read back.",
+      "accessCodeActive": "An access code is set. Enter another one to replace it.",
+      "accessCodeRemove": "Remove the access code",
+      "invalidCode": "The access code must have 4 to 6 digits."
     },
     "danger": {
       "title": "Delete the event",

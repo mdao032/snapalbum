@@ -50,7 +50,10 @@
     "invalid_response": "Réponse inattendue du serveur. Réessayez.",
     "terms_required": "Vous devez d’abord accepter les conditions.",
     "upload_incomplete": "L’envoi n’est pas terminé. Nous réessayons.",
-    "invalid_file": "Ce fichier n’est pas une photo ou une vidéo valide."
+    "invalid_file": "Ce fichier n’est pas une photo ou une vidéo valide.",
+    "access_code_required": "Cet événement demande un code d’accès.",
+    "access_code_invalid": "Ce code n’est pas le bon.",
+    "captcha_failed": "La vérification de sécurité a échoué. Rechargez la page puis réessayez."
   },
   "upload": {
     "status": {
@@ -225,7 +228,22 @@
   },
   "guest": {
     "comingSoonTitle": "L’envoi de photos ouvre bientôt",
-    "comingSoonDescription": "L’organisateur prépare l’album. Repassez scanner le QR code dans quelques instants."
+    "comingSoonDescription": "L’organisateur prépare l’album. Repassez scanner le QR code dans quelques instants.",
+    "join": {
+      "title": "Participez à l’album",
+      "subtitle": "Quelques secondes suffisent, sans compte ni appli.",
+      "nameLabel": "Votre prénom (facultatif)",
+      "nameHint": "Il est montré à l’organisateur à côté de vos photos.",
+      "codeLabel": "Code d’accès",
+      "codeHint": "L’organisateur vous l’a communiqué.",
+      "termsLabel": "J’accepte que mes photos et vidéos soient conservées pendant l’événement et visibles de l’organisateur.",
+      "termsRequired": "Cochez la case pour continuer.",
+      "submit": "Participer",
+      "submitting": "Un instant…",
+      "failed": "Impossible de rejoindre l’album pour le moment. Réessayez dans un instant.",
+      "joinedAs": "Vous participez en tant que {name}.",
+      "joinedAnonymous": "Vous participez à l’album."
+    }
   },
   "dashboard": {
     "stats": {
@@ -258,7 +276,12 @@
       "saved": "Paramètres enregistrés.",
       "invalid": "La fin des envois doit être après leur début.",
       "failed": "Les paramètres n’ont pas pu être enregistrés. Réessayez.",
-      "loading": "Chargement des dates…"
+      "loading": "Chargement des dates…",
+      "accessCodeLabel": "Code d’accès (facultatif)",
+      "accessCodeHint": "4 à 6 chiffres, demandé à vos invités avant leur premier envoi. Notez-le : il ne peut pas être relu.",
+      "accessCodeActive": "Un code d’accès est défini. Saisissez-en un autre pour le remplacer.",
+      "accessCodeRemove": "Retirer le code d’accès",
+      "invalidCode": "Le code d’accès doit comporter de 4 à 6 chiffres."
     },
     "danger": {
       "title": "Supprimer l’événement",

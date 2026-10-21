@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { accessCodeSchema } from "../schemas/guest";
 
 /** Default upload window around the event date (F-016). */
 export const UPLOAD_WINDOW_DAYS_BEFORE = 7;
@@ -65,6 +66,8 @@ export const updateEventSettingsSchema = z
     require_approval: z.boolean(),
     upload_opens_at: z.iso.datetime(),
     upload_closes_at: z.iso.datetime(),
+    /** A new access code (F-017), "" to remove it, absent to leave it as it is. */
+    access_code: z.union([accessCodeSchema, z.literal("")]).optional(),
   })
   .refine((s) => Date.parse(s.upload_opens_at) < Date.parse(s.upload_closes_at), {
     message: "The upload window must open before it closes",

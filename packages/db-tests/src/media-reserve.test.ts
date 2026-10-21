@@ -478,10 +478,14 @@ describe("SPEC 7: compteurs maintenus par déclencheurs", () => {
         [media],
       );
       await db.query("delete from public.events where id = $1", [event]);
-      for (const table of ["guests", "media", "uploads"]) {
-        const { rows } = await db.query(`select count(*)::int as n from public.${table}`);
-        expect(rows[0], table).toEqual({ n: 0 });
-      }
+      // Counted for this event only: other tests (and the end-to-end suite) leave their own rows.
+      const counts = await db.query(
+        `select (select count(*)::int from public.guests where event_id = $1) as guests,
+                (select count(*)::int from public.media where event_id = $1) as media,
+                (select count(*)::int from public.uploads where media_id = $2) as uploads`,
+        [event, media],
+      );
+      expect(counts.rows[0]).toEqual({ guests: 0, media: 0, uploads: 0 });
     }));
 
   it("un média ne peut pas pointer vers un dossier d'un autre événement", () =>

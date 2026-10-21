@@ -17,6 +17,8 @@ export const PUBLIC_CODE_LENGTH = 10;
 export const WELCOME_MESSAGE_MAX_LENGTH = 500;
 export const EVENT_TITLE_MAX_LENGTH = 80;
 export const DISPLAY_NAME_MAX_LENGTH = 100;
+/** A guest's first name, optional (F-033). */
+export const GUEST_NAME_MAX_LENGTH = 60;
 
 /** Accent colors offered as one-tap choices; each keeps white text readable (WCAG AA). */
 export const ACCENT_PRESETS = [
