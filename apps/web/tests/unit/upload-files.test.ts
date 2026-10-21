@@ -2,7 +2,14 @@ import { PrepareError } from "@snapalbum/shared/upload";
 import { createHash } from "node:crypto";
 import { Blob as NodeBlob } from "node:buffer";
 import { describe, expect, it } from "vitest";
-import { fingerprint, resolveExtension, resolveMimeType, scaledSize } from "@/lib/upload/files";
+import {
+  deviceOffsetAt,
+  fingerprint,
+  resolveExtension,
+  resolveMimeType,
+  resolveTakenAt,
+  scaledSize,
+} from "@/lib/upload/files";
 
 describe("F-031: type et extension d'un fichier choisi sur un téléphone", () => {
   it("F-031: garde le type déclaré et corrige image/jpg", () => {
@@ -51,5 +58,47 @@ describe("SPEC 8.1: taille des versions d'affichage", () => {
     expect(scaledSize(3000, 4000, 400)).toEqual({ width: 300, height: 400 });
     expect(scaledSize(800, 600, 2048)).toEqual({ width: 800, height: 600 });
     expect(scaledSize(10000, 1, 400)).toEqual({ width: 400, height: 1 });
+  });
+});
+
+describe("SPEC 8.1: date de prise de vue d'un fichier", () => {
+  const modified = Date.UTC(2026, 9, 21, 8, 0, 0);
+
+  it("SPEC 8.1: la date EXIF prime sur la date du fichier", () => {
+    expect(
+      resolveTakenAt(
+        { lastModified: modified },
+        { dateTime: "2026-06-14T16:45:10", offset: "+02:00" },
+        () => 0,
+      ),
+    ).toBe("2026-06-14T14:45:10.000Z");
+  });
+
+  it("SPEC 8.1: sans fuseau noté, celui de l'appareil à cette date est utilisé", () => {
+    expect(
+      resolveTakenAt({ lastModified: modified }, { dateTime: "2026-06-14T16:45:10" }, () => 120),
+    ).toBe("2026-06-14T14:45:10.000Z");
+  });
+
+  it("SPEC 8.1: sans EXIF, la date de modification du fichier sert", () => {
+    expect(resolveTakenAt({ lastModified: modified }, null, () => 0)).toBe(
+      "2026-10-21T08:00:00.000Z",
+    );
+    expect(resolveTakenAt({ lastModified: modified }, { dateTime: undefined }, () => 0)).toBe(
+      "2026-10-21T08:00:00.000Z",
+    );
+  });
+
+  it("SPEC 8.1: sans aucune date, la photo n'en déclare pas", () => {
+    expect(resolveTakenAt({ lastModified: 0 }, null, () => 0)).toBeUndefined();
+  });
+
+  it("SPEC 8.1: le fuseau de l'appareil est celui de la date demandée (heure d'été comprise)", () => {
+    const summer = deviceOffsetAt("2026-07-01T12:00:00");
+    const winter = deviceOffsetAt("2026-01-01T12:00:00");
+    // Quelle que soit la zone de la machine de test : l'écart avec UTC est celui de l'instant.
+    expect(summer).toBe(-new Date("2026-07-01T12:00:00").getTimezoneOffset());
+    expect(winter).toBe(-new Date("2026-01-01T12:00:00").getTimezoneOffset());
+    expect(deviceOffsetAt("pas une date")).toBe(0);
   });
 });

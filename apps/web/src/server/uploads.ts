@@ -169,6 +169,11 @@ export async function reserveUpload(
     .single();
   if (mediaError) throw mediaError;
 
+  // The placeholder only decorates the gallery: failing to store it never fails the upload.
+  if (input.blurhash && !media.blurhash) {
+    await admin.from("media").update({ blurhash: input.blurhash }).eq("id", media.id);
+  }
+
   const expiresAt = new Date(now.getTime() + UPLOAD_URL_TTL_SECONDS * 1000).toISOString();
   const sign = async (key: string, contentType: string, bytes: number): Promise<SignedTarget> => {
     const signed = await storage.presignUpload(key, { contentType, contentLength: bytes });

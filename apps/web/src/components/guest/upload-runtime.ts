@@ -1,4 +1,5 @@
 import { createApiClient } from "@snapalbum/shared/api-client";
+import type { PlanId } from "@snapalbum/shared/plans";
 import { createUploadEngine, type UploadEngine } from "@snapalbum/shared/upload";
 import { browserUploadIO } from "@/lib/upload/browser-io";
 
@@ -9,12 +10,14 @@ import { browserUploadIO } from "@/lib/upload/browser-io";
  */
 export function createGuestEngine(options: {
   eventCode: string;
+  plan: PlanId;
   onNeedJoin: () => void;
 }): UploadEngine<File> {
   return createUploadEngine<File, Blob>({
     api: createApiClient({ baseUrl: "" }),
     io: browserUploadIO,
     eventCode: options.eventCode,
+    plan: options.plan,
     onNeedJoin: options.onNeedJoin,
   });
 }

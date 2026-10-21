@@ -148,7 +148,7 @@ export async function updateEventPresentation(
 
 export type PublicEvent = Pick<
   EventRow,
-  "id" | "title" | "welcome_message" | "accent_color" | "locale" | "status" | "expires_at"
+  "id" | "title" | "welcome_message" | "accent_color" | "locale" | "status" | "expires_at" | "plan"
 > & {
   /** The guest must enter the organiser's code before joining (F-017). The hash itself never leaves. */
   requiresAccessCode: boolean;
@@ -157,7 +157,8 @@ export type PublicEvent = Pick<
 /**
  * What a guest may know about an event, found by its public code. Uses the ADMIN client on
  * purpose (visitors have no database rights) and returns only presentation fields, never the
- * owner, the plan, the counters or the settings.
+ * owner, the counters or the settings. The plan is included for its limits (video duration, file
+ * size), which the page applies before sending and states to the guest.
  */
 export async function getPublicEvent(
   admin: Client,
@@ -166,7 +167,7 @@ export async function getPublicEvent(
   if (!publicCodeSchema.safeParse(publicCode).success) return null;
   const { data, error } = await admin
     .from("events")
-    .select("id, title, welcome_message, accent_color, locale, status, expires_at, settings")
+    .select("id, title, welcome_message, accent_color, locale, status, expires_at, plan, settings")
     .eq("public_code", publicCode)
     .maybeSingle();
   if (error) throw error;

@@ -1,4 +1,4 @@
-import { PrepareError } from "@snapalbum/shared/upload";
+import { exifDateToInstant, PrepareError, type ImageMetadata } from "@snapalbum/shared/upload";
 import { ORIGINAL_EXTENSIONS } from "@snapalbum/shared/storage";
 
 /** Pure helpers of the file preparation: names, types, fingerprint and sizes (unit tested). */
@@ -77,4 +77,31 @@ export function scaledSize(width: number, height: number, maxPx: number) {
     width: Math.max(1, Math.round(width * scale)),
     height: Math.max(1, Math.round(height * scale)),
   };
+}
+
+/**
+ * When the photo was taken: the EXIF date if the file has one, else the file's own date. The EXIF
+ * date is a wall-clock time, read in the zone of the device `offsetOf` describes (minutes east of
+ * UTC at that moment) when the camera recorded none.
+ */
+export function resolveTakenAt(
+  file: { lastModified: number },
+  metadata: Pick<ImageMetadata, "dateTime" | "offset"> | null,
+  offsetOf: (wallClock: string) => number,
+): string | undefined {
+  if (metadata?.dateTime) {
+    const instant = exifDateToInstant(
+      metadata.dateTime,
+      metadata.offset,
+      offsetOf(metadata.dateTime),
+    );
+    if (instant) return instant;
+  }
+  return file.lastModified ? new Date(file.lastModified).toISOString() : undefined;
+}
+
+/** The offset of the device's own zone, in minutes east of UTC, at a local wall-clock time. */
+export function deviceOffsetAt(wallClock: string): number {
+  const date = new Date(wallClock);
+  return Number.isNaN(date.getTime()) ? 0 : -date.getTimezoneOffset();
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { getPlan, type PlanId } from "@snapalbum/shared/plans";
 import { EventCover } from "@/components/events/event-cover";
 import { GuestExperience } from "@/components/guest/guest-experience";
 import { clientEnv } from "@/config/env";
@@ -26,6 +27,8 @@ export default async function GuestEventPage({ params }: PageProps<"/[locale]/e/
   const event = await getPublicEvent(admin, code);
   if (!event || event.status !== "active") notFound();
 
+  const plan = getPlan(event.plan as PlanId);
+
   const supabase = await createSupabaseServerClient();
   const { data: auth } = await supabase.auth.getUser();
   const guest = auth.user ? await getGuestOfEvent(admin, event.id, auth.user.id) : null;
@@ -47,6 +50,8 @@ export default async function GuestEventPage({ params }: PageProps<"/[locale]/e/
           displayName={guest?.displayName ?? null}
           requiresAccessCode={event.requiresAccessCode}
           turnstileSiteKey={clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+          plan={plan.id}
+          maxVideoSeconds={plan.maxVideoSeconds}
         />
       </div>
     </>

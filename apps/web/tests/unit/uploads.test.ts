@@ -143,6 +143,47 @@ function reservedRow(overrides: Record<string, unknown> = {}) {
 }
 
 describe("SPEC 8.1: réservation d'un envoi", () => {
+  it("SPEC 8.1: enregistre le blurhash de la miniature, une seule fois", async () => {
+    const hash = "L#Iqkc2owxX6tfW:jtfjdef7fQf7";
+    const first = fakeAdmin({
+      event: { id: EVENT, plan: "free" },
+      rpc: { ok: true, result: "reserved", media_id: MEDIA, moderation: "approved" },
+      media: reservedRow(),
+    });
+    await reserveUpload(
+      deps(first.client, fakeStorage()),
+      { id: USER },
+      { ...photo, blurhash: hash },
+    );
+    expect(first.calls).toContainEqual({
+      table: "media",
+      method: "update",
+      args: [{ blurhash: hash }],
+    });
+
+    // A resumed reservation keeps the placeholder it already has.
+    const resumed = fakeAdmin({
+      event: { id: EVENT, plan: "free" },
+      rpc: { ok: true, result: "reserved", media_id: MEDIA },
+      media: reservedRow({ blurhash: "00L39k" }),
+    });
+    await reserveUpload(
+      deps(resumed.client, fakeStorage()),
+      { id: USER },
+      { ...photo, blurhash: hash },
+    );
+    expect(resumed.calls.some((call) => call.method === "update")).toBe(false);
+
+    // Older clients send none.
+    const none = fakeAdmin({
+      event: { id: EVENT, plan: "free" },
+      rpc: { ok: true, result: "reserved", media_id: MEDIA },
+      media: reservedRow(),
+    });
+    await reserveUpload(deps(none.client, fakeStorage()), { id: USER }, photo);
+    expect(none.calls.some((call) => call.method === "update")).toBe(false);
+  });
+
   it("SPEC 8.1: signe l'affichage et la miniature d'une photo gratuite, sans original (R2)", async () => {
     const { client, rpc } = fakeAdmin({
       event: { id: EVENT, plan: "free" },

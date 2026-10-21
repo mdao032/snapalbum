@@ -30,8 +30,19 @@ export default defineConfig({
       // Business logic folders (NF-042): the 80 % threshold applies to them.
       include: ["src/lib/**/*.{ts,tsx}", "src/server/**/*.ts", "src/config/**/*.ts"],
       // `server/storage.ts` talks to S3: its tests are the integration tests (`pnpm test:integration`).
-      exclude: ["**/*.test.*", "src/server/storage.ts", "src/lib/upload/browser-io.ts"],
-      // `browser-io.ts` needs a real canvas and XHR: covered by the end-to-end tests with a real browser.
+      exclude: [
+        "**/*.test.*",
+        "src/server/storage.ts",
+        "src/lib/upload/browser-io.ts",
+        "src/lib/upload/prepare-image.ts",
+        "src/lib/upload/prepare.worker.ts",
+        "src/lib/upload/surface.ts",
+        "src/lib/upload/orientation-probe.ts",
+        "src/lib/upload/heic.ts",
+      ],
+      // The files of the preparation (canvas, decoding, Web Worker, HEIC, XHR) need a real browser:
+      // `tests/e2e/upload-prepare.spec.ts` runs every fixture through them on four browser profiles.
+      // `prepare-client.ts` (worker protocol and fallbacks) is unit tested with a fake worker.
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
   },

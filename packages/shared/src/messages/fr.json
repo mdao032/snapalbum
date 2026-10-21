@@ -266,6 +266,8 @@
         "unsupported_format": "Ce format n’est pas pris en charge sur cet appareil.",
         "corrupted": "Ce fichier semble abîmé.",
         "album_full": "L’album est plein pour le moment.",
+        "video_too_long": "Cette vidéo est trop longue : {seconds} secondes au maximum.",
+        "file_too_large": "Ce fichier est trop lourd pour cet album.",
         "upload_failed": "L’envoi a échoué, nouvel essai bientôt.",
         "network_error": "Connexion perdue, nouvel essai bientôt."
       },

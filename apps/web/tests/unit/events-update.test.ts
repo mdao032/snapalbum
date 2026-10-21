@@ -89,7 +89,7 @@ describe("F-012: événement vu par un invité", () => {
     expect(from).not.toHaveBeenCalled();
   });
 
-  it("F-012: ne demande que les champs de présentation, jamais le propriétaire ni l'offre", async () => {
+  it("F-012: ne demande que les champs de présentation et l'offre (pour ses limites), jamais le propriétaire ni les compteurs", async () => {
     const { client, chain } = fakeClient({
       data: {
         title: "Fête",
@@ -103,7 +103,9 @@ describe("F-012: événement vu par un invité", () => {
       requiresAccessCode: true,
     });
     const columns = (chain.select as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as string;
-    expect(columns).not.toMatch(/owner_id|plan|bytes_used/);
+    expect(columns).not.toMatch(/owner_id|bytes_used|media_count/);
+    // The plan is selected only so the page can apply its limits (video duration, file size).
+    expect(columns).toContain("plan");
     expect(chain.eq).toHaveBeenCalledWith("public_code", "k7m2x9qvbr");
   });
 

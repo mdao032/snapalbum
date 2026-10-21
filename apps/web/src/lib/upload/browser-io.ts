@@ -5,94 +5,36 @@ import {
   type UploadIO,
 } from "@snapalbum/shared/upload";
 import type { SignedTarget } from "@snapalbum/shared/schemas";
-import { fingerprint, resolveExtension, resolveMimeType, scaledSize } from "./files";
+import { resolveExtension, resolveMimeType } from "./files";
+import { blurhashOf, encodeThumbnail, thumbnailOf } from "./prepare-image";
+import { hashFile, preparePhoto } from "./prepare-client";
+import { CanvasUnavailableError } from "./surface";
 
-/** Longest side of the display version and of the thumbnail (SPEC 8.1). */
-export const DISPLAY_MAX_PX = 2048;
-export const THUMB_MAX_PX = 400;
-const DISPLAY_QUALITY = 0.82;
-const THUMB_QUALITY = 0.7;
+type PreparedParts = Omit<
+  PreparedMedia<Blob>,
+  "sha256" | "extension" | "mimeType" | "bytes" | "original"
+>;
 
-function canvasToBlob(
-  canvas: HTMLCanvasElement,
-  type: string,
-  quality: number,
-): Promise<Blob | null> {
-  return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+/** A photo is prepared in the Web Worker (or on the page where there is none). */
+async function preparePhotoFile(file: File): Promise<PreparedParts & { sha256: string }> {
+  const image = await preparePhoto(file);
+  return {
+    kind: "photo",
+    sha256: image.sha256,
+    displayBytes: image.display.size,
+    thumbBytes: image.thumb.size,
+    previewFormat: image.previewFormat,
+    width: image.width,
+    height: image.height,
+    takenAt: image.takenAt,
+    blurhash: image.blurhash,
+    display: image.display,
+    thumb: image.thumb,
+  };
 }
 
-/**
- * An image or a video frame as a WebP of at most `maxPx`, or a JPEG where the browser cannot
- * encode WebP. Re-encoding through a canvas drops every metadata block, GPS included (S-008).
- */
-async function encodePreview(
-  source: CanvasImageSource,
-  width: number,
-  height: number,
-  maxPx: number,
-  quality: number,
-): Promise<{ blob: Blob; format: "webp" | "jpeg"; width: number; height: number }> {
-  const size = scaledSize(width, height, maxPx);
-  const canvas = document.createElement("canvas");
-  canvas.width = size.width;
-  canvas.height = size.height;
-  const context = canvas.getContext("2d");
-  if (!context) throw new PrepareError("unsupported_format");
-  context.drawImage(source, 0, 0, size.width, size.height);
-
-  const webp = await canvasToBlob(canvas, "image/webp", quality);
-  if (webp && webp.type === "image/webp") return { blob: webp, format: "webp", ...size };
-  const jpeg = await canvasToBlob(canvas, "image/jpeg", Math.min(0.9, quality + 0.05));
-  if (!jpeg) throw new PrepareError("corrupted");
-  return { blob: jpeg, format: "jpeg", ...size };
-}
-
-async function preparePhoto(
-  file: File,
-  mimeType: string,
-): Promise<Omit<PreparedMedia<Blob>, "sha256" | "extension" | "mimeType" | "bytes" | "original">> {
-  let bitmap: ImageBitmap;
-  try {
-    bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
-  } catch {
-    // HEIC outside Safari cannot be read: the guest is told to pick another format.
-    throw new PrepareError(/hei[cf]/.test(mimeType) ? "unsupported_format" : "corrupted");
-  }
-  try {
-    const display = await encodePreview(
-      bitmap,
-      bitmap.width,
-      bitmap.height,
-      DISPLAY_MAX_PX,
-      DISPLAY_QUALITY,
-    );
-    const thumb = await encodePreview(
-      bitmap,
-      bitmap.width,
-      bitmap.height,
-      THUMB_MAX_PX,
-      THUMB_QUALITY,
-    );
-    return {
-      kind: "photo",
-      displayBytes: display.blob.size,
-      thumbBytes: thumb.blob.size,
-      previewFormat: display.format === "jpeg" || thumb.format === "jpeg" ? "jpeg" : "webp",
-      width: bitmap.width,
-      height: bitmap.height,
-      takenAt: file.lastModified ? new Date(file.lastModified).toISOString() : undefined,
-      display: display.blob,
-      thumb: thumb.blob,
-    };
-  } finally {
-    bitmap.close();
-  }
-}
-
-/** Loads a video's metadata and one frame (the thumbnail), within a time limit. */
-async function prepareVideo(
-  file: File,
-): Promise<Omit<PreparedMedia<Blob>, "sha256" | "extension" | "mimeType" | "bytes" | "original">> {
+/** Loads a video's metadata and one frame (the thumbnail), within a time limit (SPEC 8.2). */
+async function prepareVideo(file: File): Promise<PreparedParts> {
   const url = URL.createObjectURL(file);
   const video = document.createElement("video");
   video.muted = true;
@@ -116,13 +58,8 @@ async function prepareVideo(
       video.src = url;
     });
     if (!video.videoWidth || !video.videoHeight) throw new PrepareError("corrupted");
-    const thumb = await encodePreview(
-      video,
-      video.videoWidth,
-      video.videoHeight,
-      THUMB_MAX_PX,
-      THUMB_QUALITY,
-    );
+    const surface = thumbnailOf(video, video.videoWidth, video.videoHeight);
+    const thumb = await encodeThumbnail(surface);
     return {
       kind: "video",
       thumbBytes: thumb.blob.size,
@@ -133,8 +70,12 @@ async function prepareVideo(
         ? Math.round(video.duration * 10) / 10
         : undefined,
       takenAt: file.lastModified ? new Date(file.lastModified).toISOString() : undefined,
+      blurhash: blurhashOf(surface),
       thumb: thumb.blob,
     };
+  } catch (error) {
+    if (error instanceof CanvasUnavailableError) throw new PrepareError("unsupported_format");
+    throw error;
   } finally {
     URL.revokeObjectURL(url);
     video.removeAttribute("src");
@@ -149,10 +90,15 @@ export async function prepareFile(file: File): Promise<PreparedMedia<Blob>> {
   const isVideo = mimeType.startsWith("video/");
   if (!isVideo && !mimeType.startsWith("image/")) throw new PrepareError("unsupported_format");
 
-  const prepared = isVideo ? await prepareVideo(file) : await preparePhoto(file, mimeType);
+  // A video's hash is computed off the page while its frame is extracted.
+  const prepared = isVideo
+    ? await Promise.all([prepareVideo(file), hashFile(file)]).then(([video, sha256]) => ({
+        ...video,
+        sha256,
+      }))
+    : await preparePhotoFile(file);
   return {
     ...prepared,
-    sha256: await fingerprint(file),
     mimeType,
     extension,
     bytes: file.size,
@@ -189,4 +135,5 @@ export const browserUploadIO: UploadIO<File, Blob> = {
   prepare: prepareFile,
   put: putWithProgress,
   slice: (body, start, end) => body.slice(start, end),
+  previewUrl: (media) => URL.createObjectURL(media.thumb),
 };

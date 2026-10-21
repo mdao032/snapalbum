@@ -1,5 +1,6 @@
 "use client";
 
+import type { PlanId } from "@snapalbum/shared/plans";
 import type { UploadEngine, UploadItem } from "@snapalbum/shared/upload";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
@@ -14,6 +15,8 @@ const KNOWN_REASONS = [
   "unsupported_format",
   "corrupted",
   "album_full",
+  "video_too_long",
+  "file_too_large",
   "upload_failed",
   "network_error",
 ] as const;
@@ -36,12 +39,17 @@ export function GuestExperience({
   displayName: initialName,
   requiresAccessCode,
   turnstileSiteKey,
+  plan,
+  maxVideoSeconds,
 }: {
   eventCode: string;
   joined: boolean;
   displayName: string | null;
   requiresAccessCode: boolean;
   turnstileSiteKey: string | undefined;
+  /** Plan of the event: its limits are applied before sending (SPEC 8.2). */
+  plan: PlanId;
+  maxVideoSeconds: number;
 }) {
   const t = useTranslations("guest");
   const [joined, setJoined] = useState(initiallyJoined);
@@ -54,13 +62,17 @@ export function GuestExperience({
 
   const getEngine = useCallback((): Promise<UploadEngine<File>> => {
     engineRef.current ??= import("./upload-runtime").then(({ createGuestEngine }) => {
-      const engine = createGuestEngine({ eventCode, onNeedJoin: () => setShowJoin(true) });
+      const engine = createGuestEngine({
+        eventCode,
+        plan,
+        onNeedJoin: () => setShowJoin(true),
+      });
       engineSync.current = engine;
       engine.subscribe(() => setItems(engine.getItems()));
       return engine;
     });
     return engineRef.current;
-  }, [eventCode]);
+  }, [eventCode, plan]);
 
   async function onFiles(event: ChangeEvent<HTMLInputElement>) {
     const chosen = Array.from(event.target.files ?? []);
@@ -189,25 +201,41 @@ export function GuestExperience({
               <li
                 key={item.id}
                 data-status={item.status}
-                className="flex flex-col gap-1 rounded-xl border border-border bg-surface px-4 py-3"
+                className="flex items-center gap-3 rounded-xl border border-border bg-surface px-3 py-3"
               >
-                <span className="flex items-center justify-between gap-3">
-                  <span className="truncate font-medium">{item.name}</span>
-                  <span className="shrink-0 text-sm">{t(`upload.status.${item.status}`)}</span>
+                <span className="size-14 shrink-0 overflow-hidden rounded-lg bg-muted">
+                  {item.previewUrl ? (
+                    // A local object URL of the prepared thumbnail: nothing `next/image` could serve.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={item.previewUrl}
+                      alt=""
+                      width={56}
+                      height={56}
+                      className="size-full object-cover"
+                      data-testid="upload-preview"
+                    />
+                  ) : null}
                 </span>
-                {item.status === "uploading" ? (
-                  <progress
-                    className="h-2 w-full"
-                    max={1}
-                    value={item.progress}
-                    aria-label={item.name}
-                  />
-                ) : null}
-                {item.reason && item.status !== "sent" ? (
-                  <span className="text-sm text-muted-foreground">
-                    {t(`upload.reasons.${reasonKey(item.reason)}`)}
+                <span className="flex min-w-0 flex-1 flex-col gap-1">
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="truncate font-medium">{item.name}</span>
+                    <span className="shrink-0 text-sm">{t(`upload.status.${item.status}`)}</span>
                   </span>
-                ) : null}
+                  {item.status === "uploading" ? (
+                    <progress
+                      className="h-2 w-full"
+                      max={1}
+                      value={item.progress}
+                      aria-label={item.name}
+                    />
+                  ) : null}
+                  {item.reason && item.status !== "sent" ? (
+                    <span className="text-sm text-muted-foreground">
+                      {t(`upload.reasons.${reasonKey(item.reason)}`, { seconds: maxVideoSeconds })}
+                    </span>
+                  ) : null}
+                </span>
               </li>
             ))}
           </ul>

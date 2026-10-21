@@ -15,6 +15,7 @@
     "test:load": "echo \"Tests de charge k6 : ajoutés en phase 2\" && exit 0",
     "db:migrate": "supabase db push",
     "db:types": "node scripts/db-types.mjs",
+    "fixtures:make": "node scripts/make-fixtures.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky",
@@ -31,6 +32,7 @@
     "husky": "9.1.7",
     "lint-staged": "17.6.0",
     "prettier": "3.9.10",
+    "sharp": "0.35.5",
     "supabase": "2.120.0",
     "turbo": "2.11.9"
   },

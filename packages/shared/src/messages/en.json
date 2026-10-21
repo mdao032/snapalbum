@@ -266,6 +266,8 @@
         "unsupported_format": "This format is not supported on this device.",
         "corrupted": "This file seems damaged.",
         "album_full": "The album is full for now.",
+        "video_too_long": "This video is too long: {seconds} seconds at most.",
+        "file_too_large": "This file is too large for this album.",
         "upload_failed": "Sending failed, trying again soon.",
         "network_error": "Connection lost, trying again soon."
       },
