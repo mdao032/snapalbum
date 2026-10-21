@@ -14,6 +14,10 @@ const serverSchema = z.object({
   R2_ACCESS_KEY_ID: z.string().min(1).optional(),
   R2_SECRET_ACCESS_KEY: z.string().min(1).optional(),
   R2_BUCKET: z.string().min(1).optional(),
+  /** Jurisdiction of the bucket: EU unless told otherwise (G-002). */
+  R2_JURISDICTION: z.enum(["eu", "default"]).optional(),
+  /** Overrides the R2 address: a local S3 emulator in development and tests. */
+  R2_ENDPOINT: z.url().optional(),
   // Upstash Redis (phase 1)
   UPSTASH_REDIS_REST_URL: z.url().optional(),
   UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),

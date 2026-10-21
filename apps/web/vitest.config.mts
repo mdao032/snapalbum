@@ -29,7 +29,8 @@ export default defineConfig({
       provider: "v8",
       // Business logic folders (NF-042): the 80 % threshold applies to them.
       include: ["src/lib/**/*.{ts,tsx}", "src/server/**/*.ts", "src/config/**/*.ts"],
-      exclude: ["**/*.test.*"],
+      // `server/storage.ts` talks to S3: its tests are the integration tests (`pnpm test:integration`).
+      exclude: ["**/*.test.*", "src/server/storage.ts"],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
   },

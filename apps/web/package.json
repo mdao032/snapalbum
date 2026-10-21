@@ -10,9 +10,12 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.mts",
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.1153.0",
+    "@aws-sdk/s3-request-presigner": "3.1153.0",
     "@radix-ui/react-slot": "1.5.0",
     "@sentry/nextjs": "11.8.0",
     "@snapalbum/shared": "workspace:*",
