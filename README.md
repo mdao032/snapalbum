@@ -41,7 +41,3 @@ docs             décisions, journal, installation, tests manuels, RGPD
 | `pnpm test:integration`               | Tests du stockage contre l'émulateur                   |
 | `pnpm build`                          | Build de production                                    |
 | `pnpm format`                         | Formatage Prettier                                     |
-
-## Documents de référence
-
-- [CLAUDE.md](CLAUDE.md) : règles de travail

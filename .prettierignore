@@ -4,5 +4,4 @@ node_modules
 coverage
 pnpm-lock.yaml
 packages/shared/src/db-types.ts
-CLAUDE.md
 supabase/templates
