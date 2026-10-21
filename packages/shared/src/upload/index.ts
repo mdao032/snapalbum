@@ -4,3 +4,6 @@ export * from "./queue";
 export * from "./quota";
 export * from "./formats";
 export * from "./engine";
+export * from "./blurhash";
+export * from "./exif";
+export * from "./orientation";

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ORIGINAL_EXTENSIONS } from "../storage/keys";
+import { BLURHASH_PATTERN } from "../upload/blurhash";
 import { publicCodeSchema, sha256Schema, uuidSchema } from "./common";
 
 export const mediaKindSchema = z.enum(["photo", "video"]);
@@ -33,6 +34,8 @@ export const reserveUploadRequestSchema = z
     height: z.number().int().positive().max(20000).optional(),
     durationSeconds: z.number().nonnegative().max(86400).optional(),
     takenAt: z.iso.datetime().optional(),
+    /** Placeholder of the thumbnail (BlurHash), computed in the browser. Absent in older clients. */
+    blurhash: z.string().regex(BLURHASH_PATTERN).optional(),
   })
   .superRefine((value, ctx) => {
     if (value.kind === "photo" && value.displayBytes === undefined) {

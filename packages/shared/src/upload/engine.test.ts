@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { ApiError } from "../api-client";
+import type { PlanId } from "../plans";
 import type { SignedTarget } from "../schemas/upload";
 import {
   classifyFailure,
@@ -55,6 +56,8 @@ function setup(
     multipart?: (body: { action: string; partNumber?: number }) => Promise<unknown>;
     complete?: () => Promise<unknown>;
     maxConcurrent?: number;
+    plan?: PlanId;
+    previewUrl?: (media: PreparedMedia<FakeBlob>) => string | undefined;
   } = {},
 ) {
   let clock = 1_000_000;
@@ -83,12 +86,14 @@ function setup(
       await options.put?.(t, body);
     }),
     slice: (body, start, end) => blob(end - start, `${body.label}:${start}-${end}`),
+    previewUrl: options.previewUrl,
   };
   const needJoin = vi.fn();
   const engine = createUploadEngine<FakeFile, FakeBlob>({
     api: { reserveUpload: reserve, completeUpload: complete, multipart } as never,
     io,
     eventCode: "k7m2x9qvbr",
+    plan: options.plan,
     now: () => clock,
     schedule: (run, delay) => {
       const entry = { run, at: clock + delay, cancelled: false };
@@ -581,5 +586,96 @@ describe("F-036, F-037: suivi de la file", () => {
       rejected: 1,
       waitingQuota: 0,
     });
+  });
+});
+
+describe("SPEC 8.1 et 8.2: ce que la préparation apporte à la réservation", () => {
+  it("SPEC 8.1: le blurhash, la date de prise de vue et les dimensions partent avec la réservation", async () => {
+    const { engine, reserve } = setup({
+      prepare: async () =>
+        photo({
+          blurhash: "LKIqkc2-,YS{y#SzjtbZdLe;fQe;",
+          takenAt: "2026-06-14T14:45:10.000Z",
+          width: 64,
+          height: 96,
+        }),
+    });
+    engine.add([file()]);
+    await flush();
+    expect(reserve).toHaveBeenCalledWith(
+      expect.objectContaining({
+        blurhash: "LKIqkc2-,YS{y#SzjtbZdLe;fQe;",
+        takenAt: "2026-06-14T14:45:10.000Z",
+        width: 64,
+        height: 96,
+      }),
+    );
+  });
+
+  it("F-036: l'adresse de la miniature locale est connue dès la préparation, avant la fin de l'envoi", async () => {
+    let release: () => void = () => {};
+    const { engine } = setup({
+      previewUrl: (media) => `blob:local/${media.thumb.label}`,
+      put: () => new Promise<void>((resolve) => (release = resolve)),
+    });
+    engine.add([file()]);
+    await flush();
+    expect(engine.getItems()[0]).toMatchObject({
+      status: "uploading",
+      previewUrl: "blob:local/thumb",
+    });
+    release();
+    await flush();
+  });
+
+  it("SPEC 8.2: une vidéo plus longue que l'offre est refusée avant tout envoi", async () => {
+    const { engine, reserve } = setup({
+      plan: "free",
+      prepare: async () =>
+        photo({
+          kind: "video",
+          mimeType: "video/mp4",
+          extension: "mp4",
+          display: undefined,
+          displayBytes: undefined,
+          durationSeconds: 45,
+          bytes: 5 * MB,
+        }),
+    });
+    engine.add([file("long.mp4")]);
+    await flush();
+    expect(engine.getItems()[0]).toMatchObject({ status: "rejected", reason: "video_too_long" });
+    expect(reserve).not.toHaveBeenCalled();
+  });
+
+  it("SPEC 8.2: la même vidéo passe sur une offre payante, qui autorise 180 s", async () => {
+    const { engine, reserve } = setup({
+      plan: "event",
+      prepare: async () =>
+        photo({
+          kind: "video",
+          mimeType: "video/mp4",
+          extension: "mp4",
+          display: undefined,
+          displayBytes: undefined,
+          durationSeconds: 45,
+          bytes: 5 * MB,
+        }),
+    });
+    engine.add([file("long.mp4")]);
+    await flush();
+    expect(reserve).toHaveBeenCalled();
+    expect(engine.getItems()[0]?.status).toBe("sent");
+  });
+
+  it("R1: un fichier trop lourd pour l'offre est refusé sans rien envoyer", async () => {
+    const { engine, reserve } = setup({
+      plan: "free",
+      prepare: async () => photo({ bytes: 51 * MB }),
+    });
+    engine.add([file("huge.jpg")]);
+    await flush();
+    expect(engine.getItems()[0]).toMatchObject({ status: "rejected", reason: "file_too_large" });
+    expect(reserve).not.toHaveBeenCalled();
   });
 });

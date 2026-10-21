@@ -1,6 +1,8 @@
 import type { ApiClient } from "../api-client";
 import { ApiError } from "../api-client";
+import type { PlanId } from "../plans";
 import type { ApiErrorCode, SignedTarget } from "../schemas/upload";
+import { checkFileLimits } from "./quota";
 import {
   createQueueItem,
   markFailed,
@@ -37,6 +39,8 @@ export interface PreparedMedia<B> {
   height?: number;
   durationSeconds?: number;
   takenAt?: string;
+  /** Placeholder of the thumbnail (BlurHash). */
+  blurhash?: string;
   original: B;
   display?: B;
   thumb: B;
@@ -64,6 +68,8 @@ export interface UploadIO<F, B> {
   put(target: SignedTarget, body: B, onProgress: (sentBytes: number) => void): Promise<void>;
   /** The bytes `start` to `end` of `body`, for one part of a large video. */
   slice(body: B, start: number, end: number): B;
+  /** An address the interface can show for the prepared thumbnail (an object URL in the browser). */
+  previewUrl?(media: PreparedMedia<B>): string | undefined;
 }
 
 export type UploadFailureReason = ApiErrorCode | "corrupted" | "network_error" | "upload_failed";
@@ -75,12 +81,16 @@ export interface UploadItem extends QueueItem {
   /** Why the item failed, was rejected or waits (shown to the guest). */
   reason?: UploadFailureReason;
   mediaId?: string;
+  /** Local picture of the file once prepared, shown in the list before and during the upload. */
+  previewUrl?: string;
 }
 
 export interface UploadEngineOptions<F extends { name: string }, B> {
   api: Pick<ApiClient, "reserveUpload" | "completeUpload" | "multipart">;
   io: UploadIO<F, B>;
   eventCode: string;
+  /** Plan of the event: files over its size or duration limits are refused before any upload. */
+  plan?: PlanId;
   now?: () => number;
   /** Runs `run` after `delayMs`; returns a function that cancels it. Injectable for tests. */
   schedule?: (run: () => void, delayMs: number) => () => void;
@@ -216,6 +226,7 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
       height: media.height,
       durationSeconds: media.durationSeconds,
       takenAt: media.takenAt,
+      blurhash: media.blurhash,
     });
     if (reserved.status === "already_received") return reserved.mediaId;
     update(id, (item) => ({ ...item, mediaId: reserved.mediaId }));
@@ -270,6 +281,19 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
       if (!media) {
         media = await io.prepare(file);
         prepared.set(id, media);
+        const previewUrl = io.previewUrl?.(media);
+        if (previewUrl) update(id, (item) => ({ ...item, previewUrl }));
+      }
+      if (options.plan) {
+        const limit = checkFileLimits({
+          plan: options.plan,
+          kind: media.kind,
+          bytes: media.bytes,
+          durationSeconds: media.durationSeconds,
+        });
+        if (!limit.ok) {
+          throw new ApiError(limit.reason === "file_too_large" ? 413 : 422, limit.reason);
+        }
       }
       const mediaId = await sendAll(id, media);
       // Confirmed by the server: the local copy can go (NF-010).

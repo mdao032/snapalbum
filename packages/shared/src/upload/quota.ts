@@ -7,6 +7,36 @@ export type QuotaRefusal =
 
 export type QuotaDecision = { ok: true } | { ok: false; reason: QuotaRefusal };
 
+export type FileLimitRefusal = Extract<QuotaRefusal, "video_too_long" | "file_too_large">;
+
+export interface FileLimitsInput {
+  plan: PlanId;
+  kind: MediaKind;
+  bytes: number;
+  durationSeconds?: number | null;
+}
+
+/**
+ * The limits that depend only on the file itself (size, video duration), straight from the plan.
+ * The browser applies them as soon as a file is prepared, to refuse it with a clear message
+ * before sending anything; the server applies them again and decides (SPEC 8.2).
+ */
+export function checkFileLimits(
+  input: FileLimitsInput,
+): { ok: true } | { ok: false; reason: FileLimitRefusal } {
+  const plan = getPlan(input.plan);
+  const maxBytes = input.kind === "video" ? plan.maxVideoBytes : plan.maxPhotoBytes;
+  if (input.bytes > maxBytes) return { ok: false, reason: "file_too_large" };
+  if (
+    input.kind === "video" &&
+    input.durationSeconds != null &&
+    input.durationSeconds > plan.maxVideoSeconds
+  ) {
+    return { ok: false, reason: "video_too_long" };
+  }
+  return { ok: true };
+}
+
 export interface QuotaInput {
   plan: PlanId;
   /** Media already stored for the event. */
