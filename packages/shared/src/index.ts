@@ -6,3 +6,4 @@ export * from "./auth";
 export * from "./upload";
 export * from "./api-client";
 export * from "./messages";
+export * from "./storage";
