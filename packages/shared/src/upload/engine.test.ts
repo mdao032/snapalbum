@@ -8,7 +8,9 @@ import {
   PrepareError,
   PutError,
   type PreparedMedia,
+  type StorageProblem,
   type UploadIO,
+  type UploadStore,
 } from "./engine";
 
 interface FakeBlob {
@@ -57,6 +59,8 @@ function setup(
     complete?: () => Promise<unknown>;
     maxConcurrent?: number;
     plan?: PlanId;
+    store?: UploadStore<FakeFile>;
+    onStorageProblem?: (problem: StorageProblem) => void;
     previewUrl?: (media: PreparedMedia<FakeBlob>) => string | undefined;
   } = {},
 ) {
@@ -94,6 +98,8 @@ function setup(
     io,
     eventCode: "k7m2x9qvbr",
     plan: options.plan,
+    store: options.store,
+    onStorageProblem: options.onStorageProblem,
     now: () => clock,
     schedule: (run, delay) => {
       const entry = { run, at: clock + delay, cancelled: false };
@@ -677,5 +683,160 @@ describe("SPEC 8.1 et 8.2: ce que la préparation apporte à la réservation", (
     await flush();
     expect(engine.getItems()[0]).toMatchObject({ status: "rejected", reason: "file_too_large" });
     expect(reserve).not.toHaveBeenCalled();
+  });
+});
+
+function fakeStore(initial: { id: string; file: FakeFile }[] = []) {
+  const saved = new Map(initial.map((entry) => [entry.id, entry.file]));
+  const store: UploadStore<FakeFile> = {
+    put: vi.fn(async (id, file) => {
+      saved.set(id, file);
+    }),
+    remove: vi.fn(async (id) => {
+      saved.delete(id);
+    }),
+    list: vi.fn(async () => [...saved].map(([id, file]) => ({ id, file }))),
+  };
+  return { store, saved };
+}
+
+describe("NF-010: aucune photo perdue, copie locale jusqu'à la confirmation", () => {
+  it("NF-010: chaque fichier est copié avant son envoi, et retiré seulement une fois confirmé", async () => {
+    const { store, saved } = fakeStore();
+    let release: () => void = () => {};
+    const { engine, reserve } = setup({
+      store,
+      put: async (_target, body) => {
+        if (body.label === "display") await new Promise<void>((resolve) => (release = resolve));
+      },
+    });
+    engine.add([file("a.jpg")]);
+    await flush();
+    // En cours d'envoi : la copie existe encore, la réservation a bien eu lieu après elle.
+    expect(saved.size).toBe(1);
+    expect(reserve).toHaveBeenCalled();
+    expect(store.remove).not.toHaveBeenCalled();
+    release();
+    await flush();
+    expect(engine.getItems()[0]?.status).toBe("sent");
+    expect(saved.size).toBe(0);
+  });
+
+  it("NF-010: un échec réseau garde la copie, qui servira à la reprise", async () => {
+    const { store, saved } = fakeStore();
+    const { engine } = setup({
+      store,
+      reserve: async () => {
+        throw new ApiError(0, "network_error");
+      },
+    });
+    engine.add([file("a.jpg")]);
+    await flush();
+    expect(engine.getItems()[0]?.status).toBe("failed");
+    expect(saved.size).toBe(1);
+  });
+
+  it("NF-010: un fichier en attente de place (R1) reste sur l'appareil", async () => {
+    const { store, saved } = fakeStore();
+    const { engine } = setup({
+      store,
+      reserve: async () => {
+        throw new ApiError(409, "album_full");
+      },
+    });
+    engine.add([file("a.jpg")]);
+    await flush();
+    expect(engine.getItems()[0]?.status).toBe("waiting_quota");
+    expect(saved.size).toBe(1);
+  });
+
+  it("NF-010: un fichier refusé pour de bon n'est pas gardé (il ne partira jamais)", async () => {
+    const { store, saved } = fakeStore();
+    const { engine } = setup({
+      store,
+      prepare: async () => {
+        throw new PrepareError("corrupted");
+      },
+    });
+    engine.add([file("a.jpg")]);
+    await flush();
+    expect(engine.getItems()[0]?.status).toBe("rejected");
+    expect(saved.size).toBe(0);
+  });
+
+  it("NF-010: rien ne part avant que la copie soit faite", async () => {
+    let finish: () => void = () => {};
+    const { store } = fakeStore();
+    store.put = vi.fn(() => new Promise<void>((resolve) => (finish = resolve)));
+    const { engine, reserve } = setup({ store });
+    engine.add([file("a.jpg")]);
+    await flush();
+    expect(reserve).not.toHaveBeenCalled();
+    finish();
+    await flush();
+    expect(reserve).toHaveBeenCalled();
+  });
+
+  it("NF-010: stockage plein : le fichier part quand même, marqué non sauvegardé, et l'invité est prévenu", async () => {
+    const { store } = fakeStore();
+    const full = Object.assign(new Error("full"), { name: "QuotaExceededError" });
+    store.put = vi.fn(async () => {
+      throw full;
+    });
+    const problems: StorageProblem[] = [];
+    const { engine } = setup({ store, onStorageProblem: (p) => problems.push(p) });
+    engine.add([file("a.jpg")]);
+    await flush();
+    expect(problems).toEqual(["storage_full"]);
+    expect(engine.getItems()[0]).toMatchObject({ status: "sent", unsaved: true });
+  });
+
+  it("NF-010: un stockage inutilisable (navigation privée) est signalé autrement", async () => {
+    const { store } = fakeStore();
+    store.put = vi.fn(async () => {
+      throw new Error("blocked");
+    });
+    const problems: StorageProblem[] = [];
+    const { engine } = setup({ store, onStorageProblem: (p) => problems.push(p) });
+    engine.add([file("a.jpg")]);
+    await flush();
+    expect(problems).toEqual(["storage_unavailable"]);
+  });
+
+  it("NF-010: au retour sur la page, les fichiers restés sur l'appareil sont repris et envoyés", async () => {
+    const { store, saved } = fakeStore([
+      { id: "old-1", file: file("IMG_1.jpg") },
+      { id: "old-2", file: file("IMG_2.jpg") },
+    ]);
+    const { engine, puts } = setup({ store });
+    expect(await engine.restore()).toBe(2);
+    await flush();
+    expect(engine.getItems().map((item) => [item.name, item.status])).toEqual([
+      ["IMG_1.jpg", "sent"],
+      ["IMG_2.jpg", "sent"],
+    ]);
+    expect(puts.length).toBeGreaterThan(0);
+    expect(saved.size).toBe(0);
+    // Reprise une seconde fois : plus rien à reprendre.
+    expect(await engine.restore()).toBe(0);
+  });
+
+  it("NF-010: reprendre ne double pas un fichier déjà dans la file", async () => {
+    const { store } = fakeStore();
+    const { engine } = setup({
+      store,
+      reserve: async () => {
+        throw new ApiError(0, "network_error");
+      },
+    });
+    engine.add([file("a.jpg")]);
+    await flush();
+    expect(await engine.restore()).toBe(0);
+    expect(engine.getItems()).toHaveLength(1);
+  });
+
+  it("NF-010: sans stockage, restore ne fait rien", async () => {
+    const { engine } = setup();
+    expect(await engine.restore()).toBe(0);
   });
 });

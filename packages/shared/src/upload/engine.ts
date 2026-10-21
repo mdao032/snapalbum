@@ -72,6 +72,20 @@ export interface UploadIO<F, B> {
   previewUrl?(media: PreparedMedia<B>): string | undefined;
 }
 
+/**
+ * Where chosen files wait on the device until the server has confirmed them (NF-010): IndexedDB
+ * in the browser. Injected, so the engine stays free of any platform.
+ */
+export interface UploadStore<F> {
+  put(id: string, file: F): Promise<void>;
+  remove(id: string): Promise<void>;
+  /** Every file left from an earlier visit of this page. */
+  list(): Promise<{ id: string; file: F }[]>;
+}
+
+/** Why a copy could not be kept on the device: the file is still sent, but not safe from a reload. */
+export type StorageProblem = "storage_full" | "storage_unavailable";
+
 export type UploadFailureReason = ApiErrorCode | "corrupted" | "network_error" | "upload_failed";
 
 export interface UploadItem extends QueueItem {
@@ -83,6 +97,8 @@ export interface UploadItem extends QueueItem {
   mediaId?: string;
   /** Local picture of the file once prepared, shown in the list before and during the upload. */
   previewUrl?: string;
+  /** No copy of the file could be kept on the device: closing the page now would lose it. */
+  unsaved?: boolean;
 }
 
 export interface UploadEngineOptions<F extends { name: string }, B> {
@@ -96,6 +112,10 @@ export interface UploadEngineOptions<F extends { name: string }, B> {
   schedule?: (run: () => void, delayMs: number) => () => void;
   newId?: () => string;
   maxConcurrent?: number;
+  /** Local copies of the files (NF-010). Without it, files live in memory only. */
+  store?: UploadStore<F>;
+  /** Called when a file could not be copied to the store. */
+  onStorageProblem?: (problem: StorageProblem) => void;
   /** Called once when the guest has to join the event first (no session or not a guest yet). */
   onNeedJoin?: () => void;
 }
@@ -103,6 +123,8 @@ export interface UploadEngineOptions<F extends { name: string }, B> {
 export interface UploadEngine<F> {
   /** Adds files to the queue and starts sending them. */
   add(files: readonly F[]): void;
+  /** Takes back the files left by an earlier visit and sends them; resolves with their number. */
+  restore(): Promise<number>;
   /** Tries every waiting or failed file again now (connection back, album enlarged). */
   retryNow(): void;
   /** Starts again after the guest has joined the event. */
@@ -174,6 +196,9 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
   const files = new Map<string, F>();
   const prepared = new Map<string, PreparedMedia<B>>();
   const listeners = new Set<() => void>();
+  const store = options.store;
+  /** Files being copied to the store: they must not start before the copy is safe. */
+  const held = new Set<string>();
   let paused = false;
   let cancelWake: (() => void) | null = null;
 
@@ -193,7 +218,11 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
     cancelWake = null;
     if (paused) return;
 
-    const picked = pickNextItems(items, now(), maxConcurrent);
+    const picked = pickNextItems(
+      items.filter((item) => !held.has(item.id)),
+      now(),
+      maxConcurrent,
+    );
     for (const item of picked) {
       update(item.id, (current) => ({ ...markUploading(current), progress: 0, reason: undefined }));
       void run(item.id);
@@ -273,6 +302,25 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
     return reserved.mediaId;
   }
 
+  /** Confirmed or refused for good: the memory and the local copy can go (NF-010). */
+  function forget(id: string) {
+    files.delete(id);
+    prepared.delete(id);
+    store?.remove(id).catch(() => undefined);
+  }
+
+  async function persist(id: string, file: F) {
+    try {
+      await store?.put(id, file);
+    } catch (error) {
+      update(id, (item) => ({ ...item, unsaved: true }));
+      const full = error instanceof Error && error.name === "QuotaExceededError";
+      options.onStorageProblem?.(full ? "storage_full" : "storage_unavailable");
+    } finally {
+      held.delete(id);
+    }
+  }
+
   async function run(id: string) {
     const file = files.get(id);
     if (!file) return;
@@ -297,8 +345,7 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
       }
       const mediaId = await sendAll(id, media);
       // Confirmed by the server: the local copy can go (NF-010).
-      files.delete(id);
-      prepared.delete(id);
+      forget(id);
       update(id, (item) => ({ ...markSent(item), progress: 1, mediaId, reason: undefined }));
     } catch (error) {
       const decision = classifyFailure(error);
@@ -309,8 +356,7 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
           options.onNeedJoin?.();
           break;
         case "reject":
-          files.delete(id);
-          prepared.delete(id);
+          forget(id);
           update(id, (item) => ({ ...markRejected(item), reason: decision.reason }));
           break;
         case "wait_quota":
@@ -326,13 +372,37 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
 
   return {
     add(newFiles) {
+      const saving: Promise<void>[] = [];
       for (const file of newFiles) {
         const id = newId();
         files.set(id, file);
+        if (store) {
+          held.add(id);
+          saving.push(persist(id, file));
+        }
         items.push({ ...createQueueItem(id, now()), name: file.name, progress: 0 });
       }
       emit();
       pump();
+      // Sending starts once each file is safely copied (or the copy has failed).
+      if (saving.length > 0) void Promise.all(saving).then(pump);
+    },
+    async restore() {
+      if (!store) return 0;
+      const left = (await store.list()).filter((entry) => !files.has(entry.id));
+      for (const entry of left) {
+        files.set(entry.id, entry.file);
+        items.push({
+          ...createQueueItem(entry.id, now()),
+          name: entry.file.name,
+          progress: 0,
+        });
+      }
+      if (left.length > 0) {
+        emit();
+        pump();
+      }
+      return left.length;
     },
     retryNow() {
       items = items.map((item) =>
