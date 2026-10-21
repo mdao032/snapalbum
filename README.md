@@ -44,6 +44,4 @@ docs             décisions, journal, installation, tests manuels, RGPD
 
 ## Documents de référence
 
-- [SPEC.md](SPEC.md) : cahier des charges
-- [ROADMAP.md](ROADMAP.md) : plan de réalisation par phases
 - [CLAUDE.md](CLAUDE.md) : règles de travail

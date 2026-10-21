@@ -4,7 +4,5 @@ node_modules
 coverage
 pnpm-lock.yaml
 packages/shared/src/db-types.ts
-SPEC.md
-ROADMAP.md
 CLAUDE.md
 supabase/templates
