@@ -1,5 +1,11 @@
 import "server-only";
-import { TERMS_VERSION, type ApiErrorCode, type JoinEventResponse } from "@snapalbum/shared";
+import {
+  TERMS_VERSION,
+  type ApiErrorCode,
+  type JoinEventResponse,
+  type NotifyRequestParsed,
+  type NotifyResponse,
+} from "@snapalbum/shared";
 import type { Database } from "@snapalbum/shared/db-types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { verifyAccessCode } from "./access-code";
@@ -154,18 +160,67 @@ export async function joinEvent(
   return { ok: true, body: { guestId: created.id, displayName: created.display_name, session } };
 }
 
-/** The guest record of a signed-in visitor for an event, or null when they have not joined. */
+/**
+ * The guest record of a signed-in visitor for an event, or null when they have not joined. The
+ * e-mail address they left (F-044) is their own data, shown back to them; it counts only with its
+ * consent.
+ */
 export async function getGuestOfEvent(
   admin: Client,
   eventId: string,
   userId: string,
-): Promise<{ id: string; displayName: string | null } | null> {
+): Promise<{ id: string; displayName: string | null; notifyEmail: string | null } | null> {
   const { data, error } = await admin
     .from("guests")
-    .select("id, display_name")
+    .select("id, display_name, notify_email, notify_consent_at")
     .eq("event_id", eventId)
     .eq("auth_user_id", userId)
     .maybeSingle();
   if (error) throw error;
-  return data ? { id: data.id, displayName: data.display_name } : null;
+  if (!data) return null;
+  return {
+    id: data.id,
+    displayName: data.display_name,
+    notifyEmail: data.notify_consent_at ? data.notify_email : null,
+  };
+}
+
+/**
+ * A guest leaves an e-mail address to be told when the album is ready, with a consent of its own,
+ * or takes it back (F-044). Only a guest of the event can do it, for themselves. The address is
+ * used for that single e-mail and removed when the event expires (step 4.3).
+ */
+export async function setNotifyEmail(
+  admin: Client,
+  user: { id: string },
+  request: NotifyRequestParsed,
+  now: Date = new Date(),
+): Promise<GuestResult<NotifyResponse>> {
+  const { data: event, error: eventError } = await admin
+    .from("events")
+    .select("id, status")
+    .eq("public_code", request.eventCode)
+    .maybeSingle();
+  if (eventError) throw eventError;
+  if (!event || event.status !== "active") return fail(404, "not_found");
+
+  const { data: guest, error: guestError } = await admin
+    .from("guests")
+    .select("id, blocked_at")
+    .eq("event_id", event.id)
+    .eq("auth_user_id", user.id)
+    .maybeSingle();
+  if (guestError) throw guestError;
+  if (!guest || guest.blocked_at) return fail(403, "forbidden");
+
+  const changes =
+    request.action === "set"
+      ? { notify_email: request.email, notify_consent_at: now.toISOString() }
+      : { notify_email: null, notify_consent_at: null };
+  const { error } = await admin.from("guests").update(changes).eq("id", guest.id);
+  if (error) throw error;
+  return {
+    ok: true,
+    body: request.action === "set" ? { action: "set", email: request.email } : { action: "clear" },
+  };
 }

@@ -6,12 +6,15 @@ import {
   computeExpiresAt,
   createEventSchema,
   defaultEventSettings,
+  eventSettingsSchema,
   generatePublicCode,
+  guestPhase,
   makeAccentReadable,
   publicCodeSchema,
   updateEventSchema,
   updateEventSettingsSchema,
   type CreateEventInput,
+  type GuestPhase,
 } from "@snapalbum/shared";
 import type { Database } from "@snapalbum/shared/db-types";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -152,6 +155,10 @@ export type PublicEvent = Pick<
 > & {
   /** The guest must enter the organiser's code before joining (F-017). The hash itself never leaves. */
   requiresAccessCode: boolean;
+  /** The organiser opened the gallery to guests (F-015, F-039). */
+  galleryVisible: boolean;
+  /** What the page offers now: not yet, the event itself, after it, uploads closed (F-043). */
+  phase: GuestPhase;
 };
 
 /**
@@ -163,21 +170,34 @@ export type PublicEvent = Pick<
 export async function getPublicEvent(
   admin: Client,
   publicCode: string,
+  now: Date = new Date(),
 ): Promise<PublicEvent | null> {
   if (!publicCodeSchema.safeParse(publicCode).success) return null;
   const { data, error } = await admin
     .from("events")
-    .select("id, title, welcome_message, accent_color, locale, status, expires_at, plan, settings")
+    .select(
+      "id, title, welcome_message, accent_color, locale, status, expires_at, plan, settings, event_date",
+    )
     .eq("public_code", publicCode)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;
-  const { settings, ...visible } = data;
-  const hash =
+  const { settings, event_date: eventDate, ...visible } = data;
+  const values =
     settings && typeof settings === "object" && !Array.isArray(settings)
-      ? (settings as Record<string, unknown>).access_code_hash
-      : null;
-  return { ...visible, requiresAccessCode: typeof hash === "string" && hash !== "" };
+      ? (settings as Record<string, unknown>)
+      : {};
+  const hash = values.access_code_hash;
+  const parsedSettings = eventSettingsSchema.safeParse(settings);
+  return {
+    ...visible,
+    requiresAccessCode: typeof hash === "string" && hash !== "",
+    galleryVisible: values.gallery_visible === true,
+    // Settings that are not a valid window mean uploads are closed, as the database reads them.
+    phase: parsedSettings.success
+      ? guestPhase({ eventDate, settings: parsedSettings.data }, now)
+      : "closed",
+  };
 }
 
 export type SettingsResult = { ok: true; event: EventRow } | { ok: false; reason: "not_found" };
@@ -289,4 +309,44 @@ export interface EventStats {
  */
 export function getEventStats(event: Pick<EventRow, "media_count" | "bytes_used">): EventStats {
   return { photos: event.media_count, videos: 0, guests: 0, bytesUsed: event.bytes_used };
+}
+
+/**
+ * Guests of an event who left an e-mail address and agreed to receive the album link (F-044). Only
+ * the count is ever shown to the organiser; the addresses stay with the mailer (step 4.3).
+ */
+export async function countNotifyGuests(admin: Client, eventId: string): Promise<number> {
+  const { count, error } = await admin
+    .from("guests")
+    .select("id", { count: "exact", head: true })
+    .eq("event_id", eventId)
+    .not("notify_email", "is", null)
+    .not("notify_consent_at", "is", null);
+  if (error) throw error;
+  return count ?? 0;
+}
+
+export type AlbumReadyResult =
+  { ok: true; readyAt: string; alreadyReady: boolean } | { ok: false; reason: "not_found" };
+
+/**
+ * The organiser declares the album ready (F-044). The moment is kept in the event settings, once,
+ * by a database function that locks the event: guests who asked to be told get their e-mail from
+ * it (the mailer is wired in step 4.3), and declaring it twice, even at the same instant, changes
+ * nothing, so the e-mails cannot go out twice. The function checks that the caller owns an active
+ * event; this uses the ADMIN client.
+ */
+export async function markAlbumReady(
+  admin: Client,
+  ownerId: string,
+  eventId: string,
+): Promise<AlbumReadyResult> {
+  const { data, error } = await admin.rpc("mark_album_ready", {
+    p_event_id: eventId,
+    p_owner_id: ownerId,
+  });
+  if (error) throw error;
+  const answer = data as { ok: boolean; ready_at?: string; already?: boolean } | null;
+  if (!answer?.ok || !answer.ready_at) return { ok: false, reason: "not_found" };
+  return { ok: true, readyAt: answer.ready_at, alreadyReady: answer.already === true };
 }

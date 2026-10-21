@@ -49,6 +49,10 @@ export default async function GuestEventPage({ params }: PageProps<"/[locale]/e/
           joined={guest !== null}
           displayName={guest?.displayName ?? null}
           requiresAccessCode={event.requiresAccessCode}
+          galleryVisible={event.galleryVisible}
+          phase={event.phase}
+          notifyEmail={guest?.notifyEmail ?? null}
+          title={event.title}
           turnstileSiteKey={clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
           plan={plan.id}
           maxVideoSeconds={plan.maxVideoSeconds}

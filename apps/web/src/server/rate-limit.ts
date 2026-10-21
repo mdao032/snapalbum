@@ -52,6 +52,13 @@ export const GALLERY_RATE_LIMIT: RateLimitRule = {
   windowSeconds: 60,
 };
 
+/** Leaving or withdrawing an e-mail address (F-044): 10 per hour per guest. */
+export const NOTIFY_RATE_LIMIT: RateLimitRule = {
+  name: "guest-notify",
+  limit: 10,
+  windowSeconds: 60 * 60,
+};
+
 /** Wrong access codes (S-006): 5 attempts per 10 minutes per address and event. */
 export const ACCESS_CODE_RATE_LIMIT: RateLimitRule = {
   name: "access-code",

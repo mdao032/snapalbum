@@ -32,6 +32,7 @@ const fail = (status: number, code: ApiErrorCode): Failure => ({ ok: false, stat
 interface Granted {
   eventId: string;
   title: string;
+  accentColor: string | null;
   /** Guest names and the "sent by" filter: for the event's own people, never for a share link. */
   showGuests: boolean;
 }
@@ -60,24 +61,37 @@ export async function resolveGalleryAccess(
     if (!link) return fail(404, "not_found");
     const { data: event, error: eventError } = await admin
       .from("events")
-      .select("id, title, status")
+      .select("id, title, status, accent_color")
       .eq("id", link.event_id)
       .maybeSingle();
     if (eventError) throw eventError;
     if (!event || event.status !== "active") return fail(404, "not_found");
-    return { ok: true, body: { eventId: event.id, title: event.title, showGuests: false } };
+    return {
+      ok: true,
+      body: {
+        eventId: event.id,
+        title: event.title,
+        accentColor: event.accent_color,
+        showGuests: false,
+      },
+    };
   }
 
   if (!user) return fail(401, "unauthorized");
   const { data: event, error } = await admin
     .from("events")
-    .select("id, title, status, owner_id, settings")
+    .select("id, title, status, owner_id, settings, accent_color")
     .eq("public_code", access.eventCode)
     .maybeSingle();
   if (error) throw error;
   if (!event || event.status !== "active") return fail(404, "not_found");
 
-  const granted: Granted = { eventId: event.id, title: event.title, showGuests: true };
+  const granted: Granted = {
+    eventId: event.id,
+    title: event.title,
+    accentColor: event.accent_color,
+    showGuests: true,
+  };
   if (event.owner_id === user.id) return { ok: true, body: granted };
 
   const { data: guest, error: guestError } = await admin

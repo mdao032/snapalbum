@@ -15,12 +15,14 @@ import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { AlbumReady } from "@/components/events/album-ready";
 import { DeleteEvent } from "@/components/events/delete-event";
 import { EventCover } from "@/components/events/event-cover";
 import { EventStatsPanel } from "@/components/events/event-stats";
 import { PersonalizeForm } from "@/components/events/personalize-form";
 import { SettingsForm } from "@/components/events/settings-form";
 import { SharePanel } from "@/components/events/share-panel";
+import { ShareLinks } from "@/components/events/share-links";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { clientEnv } from "@/config/env";
@@ -28,8 +30,15 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { eventDisplayStatus, formatEventDate, formatInstantDate } from "@/lib/events";
 import { requireOrganiser } from "@/server/auth";
-import { getEventStats, getOwnEvent } from "@/server/events";
-import { cancelDeletionAction } from "./actions";
+import { countNotifyGuests, getEventStats, getOwnEvent } from "@/server/events";
+import { shareLinkViews } from "@/server/share-links";
+import { createSupabaseAdminClient } from "@/server/supabase/admin";
+import {
+  cancelDeletionAction,
+  createShareLinkAction,
+  markAlbumReadyAction,
+  revokeShareLinkAction,
+} from "./actions";
 
 export const metadata: Metadata = { robots: { index: false } };
 
@@ -37,7 +46,7 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
   const { locale, id } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const { supabase } = await requireOrganiser(locale);
+  const { supabase, user } = await requireOrganiser(locale);
   if (!uuidSchema.safeParse(id).success) notFound();
 
   const event = await getOwnEvent(supabase, id);
@@ -53,6 +62,12 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
   const settings = parsedSettings.success
     ? parsedSettings.data
     : defaultEventSettings(event.event_date);
+  const notifyCount = pendingDeletion
+    ? 0
+    : await countNotifyGuests(createSupabaseAdminClient(), event.id);
+  const shareLinks = pendingDeletion
+    ? []
+    : await shareLinkViews(createSupabaseAdminClient(), user.id, event.id);
   const usage = computeEventUsage({ plan: event.plan as PlanId, mediaCount: event.media_count });
 
   return (
@@ -106,6 +121,18 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
               eventId={event.id}
               title={event.title}
               link={buildShortLink(clientEnv.NEXT_PUBLIC_SHORT_LINK_BASE, event.public_code)}
+            />
+
+            <AlbumReady
+              waitingCount={notifyCount}
+              readyAt={settings.album_ready_at ?? null}
+              onDeclare={markAlbumReadyAction.bind(null, event.id)}
+            />
+
+            <ShareLinks
+              initialLinks={shareLinks}
+              onCreate={createShareLinkAction.bind(null, event.id)}
+              onRevoke={revokeShareLinkAction.bind(null, event.id)}
             />
 
             <SettingsForm

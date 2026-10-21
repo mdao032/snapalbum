@@ -11,8 +11,11 @@ import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 import { getOrganiser } from "@/server/auth";
+import { createShareLink, revokeShareLink } from "@/server/gallery";
+import { shareLinkViews, type ShareLinkView } from "@/server/share-links";
 import {
   cancelEventDeletion,
+  markAlbumReady,
   requestEventDeletion,
   updateEventPresentation,
   updateEventSettings,
@@ -123,4 +126,60 @@ export async function cancelDeletionAction(eventId: string): Promise<void> {
   const ownerId = await ownerOf(eventId);
   if (ownerId) await cancelEventDeletion(createSupabaseAdminClient(), ownerId, eventId);
   redirect({ href: `/events/${eventId}`, locale: await getLocale() });
+}
+
+export type ShareLinksState =
+  { ok: true; links: ShareLinkView[] } | { ok: false; error: "failed" | "too_many" };
+
+/** Creates a read-only share link for the gallery (F-054). */
+export async function createShareLinkAction(eventId: string): Promise<ShareLinksState> {
+  const ownerId = await ownerOf(eventId);
+  if (!ownerId) return { ok: false, error: "failed" };
+  try {
+    const admin = createSupabaseAdminClient();
+    const created = await createShareLink(admin, ownerId, eventId);
+    if (!created.ok) {
+      return { ok: false, error: created.reason === "too_many" ? "too_many" : "failed" };
+    }
+    return { ok: true, links: await shareLinkViews(admin, ownerId, eventId) };
+  } catch (error) {
+    console.error("[events] share link creation failed", error);
+    return { ok: false, error: "failed" };
+  }
+}
+
+/** Revokes a share link: it stops working at once (F-054). */
+export async function revokeShareLinkAction(
+  eventId: string,
+  linkId: string,
+): Promise<ShareLinksState> {
+  const ownerId = await ownerOf(eventId);
+  if (!ownerId || !uuidSchema.safeParse(linkId).success) return { ok: false, error: "failed" };
+  try {
+    const admin = createSupabaseAdminClient();
+    if (!(await revokeShareLink(admin, ownerId, eventId, linkId))) {
+      return { ok: false, error: "failed" };
+    }
+    return { ok: true, links: await shareLinkViews(admin, ownerId, eventId) };
+  } catch (error) {
+    console.error("[events] share link revocation failed", error);
+    return { ok: false, error: "failed" };
+  }
+}
+
+export type AlbumReadyState = { ok: true; readyAt: string } | { ok: false };
+
+/** Declares the album ready: the guests who left an e-mail address get its link (F-044). */
+export async function markAlbumReadyAction(eventId: string): Promise<AlbumReadyState> {
+  const ownerId = await ownerOf(eventId);
+  if (!ownerId) return { ok: false };
+  try {
+    const result = await markAlbumReady(createSupabaseAdminClient(), ownerId, eventId);
+    if (!result.ok) return { ok: false };
+    revalidatePath("/[locale]/events/[id]", "page");
+    return { ok: true, readyAt: result.readyAt };
+  } catch (error) {
+    console.error("[events] album ready failed", error);
+    return { ok: false };
+  }
 }
