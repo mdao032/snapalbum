@@ -1,5 +1,11 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test as base, type Browser, type Page } from "@playwright/test";
+import {
+  expect,
+  test as base,
+  type Browser,
+  type BrowserContextOptions,
+  type Page,
+} from "@playwright/test";
 
 /** NF-030: every page checked by an end-to-end test must have no detectable WCAG A/AA issue. */
 export async function expectNoAccessibilityViolations(page: Page): Promise<void> {
@@ -99,8 +105,15 @@ export async function signIn(page: Page, loginPath = "/login"): Promise<string> 
 }
 
 /** A page of a brand-new browser context: another person, on another connection. */
-export async function newVisitor(browser: Browser): Promise<Page> {
-  const context = await browser.newContext({ locale: "fr-FR", reducedMotion: "reduce" });
+export async function newVisitor(
+  browser: Browser,
+  options: BrowserContextOptions = {},
+): Promise<Page> {
+  const context = await browser.newContext({
+    locale: "fr-FR",
+    reducedMotion: "reduce",
+    ...options,
+  });
   await context.setExtraHTTPHeaders({ "x-forwarded-for": randomIp() });
   return context.newPage();
 }
