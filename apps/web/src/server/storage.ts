@@ -286,8 +286,9 @@ export function storageConfigFromEnv(): StorageConfig {
     bucket: R2_BUCKET,
     accessKeyId: R2_ACCESS_KEY_ID,
     secretAccessKey: R2_SECRET_ACCESS_KEY,
-    // A custom endpoint is a local emulator, which needs path-style addresses.
+    // A custom endpoint is a local emulator: path-style addresses and the region it signs for.
     forcePathStyle: Boolean(env.R2_ENDPOINT),
+    region: env.R2_ENDPOINT ? "us-east-1" : undefined,
   };
 }
 

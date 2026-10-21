@@ -30,7 +30,8 @@ export default defineConfig({
       // Business logic folders (NF-042): the 80 % threshold applies to them.
       include: ["src/lib/**/*.{ts,tsx}", "src/server/**/*.ts", "src/config/**/*.ts"],
       // `server/storage.ts` talks to S3: its tests are the integration tests (`pnpm test:integration`).
-      exclude: ["**/*.test.*", "src/server/storage.ts"],
+      exclude: ["**/*.test.*", "src/server/storage.ts", "src/lib/upload/browser-io.ts"],
+      // `browser-io.ts` needs a real canvas and XHR: covered by the end-to-end tests with a real browser.
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },
   },

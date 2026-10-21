@@ -1,9 +1,7 @@
 "use client";
 
-import { ApiError, createApiClient } from "@snapalbum/shared/api-client";
 import { GUEST_NAME_MAX_LENGTH } from "@snapalbum/shared/constants";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { TurnstileField } from "@/components/auth/turnstile-field";
 import { Alert } from "@/components/ui/alert";
@@ -16,8 +14,6 @@ import { Spinner } from "@/components/ui/spinner";
 /** Where the guest's first name is remembered on this device (F-033). */
 const NAME_KEY = "snapalbum:guest-name";
 
-const api = createApiClient({ baseUrl: "" });
-
 /** Error codes of the join route that have a message of their own. */
 const KNOWN_ERRORS = [
   "access_code_required",
@@ -27,6 +23,39 @@ const KNOWN_ERRORS = [
   "event_suspended",
   "validation_failed",
 ] as const;
+type KnownError = (typeof KNOWN_ERRORS)[number];
+
+interface JoinPayload {
+  eventCode: string;
+  displayName?: string;
+  acceptTerms: true;
+  accessCode?: string;
+  turnstileToken?: string;
+}
+
+/**
+ * Calls the join route. Plain `fetch` on purpose: this form is part of the page's first
+ * JavaScript, and the shared API client (with its validation library) is loaded only when
+ * photos are actually sent (NF-002).
+ */
+async function postJoin(payload: JoinPayload): Promise<{ displayName: string | null }> {
+  let response: Response;
+  try {
+    response = await fetch("/api/guests/join", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch {
+    throw new Error("network_error");
+  }
+  const body = (await response.json().catch(() => null)) as {
+    displayName?: string | null;
+    error?: { code?: string };
+  } | null;
+  if (!response.ok) throw new Error(body?.error?.code ?? "internal_error");
+  return { displayName: body?.displayName ?? null };
+}
 
 /**
  * The light step before a guest's first upload (F-033, F-034, F-035): an optional first name,
@@ -36,14 +65,16 @@ export function JoinForm({
   eventCode,
   requiresAccessCode,
   turnstileSiteKey,
+  onJoined,
 }: {
   eventCode: string;
   requiresAccessCode: boolean;
   turnstileSiteKey: string | undefined;
+  /** Called once the guest is registered (the page then sends the photos already chosen). */
+  onJoined: (displayName: string | null) => void;
 }) {
   const t = useTranslations("guest.join");
   const tApi = useTranslations("apiErrors");
-  const router = useRouter();
   const nameInput = useRef<HTMLInputElement>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,7 +105,7 @@ export function JoinForm({
     const name = String(data.get("displayName") ?? "").trim();
     const code = String(data.get("accessCode") ?? "").trim();
     try {
-      const result = await api.joinEvent({
+      const result = await postJoin({
         eventCode,
         displayName: name || undefined,
         acceptTerms: true,
@@ -86,13 +117,12 @@ export function JoinForm({
       } catch {
         // Not remembering the name is harmless.
       }
-      // The session cookie is set: the page now sees a guest.
-      router.refresh();
+      onJoined(result.displayName);
     } catch (failure) {
-      const code = failure instanceof ApiError ? failure.code : null;
+      const reason = failure instanceof Error ? failure.message : "";
       setError(
-        code && (KNOWN_ERRORS as readonly string[]).includes(code)
-          ? tApi(code as (typeof KNOWN_ERRORS)[number])
+        (KNOWN_ERRORS as readonly string[]).includes(reason)
+          ? tApi(reason as KnownError)
           : t("failed"),
       );
       setPending(false);

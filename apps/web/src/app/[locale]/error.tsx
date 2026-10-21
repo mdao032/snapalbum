@@ -1,41 +1,14 @@
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
-import { useTranslations } from "next-intl";
-import { useEffect } from "react";
-import { EmptyState } from "@/components/feedback/empty-state";
-import { PageShell } from "@/components/layout/page-shell";
-import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
 
-export default function ErrorPage({
-  error,
-  reset,
-}: {
+// The error screen (header, footer, error reporting) is a separate chunk: every page carries this
+// boundary, and none should pay for it before something actually fails (NF-002).
+const ErrorView = dynamic(() => import("@/components/feedback/error-view"));
+
+export default function ErrorPage(props: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const t = useTranslations();
-
-  useEffect(() => {
-    Sentry.captureException(error);
-  }, [error]);
-
-  return (
-    <PageShell>
-      <div className="container-page flex flex-1 items-center justify-center">
-        <EmptyState
-          as="h1"
-          tone="warm"
-          mark="alert"
-          title={t("error.title")}
-          description={t("error.description")}
-          action={
-            <Button type="button" onClick={reset}>
-              {t("common.retry")}
-            </Button>
-          }
-        />
-      </div>
-    </PageShell>
-  );
+  return <ErrorView {...props} />;
 }

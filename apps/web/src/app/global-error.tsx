@@ -1,11 +1,11 @@
 "use client";
 
-import { messages } from "@snapalbum/shared/messages";
-import * as Sentry from "@sentry/nextjs";
-import { useEffect } from "react";
-import { EmptyState } from "@/components/feedback/empty-state";
-import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
 import "./globals.css";
+
+// Both languages' messages, error reporting and the page itself load only when this page is
+// actually shown: the boundary is part of every first load, its content must not be (NF-002).
+const GlobalErrorView = dynamic(() => import("./global-error-view"));
 
 // Last-resort error page: replaces the whole document, so it cannot rely on the locale layout.
 export default function GlobalError({
@@ -17,29 +17,11 @@ export default function GlobalError({
 }) {
   const locale =
     typeof navigator !== "undefined" && navigator.language.startsWith("en") ? "en" : "fr";
-  const t = messages[locale];
-
-  useEffect(() => {
-    Sentry.captureException(error);
-  }, [error]);
 
   return (
     <html lang={locale}>
       <body className="bg-background text-foreground">
-        <main className="flex min-h-dvh items-center justify-center">
-          <EmptyState
-            as="h1"
-            tone="warm"
-            mark="alert"
-            title={t.error.title}
-            description={t.error.description}
-            action={
-              <Button type="button" onClick={reset}>
-                {t.common.retry}
-              </Button>
-            }
-          />
-        </main>
+        <GlobalErrorView error={error} reset={reset} locale={locale} />
       </body>
     </html>
   );
