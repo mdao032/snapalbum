@@ -80,7 +80,7 @@ jobs:
           retention-days: 7
 
   storage:
-    name: Stockage (émulateur S3)
+    name: Stockage et envois (émulateur S3 et Supabase)
     runs-on: ubuntu-latest
     needs: quality
     timeout-minutes: 15
@@ -92,10 +92,21 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: cp .env.example apps/web/.env.local
+      # The upload tests use the real database functions and the real signed addresses.
+      - name: Start local Supabase
+        run: pnpm exec supabase start -x studio,imgproxy,edge-runtime,logflare,vector,supavisor
+      - name: Point the tests at local Supabase
+        run: |
+          pnpm exec supabase status -o env > "$RUNNER_TEMP/supabase.env"
+          set -a
+          . "$RUNNER_TEMP/supabase.env"
+          set +a
+          sed -i "s|^NEXT_PUBLIC_SUPABASE_ANON_KEY=.*|NEXT_PUBLIC_SUPABASE_ANON_KEY=${ANON_KEY}|; s|^SUPABASE_SERVICE_ROLE_KEY=.*|SUPABASE_SERVICE_ROLE_KEY=${SERVICE_ROLE_KEY}|" apps/web/.env.local
       # R2 speaks the S3 protocol: the tests run against a local emulator, no Cloudflare account.
       - name: Start the S3 emulator
         run: node scripts/storage-emulator.mjs start
-      - name: Storage integration tests (signed addresses, multipart, purge)
+      - name: Integration tests (storage, reservation, confirmation, multipart)
         run: pnpm --filter web test:integration
 
   database:
