@@ -1,5 +1,4 @@
 # Secrets and local environment
-environnement.txt
 .env
 .env.*
 !.env.example
