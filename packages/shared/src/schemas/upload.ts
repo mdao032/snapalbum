@@ -59,6 +59,7 @@ export const API_ERROR_CODES = [
   "file_too_large",
   "upload_window_closed",
   "guest_blocked",
+  "free_event_limit",
   "event_suspended",
   "unsupported_format",
   "internal_error",

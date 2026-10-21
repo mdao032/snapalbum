@@ -43,6 +43,7 @@
     "file_too_large": "This file is too large.",
     "upload_window_closed": "Photo uploads have ended for this event.",
     "guest_blocked": "You can no longer send photos to this event.",
+    "free_event_limit": "You already have a free event in progress. Upgrade it to the Event plan or wait until it ends to create another.",
     "event_suspended": "This event is temporarily suspended.",
     "unsupported_format": "This file format isn’t supported.",
     "internal_error": "An error occurred. Try again in a moment.",
