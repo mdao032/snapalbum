@@ -42,6 +42,16 @@ export const GUEST_JOIN_RATE_LIMIT: RateLimitRule = {
   windowSeconds: 60 * 60,
 };
 
+/**
+ * Gallery requests: 240 per minute per guest, or per address for a share link. A screen of
+ * thumbnails asks a handful of times when scrolling fast; this only stops scraping.
+ */
+export const GALLERY_RATE_LIMIT: RateLimitRule = {
+  name: "gallery",
+  limit: 240,
+  windowSeconds: 60,
+};
+
 /** Wrong access codes (S-006): 5 attempts per 10 minutes per address and event. */
 export const ACCESS_CODE_RATE_LIMIT: RateLimitRule = {
   name: "access-code",
