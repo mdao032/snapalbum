@@ -126,6 +126,73 @@
   "nav": {
     "signIn": "Se connecter",
     "account": "Mon compte",
-    "primary": "Navigation principale"
+    "primary": "Navigation principale",
+    "events": "Mes événements"
+  },
+  "events": {
+    "list": {
+      "title": "Mes événements",
+      "subtitle": "Retrouvez ici tous vos albums.",
+      "create": "Créer un événement",
+      "emptyTitle": "Votre premier événement vous attend",
+      "emptyDescription": "Créez-le en moins d’une minute : vous obtiendrez ensuite un QR code à faire scanner à vos invités.",
+      "photoCount": "{count, plural, =0 {Aucune photo} one {# photo} other {# photos}}"
+    },
+    "status": {
+      "active": "En cours",
+      "expired": "Terminé",
+      "suspended": "Suspendu",
+      "pending_deletion": "Suppression prévue"
+    },
+    "types": {
+      "wedding": "Mariage",
+      "birthday": "Anniversaire",
+      "corporate": "Entreprise",
+      "other": "Autre"
+    },
+    "new": {
+      "title": "Créer un événement",
+      "subtitle": "Quatre informations suffisent. Le reste se règle ensuite.",
+      "titleLabel": "Nom de l’événement",
+      "titlePlaceholder": "Mariage de Léa et Tom",
+      "dateLabel": "Date de l’événement",
+      "typeLabel": "Type d’événement",
+      "localeLabel": "Langue de la page invité",
+      "localeHint": "C’est la langue que verront vos invités en scannant le QR code.",
+      "submit": "Créer mon événement",
+      "submitting": "Création…",
+      "cancel": "Annuler"
+    },
+    "fieldErrors": {
+      "required": "Ce champ est obligatoire.",
+      "too_long": "Ce texte est trop long ({max} caractères au maximum).",
+      "invalid": "Cette valeur n’est pas valide."
+    },
+    "errors": {
+      "validation": "Vérifiez les champs signalés.",
+      "failed": "L’événement n’a pas pu être créé. Réessayez dans un instant.",
+      "saveFailed": "Vos modifications n’ont pas pu être enregistrées. Réessayez."
+    },
+    "detail": {
+      "back": "Mes événements",
+      "personalizeTitle": "Personnalisation",
+      "personalizeSubtitle": "Ce que vos invités voient en arrivant sur la page de l’événement.",
+      "titleLabel": "Nom de l’événement",
+      "typeLabel": "Type d’événement",
+      "localeLabel": "Langue de la page invité",
+      "welcomeLabel": "Message d’accueil",
+      "welcomePlaceholder": "Bienvenue ! Partagez avec nous vos plus beaux moments.",
+      "welcomeCount": "{count} / {max}",
+      "accentLabel": "Couleur d’accent",
+      "accentDefault": "Couleur par défaut",
+      "accentPreset": "Couleur {color}",
+      "accentCustom": "Autre couleur",
+      "accentAdjusted": "Cette couleur est trop claire pour du texte blanc : elle sera légèrement assombrie ({color}).",
+      "coverLabel": "Couverture",
+      "coverHint": "Une image aux couleurs de votre événement. L’envoi de votre propre photo arrive bientôt.",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "saved": "Modifications enregistrées."
+    }
   }
 }

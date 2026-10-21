@@ -40,7 +40,7 @@ describe("F-001: redirection après connexion", () => {
   it("section 12: retire le préfixe de langue", () => {
     expect(stripLocalePrefix("/en/account")).toBe("/account");
     expect(stripLocalePrefix("/en")).toBe("/");
-    expect(stripLocalePrefix("/account")).toBe("/account");
+    expect(stripLocalePrefix("/events")).toBe("/events");
     expect(stripLocalePrefix("/english")).toBe("/english");
   });
 });

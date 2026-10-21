@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
+import { isAccentReadable } from "../events/color";
 import {
+  ACCENT_PRESETS,
   PUBLIC_CODE_ALPHABET,
   PUBLIC_CODE_LENGTH,
   createEventSchema,
   publicCodeSchema,
   reserveUploadRequestSchema,
+  toFieldErrors,
+  updateEventSchema,
 } from "./index";
 
 describe("F-012: code public", () => {
@@ -56,5 +60,58 @@ describe("S-002: réservation d'envoi", () => {
       bytes: 10,
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe("F-011: personnalisation", () => {
+  const valid = {
+    title: "Mariage de Léa et Tom",
+    type: "wedding",
+    locale: "fr",
+    welcomeMessage: "  Bienvenue !  ",
+    accentColor: "#1d4ed8",
+  };
+
+  it("F-011: accepte une personnalisation valide et nettoie le message", () => {
+    const parsed = updateEventSchema.parse(valid);
+    expect(parsed.welcomeMessage).toBe("Bienvenue !");
+    expect(parsed.accentColor).toBe("#1d4ed8");
+  });
+
+  it("F-011: un message vide et une couleur vide valent null", () => {
+    const parsed = updateEventSchema.parse({ ...valid, welcomeMessage: "  ", accentColor: "" });
+    expect(parsed.welcomeMessage).toBeNull();
+    expect(parsed.accentColor).toBeNull();
+  });
+
+  it("F-011: refuse un message de plus de 500 caractères et une couleur invalide", () => {
+    expect(updateEventSchema.safeParse({ ...valid, welcomeMessage: "a".repeat(501) }).success).toBe(
+      false,
+    );
+    expect(updateEventSchema.safeParse({ ...valid, accentColor: "rouge" }).success).toBe(false);
+  });
+
+  it("F-011: chaque couleur proposée garde le texte blanc lisible", () => {
+    for (const color of ACCENT_PRESETS) expect(isAccentReadable(color)).toBe(true);
+  });
+});
+
+describe("F-010: erreurs de champ", () => {
+  it("F-010: distingue champ vide, trop long et invalide", () => {
+    const result = createEventSchema.safeParse({
+      title: "   ",
+      eventDate: "demain",
+      type: "wedding",
+      locale: "fr",
+      welcomeMessage: "a".repeat(501),
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(toFieldErrors(result.error)).toEqual({
+        title: "required",
+        eventDate: "invalid",
+        welcomeMessage: "too_long",
+      });
+    }
   });
 });

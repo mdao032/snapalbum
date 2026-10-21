@@ -1,7 +1,7 @@
 import { DEFAULT_LOCALE, LOCALES, type Locale } from "../schemas/common";
 
 /** Where an organiser lands after signing in when no page was requested. */
-export const DEFAULT_AFTER_LOGIN_PATH = "/account";
+export const DEFAULT_AFTER_LOGIN_PATH = "/events";
 
 /** The default landing page in the visitor's language (`/account` in French, `/en/account` in English). */
 export function defaultAfterLoginPath(locale: Locale): string {

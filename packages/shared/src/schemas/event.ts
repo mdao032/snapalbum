@@ -14,3 +14,31 @@ export const createEventSchema = z.object({
   accentColor: accentColorSchema.optional(),
 });
 export type CreateEventInput = z.infer<typeof createEventSchema>;
+
+/**
+ * "Personalise" form (F-011). Empty strings come straight from the form: no message means `null`,
+ * no accent means `null` (the product color). The event date is not editable here (it drives the
+ * expiry, so only the server changes it).
+ */
+export const updateEventSchema = z.object({
+  title: z.string().trim().min(1).max(EVENT_TITLE_MAX_LENGTH),
+  type: eventTypeSchema,
+  locale: localeSchema,
+  welcomeMessage: z
+    .string()
+    .trim()
+    .max(WELCOME_MESSAGE_MAX_LENGTH)
+    .transform((value) => (value === "" ? null : value)),
+  accentColor: z.union([accentColorSchema, z.literal("")]).transform((v) => (v === "" ? null : v)),
+});
+export type UpdateEventInput = z.infer<typeof updateEventSchema>;
+
+/** Accent colors offered as one-tap choices; each keeps white text readable (WCAG AA). */
+export const ACCENT_PRESETS = [
+  "#6d4aff",
+  "#be185d",
+  "#1d4ed8",
+  "#15803d",
+  "#c2410c",
+  "#334155",
+] as const;

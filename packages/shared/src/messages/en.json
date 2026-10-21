@@ -126,6 +126,73 @@
   "nav": {
     "signIn": "Sign in",
     "account": "My account",
-    "primary": "Main navigation"
+    "primary": "Main navigation",
+    "events": "My events"
+  },
+  "events": {
+    "list": {
+      "title": "My events",
+      "subtitle": "All your albums in one place.",
+      "create": "Create an event",
+      "emptyTitle": "Your first event is waiting",
+      "emptyDescription": "Create it in under a minute: you then get a QR code for your guests to scan.",
+      "photoCount": "{count, plural, =0 {No photos} one {# photo} other {# photos}}"
+    },
+    "status": {
+      "active": "Ongoing",
+      "expired": "Finished",
+      "suspended": "Suspended",
+      "pending_deletion": "Deletion scheduled"
+    },
+    "types": {
+      "wedding": "Wedding",
+      "birthday": "Birthday",
+      "corporate": "Corporate",
+      "other": "Other"
+    },
+    "new": {
+      "title": "Create an event",
+      "subtitle": "Four details are enough. You can set up the rest afterwards.",
+      "titleLabel": "Event name",
+      "titlePlaceholder": "Léa and Tom’s wedding",
+      "dateLabel": "Event date",
+      "typeLabel": "Type of event",
+      "localeLabel": "Guest page language",
+      "localeHint": "This is the language your guests see when they scan the QR code.",
+      "submit": "Create my event",
+      "submitting": "Creating…",
+      "cancel": "Cancel"
+    },
+    "fieldErrors": {
+      "required": "This field is required.",
+      "too_long": "This text is too long ({max} characters at most).",
+      "invalid": "This value isn’t valid."
+    },
+    "errors": {
+      "validation": "Check the highlighted fields.",
+      "failed": "The event couldn’t be created. Try again in a moment.",
+      "saveFailed": "Your changes couldn’t be saved. Try again."
+    },
+    "detail": {
+      "back": "My events",
+      "personalizeTitle": "Personalise",
+      "personalizeSubtitle": "What your guests see when they arrive on the event page.",
+      "titleLabel": "Event name",
+      "typeLabel": "Type of event",
+      "localeLabel": "Guest page language",
+      "welcomeLabel": "Welcome message",
+      "welcomePlaceholder": "Welcome! Share your best moments with us.",
+      "welcomeCount": "{count} / {max}",
+      "accentLabel": "Accent color",
+      "accentDefault": "Default color",
+      "accentPreset": "Color {color}",
+      "accentCustom": "Another color",
+      "accentAdjusted": "This color is too light for white text: it will be slightly darkened ({color}).",
+      "coverLabel": "Cover",
+      "coverHint": "An image in your event’s colors. Uploading your own photo is coming soon.",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Changes saved."
+    }
   }
 }
