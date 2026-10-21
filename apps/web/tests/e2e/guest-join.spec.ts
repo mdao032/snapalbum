@@ -5,21 +5,9 @@ import {
   expectNoAccessibilityViolations,
   expectNoHorizontalScroll,
   newVisitor,
-  signIn,
   test,
 } from "./fixtures";
-
-/** An organiser creates an event; returns its code, its id and the organiser's page. */
-async function createEvent(page: Page): Promise<{ code: string; id: string }> {
-  await signIn(page);
-  await page.goto("/events/new");
-  await page.getByLabel("Nom de l’événement").fill("Mariage de Léa et Tom");
-  await page.getByRole("button", { name: "Créer mon événement" }).click();
-  await expect(page).toHaveURL(/\/events\/[0-9a-f-]{36}$/);
-  const id = page.url().split("/").pop() ?? "";
-  const code = (await page.getByLabel("Lien de l’événement").inputValue()).split("/").pop() ?? "";
-  return { code, id };
-}
+import { chooseFromGallery, createEvent, samplePhoto } from "./guest-helpers";
 
 /** The organiser sets (or removes) the access code from the dashboard. */
 async function setAccessCode(page: Page, id: string, code: string | null) {
@@ -34,9 +22,11 @@ async function setAccessCode(page: Page, id: string, code: string | null) {
   ).toBeVisible();
 }
 
+/** Opens the event page and chooses a photo: the join step appears with the first choice. */
 async function visit(browser: Browser, path: string): Promise<Page> {
   const page = await newVisitor(browser);
   await page.goto(path);
+  await chooseFromGallery(page, [{ name: "IMG_0001.png", buffer: samplePhoto(1) }]);
   return page;
 }
 
@@ -104,6 +94,7 @@ test.describe("participer à un événement", () => {
     await guest.evaluate(() => window.localStorage.setItem("snapalbum:guest-name", "Tom"));
     await guest.context().clearCookies();
     await guest.reload();
+    await chooseFromGallery(guest, [{ name: "IMG_0002.png", buffer: samplePhoto(2) }]);
     await expect(guest.getByLabel("Votre prénom (facultatif)")).toHaveValue("Tom");
     expect((await getRows("guests", `event_id=eq.${id}&select=display_name`))[0]).toEqual({
       display_name: null,

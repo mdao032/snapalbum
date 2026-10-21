@@ -69,6 +69,9 @@ jobs:
           . "$RUNNER_TEMP/supabase.env"
           set +a
           sed -i "s|^NEXT_PUBLIC_SUPABASE_ANON_KEY=.*|NEXT_PUBLIC_SUPABASE_ANON_KEY=${ANON_KEY}|; s|^SUPABASE_SERVICE_ROLE_KEY=.*|SUPABASE_SERVICE_ROLE_KEY=${SERVICE_ROLE_KEY}|" apps/web/.env.local
+      # Photos sent during the tests go to a local S3 emulator, not to a real bucket.
+      - name: Start the S3 emulator
+        run: node scripts/storage-emulator.mjs start
       - name: Install browsers
         run: pnpm --filter web exec playwright install --with-deps chromium webkit
       - run: pnpm test:e2e
