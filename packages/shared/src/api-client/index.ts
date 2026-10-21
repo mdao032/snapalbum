@@ -2,6 +2,7 @@ import type { z } from "zod";
 import {
   apiErrorBodySchema,
   completeUploadResponseSchema,
+  galleryResponseSchema,
   joinEventResponseSchema,
   multipartResponseSchema,
   myMediaResponseSchema,
@@ -9,6 +10,8 @@ import {
   type ApiErrorCode,
   type CompleteUploadRequest,
   type CompleteUploadResponse,
+  type GalleryRequest,
+  type GalleryResponse,
   type JoinEventRequest,
   type JoinEventResponse,
   type MultipartRequest,
@@ -48,6 +51,8 @@ export interface ApiClient {
   multipart(body: MultipartRequest): Promise<MultipartResponse>;
   /** The guest's own uploads (F-038) and deletion of one of them (G-005). */
   myMedia(body: MyMediaRequest): Promise<MyMediaResponse>;
+  /** The album: a page of thumbnails, fresh addresses, or the files of the viewer (F-039, F-050 to F-054). */
+  gallery(body: GalleryRequest): Promise<GalleryResponse>;
 }
 
 /** Typed client of the Next.js API routes, shared by the web, the mobile apps and the App Clip. */
@@ -96,5 +101,6 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     completeUpload: (body) => post("/api/uploads/complete", body, completeUploadResponseSchema),
     multipart: (body) => post("/api/uploads/multipart", body, multipartResponseSchema),
     myMedia: (body) => post("/api/uploads/mine", body, myMediaResponseSchema),
+    gallery: (body) => post("/api/gallery", body, galleryResponseSchema),
   };
 }

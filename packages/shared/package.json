@@ -14,6 +14,7 @@
     "./schemas": "./src/schemas/index.ts",
     "./api-client": "./src/api-client/index.ts",
     "./upload": "./src/upload/index.ts",
+    "./gallery": "./src/gallery/index.ts",
     "./storage": "./src/storage/index.ts",
     "./messages": "./src/messages/index.ts",
     "./messages/fr.json": "./src/messages/fr.json",

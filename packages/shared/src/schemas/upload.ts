@@ -172,6 +172,7 @@ export const API_ERROR_CODES = [
   "file_too_large",
   "upload_window_closed",
   "guest_blocked",
+  "gallery_closed",
   "free_event_limit",
   "event_suspended",
   "unsupported_format",

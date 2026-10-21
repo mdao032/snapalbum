@@ -53,7 +53,8 @@
     "invalid_file": "This file isn’t a valid photo or video.",
     "access_code_required": "This event asks for an access code.",
     "access_code_invalid": "That code isn’t right.",
-    "captcha_failed": "The security check failed. Reload the page and try again."
+    "captcha_failed": "The security check failed. Reload the page and try again.",
+    "gallery_closed": "The organiser has not opened the gallery to guests."
   },
   "upload": {
     "status": {
@@ -304,6 +305,11 @@
       "deleteFailed": "Deleting failed. Try again.",
       "photoAlt": "Photo sent on {date}",
       "videoAlt": "Video sent on {date}"
+    },
+    "tabs": {
+      "label": "Page sections",
+      "upload": "Send",
+      "gallery": "Gallery"
     }
   },
   "dashboard": {
@@ -355,6 +361,85 @@
       "pendingTitle": "Deletion scheduled for {date}",
       "pendingDescription": "This event is no longer available to guests. Everything is permanently deleted on that date.",
       "cancel": "Cancel the deletion"
+    },
+    "shareLinks": {
+      "title": "Gallery share link",
+      "subtitle": "Anyone with this link can see the approved photos, without an account. You can stop it at any time.",
+      "create": "Create a share link",
+      "creating": "Creating…",
+      "linkLabel": "Share link",
+      "copy": "Copy the link",
+      "copied": "Link copied",
+      "copyFailed": "Could not copy: select the link and copy it.",
+      "revoke": "Revoke the link",
+      "revokeAsk": "This link will stop working for everyone who received it. Revoke it?",
+      "revokeYes": "Yes, revoke",
+      "revokeNo": "No, keep it",
+      "revoked": "Link revoked: it no longer works.",
+      "createdOn": "Created on {date}",
+      "empty": "No active share link.",
+      "failed": "That did not work. Try again."
+    }
+  },
+  "gallery": {
+    "title": "Gallery",
+    "joinFirst": "Join the album to see the other guests’ photos.",
+    "loading": "Loading photos…",
+    "loadingMore": "Loading more…",
+    "empty": "There are no photos yet. The first ones will appear here.",
+    "emptyFiltered": "No photo matches this choice.",
+    "resetFilters": "Show everything",
+    "error": "Could not load the photos. Try again in a moment.",
+    "retry": "Try again",
+    "count": "{count, plural, one {# photo or video} other {# photos and videos}}",
+    "grid": "Album photos",
+    "controls": {
+      "title": "Sort and filter",
+      "sortLabel": "Sort by",
+      "sort": {
+        "takenDesc": "Date taken, newest first",
+        "takenAsc": "Date taken, oldest first",
+        "sentDesc": "Date sent, newest first",
+        "sentAsc": "Date sent, oldest first"
+      },
+      "kindLabel": "Show",
+      "kinds": {
+        "all": "Everything",
+        "photo": "Photos",
+        "video": "Videos"
+      },
+      "guestLabel": "Sent by",
+      "allGuests": "All guests",
+      "anonymousGuest": "Guest without a name",
+      "guestOption": "{name} ({count})"
+    },
+    "tile": {
+      "open": "Open the photo of {date}",
+      "openVideo": "Open the video of {date}",
+      "photoAlt": "Photo of {date}",
+      "videoAlt": "Video of {date}",
+      "video": "Video"
+    },
+    "viewer": {
+      "label": "Viewer",
+      "close": "Close",
+      "previous": "Previous photo",
+      "next": "Next photo",
+      "position": "{index} of {total}",
+      "download": "Download",
+      "share": "Share",
+      "shareFailed": "Sharing failed. You can download the photo instead.",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "loading": "Loading…",
+      "fileError": "This file cannot be shown right now.",
+      "retry": "Try again",
+      "shareText": "{title}"
+    },
+    "shared": {
+      "title": "Shared album",
+      "readOnly": "This album is read-only.",
+      "by": "Memories of {title}"
     }
   }
 }

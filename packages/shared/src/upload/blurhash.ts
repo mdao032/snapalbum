@@ -8,7 +8,8 @@
  * in `blurhash.test.ts`).
  */
 
-const BASE83 =
+/** The 83 characters of the encoding, in order. */
+export const BLURHASH_ALPHABET =
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#$%*+,-.:;=?@[]^_{|}~";
 
 /** Every character a BlurHash can contain, to validate one received from a client. */
@@ -24,7 +25,7 @@ function encode83(value: number, length: number): string {
   let result = "";
   for (let i = 1; i <= length; i += 1) {
     const digit = Math.floor(value / 83 ** (length - i)) % 83;
-    result += BASE83.charAt(digit);
+    result += BLURHASH_ALPHABET.charAt(digit);
   }
   return result;
 }
@@ -134,4 +135,77 @@ export function blurhashSampleSize(width: number, height: number) {
     width: Math.max(1, Math.round(width * scale)),
     height: Math.max(1, Math.round(height * scale)),
   };
+}
+
+function decode83(text: string): number {
+  let value = 0;
+  for (const character of text) {
+    const digit = BLURHASH_ALPHABET.indexOf(character);
+    if (digit < 0) throw new RangeError("Invalid BlurHash character");
+    value = value * 83 + digit;
+  }
+  return value;
+}
+
+/** Number of components along each axis stored in a BlurHash, or null when it is malformed. */
+export function blurhashComponents(hash: string): { x: number; y: number } | null {
+  if (hash.length < 6 || !BLURHASH_PATTERN.test(hash)) return null;
+  const size = decode83(hash.charAt(0));
+  const x = (size % 9) + 1;
+  const y = Math.floor(size / 9) + 1;
+  return hash.length === 4 + 2 * x * y ? { x, y } : null;
+}
+
+/**
+ * RGBA pixels (4 bytes per pixel, opaque) of a BlurHash drawn at `width` by `height`: a blurred
+ * picture of the photo, shown while its thumbnail loads (F-053). Pass a small size (32 pixels on
+ * the longest side is plenty): the browser scales it up. Throws a `RangeError` for a malformed hash.
+ */
+export function decodeBlurhash(hash: string, width: number, height: number): Uint8ClampedArray {
+  const components = blurhashComponents(hash);
+  if (!components) throw new RangeError("Malformed BlurHash");
+  if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1) {
+    throw new RangeError("BlurHash needs a picture of at least one pixel");
+  }
+
+  const maximum = (decode83(hash.charAt(1)) + 1) / 166;
+  const colors: Factor[] = [];
+  for (let index = 0; index < components.x * components.y; index += 1) {
+    if (index === 0) {
+      const dc = decode83(hash.slice(2, 6));
+      colors.push([srgbToLinear(dc >> 16), srgbToLinear((dc >> 8) & 255), srgbToLinear(dc & 255)]);
+    } else {
+      const ac = decode83(hash.slice(4 + index * 2, 6 + index * 2));
+      const channel = (quantised: number) => signPow((quantised - 9) / 9, 2) * maximum;
+      colors.push([
+        channel(Math.floor(ac / (19 * 19))),
+        channel(Math.floor(ac / 19) % 19),
+        channel(ac % 19),
+      ]);
+    }
+  }
+
+  const pixels = new Uint8ClampedArray(width * height * 4);
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      let r = 0;
+      let g = 0;
+      let b = 0;
+      for (let j = 0; j < components.y; j += 1) {
+        for (let i = 0; i < components.x; i += 1) {
+          const basis = Math.cos((Math.PI * i * x) / width) * Math.cos((Math.PI * j * y) / height);
+          const color = colors[i + j * components.x]!;
+          r += color[0] * basis;
+          g += color[1] * basis;
+          b += color[2] * basis;
+        }
+      }
+      const at = 4 * (x + y * width);
+      pixels[at] = linearToSrgb(r);
+      pixels[at + 1] = linearToSrgb(g);
+      pixels[at + 2] = linearToSrgb(b);
+      pixels[at + 3] = 255;
+    }
+  }
+  return pixels;
 }

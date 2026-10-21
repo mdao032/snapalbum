@@ -4,6 +4,7 @@ export * from "./schemas";
 export * from "./events";
 export * from "./auth";
 export * from "./upload";
+export * from "./gallery";
 export * from "./api-client";
 export * from "./messages";
 export * from "./storage";

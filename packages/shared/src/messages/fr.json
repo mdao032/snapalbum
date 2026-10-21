@@ -53,7 +53,8 @@
     "invalid_file": "Ce fichier n’est pas une photo ou une vidéo valide.",
     "access_code_required": "Cet événement demande un code d’accès.",
     "access_code_invalid": "Ce code n’est pas le bon.",
-    "captcha_failed": "La vérification de sécurité a échoué. Rechargez la page puis réessayez."
+    "captcha_failed": "La vérification de sécurité a échoué. Rechargez la page puis réessayez.",
+    "gallery_closed": "L’organisateur n’a pas ouvert la galerie aux invités."
   },
   "upload": {
     "status": {
@@ -304,6 +305,11 @@
       "deleteFailed": "La suppression a échoué. Réessayez.",
       "photoAlt": "Photo envoyée le {date}",
       "videoAlt": "Vidéo envoyée le {date}"
+    },
+    "tabs": {
+      "label": "Sections de la page",
+      "upload": "Envoyer",
+      "gallery": "Galerie"
     }
   },
   "dashboard": {
@@ -355,6 +361,85 @@
       "pendingTitle": "Suppression prévue le {date}",
       "pendingDescription": "Cet événement n’est plus accessible aux invités. Tout sera supprimé définitivement à cette date.",
       "cancel": "Annuler la suppression"
+    },
+    "shareLinks": {
+      "title": "Lien de partage de la galerie",
+      "subtitle": "Toute personne qui a ce lien peut voir les photos approuvées, sans compte. Vous pouvez l’arrêter à tout moment.",
+      "create": "Créer un lien de partage",
+      "creating": "Création…",
+      "linkLabel": "Lien de partage",
+      "copy": "Copier le lien",
+      "copied": "Lien copié",
+      "copyFailed": "Copie impossible : sélectionnez le lien et copiez-le.",
+      "revoke": "Révoquer le lien",
+      "revokeAsk": "Ce lien cessera de fonctionner pour tous ceux qui l’ont reçu. Révoquer ?",
+      "revokeYes": "Oui, révoquer",
+      "revokeNo": "Non, garder",
+      "revoked": "Lien révoqué : il ne fonctionne plus.",
+      "createdOn": "Créé le {date}",
+      "empty": "Aucun lien de partage actif.",
+      "failed": "L’opération a échoué. Réessayez."
+    }
+  },
+  "gallery": {
+    "title": "Galerie",
+    "joinFirst": "Participez à l’album pour voir les photos des autres invités.",
+    "loading": "Chargement des photos…",
+    "loadingMore": "Chargement de la suite…",
+    "empty": "Il n’y a pas encore de photo. Les premières apparaîtront ici.",
+    "emptyFiltered": "Aucune photo ne correspond à ce choix.",
+    "resetFilters": "Tout afficher",
+    "error": "Impossible de charger les photos. Réessayez dans un instant.",
+    "retry": "Réessayer",
+    "count": "{count, plural, one {# photo ou vidéo} other {# photos et vidéos}}",
+    "grid": "Photos de l’album",
+    "controls": {
+      "title": "Trier et filtrer",
+      "sortLabel": "Trier par",
+      "sort": {
+        "takenDesc": "Prise de vue, récentes d’abord",
+        "takenAsc": "Prise de vue, anciennes d’abord",
+        "sentDesc": "Envoi, récents d’abord",
+        "sentAsc": "Envoi, anciens d’abord"
+      },
+      "kindLabel": "Afficher",
+      "kinds": {
+        "all": "Tout",
+        "photo": "Photos",
+        "video": "Vidéos"
+      },
+      "guestLabel": "Envoyé par",
+      "allGuests": "Tous les invités",
+      "anonymousGuest": "Invité sans prénom",
+      "guestOption": "{name} ({count})"
+    },
+    "tile": {
+      "open": "Ouvrir la photo du {date}",
+      "openVideo": "Ouvrir la vidéo du {date}",
+      "photoAlt": "Photo du {date}",
+      "videoAlt": "Vidéo du {date}",
+      "video": "Vidéo"
+    },
+    "viewer": {
+      "label": "Visionneuse",
+      "close": "Fermer",
+      "previous": "Photo précédente",
+      "next": "Photo suivante",
+      "position": "{index} sur {total}",
+      "download": "Télécharger",
+      "share": "Partager",
+      "shareFailed": "Le partage a échoué. Vous pouvez télécharger la photo.",
+      "zoomIn": "Zoomer",
+      "zoomOut": "Dézoomer",
+      "loading": "Chargement…",
+      "fileError": "Impossible d’afficher ce fichier pour le moment.",
+      "retry": "Réessayer",
+      "shareText": "{title}"
+    },
+    "shared": {
+      "title": "Album partagé",
+      "readOnly": "Cet album est en lecture seule.",
+      "by": "Souvenirs de {title}"
     }
   }
 }
