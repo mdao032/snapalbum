@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useActionState, useState, useSyncExternalStore } from "react";
+import { useActionState, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { saveSettingsAction, type SettingsState } from "@/app/[locale]/(app)/events/[id]/actions";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,8 @@ export interface SettingsValues {
   /** ISO instants, as stored. */
   uploadOpensAt: string;
   uploadClosesAt: string;
+  /** An access code is set (its value is never sent back). */
+  accessCodeSet: boolean;
 }
 
 const pad = (value: number) => String(value).padStart(2, "0");
@@ -79,12 +81,21 @@ export function SettingsForm({ eventId, values }: { eventId: string; values: Set
     () => true,
     () => false,
   );
+  const formRef = useRef<HTMLFormElement>(null);
+  // A saved code is never shown back: empty the field and the "remove" box once it is stored.
+  useEffect(() => {
+    if (state.status !== "saved" || !formRef.current) return;
+    const code = formRef.current.elements.namedItem("access_code");
+    const remove = formRef.current.elements.namedItem("remove_access_code");
+    if (code instanceof HTMLInputElement) code.value = "";
+    if (remove instanceof HTMLInputElement) remove.checked = false;
+  }, [state]);
   const [opens, setOpens] = useState(() => toLocalInput(values.uploadOpensAt));
   const [closes, setCloses] = useState(() => toLocalInput(values.uploadClosesAt));
 
   return (
     <Card className="p-6 sm:p-8">
-      <form action={save} className="flex flex-col gap-6">
+      <form ref={formRef} action={save} className="flex flex-col gap-6">
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-semibold">{t("title")}</h2>
           <p className="text-muted-foreground">{t("subtitle")}</p>
@@ -92,7 +103,15 @@ export function SettingsForm({ eventId, values }: { eventId: string; values: Set
 
         {state.status === "saved" ? <Alert tone="success">{t("saved")}</Alert> : null}
         {state.status === "error" ? (
-          <Alert tone="error">{t(state.error === "invalid" ? "invalid" : "failed")}</Alert>
+          <Alert tone="error">
+            {t(
+              state.error === "invalid"
+                ? "invalid"
+                : state.error === "invalid_code"
+                  ? "invalidCode"
+                  : "failed",
+            )}
+          </Alert>
         ) : null}
 
         <Switch
@@ -109,6 +128,34 @@ export function SettingsForm({ eventId, values }: { eventId: string; values: Set
           hint={t("approvalHint")}
           defaultChecked={values.requireApproval}
         />
+
+        <Field
+          id="access_code"
+          label={t("accessCodeLabel")}
+          hint={values.accessCodeSet ? t("accessCodeActive") : t("accessCodeHint")}
+        >
+          {(aria) => (
+            <Input
+              id="access_code"
+              name="access_code"
+              inputMode="numeric"
+              pattern="[0-9]{4,6}"
+              maxLength={6}
+              autoComplete="off"
+              {...aria}
+            />
+          )}
+        </Field>
+        {values.accessCodeSet ? (
+          <label className="flex min-h-11 cursor-pointer items-center gap-3 font-medium">
+            <input
+              type="checkbox"
+              name="remove_access_code"
+              className="size-5 shrink-0 cursor-pointer accent-primary"
+            />
+            {t("accessCodeRemove")}
+          </label>
+        ) : null}
 
         <fieldset className="flex flex-col gap-4">
           <legend className="mb-1 font-medium">{t("windowTitle")}</legend>

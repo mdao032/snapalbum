@@ -115,6 +115,8 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
                 requireApproval: settings.require_approval,
                 uploadOpensAt: settings.upload_opens_at,
                 uploadClosesAt: settings.upload_closes_at,
+                accessCodeSet:
+                  typeof settings.access_code_hash === "string" && settings.access_code_hash !== "",
               }}
             />
 

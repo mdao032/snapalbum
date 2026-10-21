@@ -35,6 +35,20 @@ export const EVENT_RESERVE_RATE_LIMIT: RateLimitRule = {
   windowSeconds: 60,
 };
 
+/** Joining an event: 20 per hour per address. */
+export const GUEST_JOIN_RATE_LIMIT: RateLimitRule = {
+  name: "guest-join",
+  limit: 20,
+  windowSeconds: 60 * 60,
+};
+
+/** Wrong access codes (S-006): 5 attempts per 10 minutes per address and event. */
+export const ACCESS_CODE_RATE_LIMIT: RateLimitRule = {
+  name: "access-code",
+  limit: 5,
+  windowSeconds: 10 * 60,
+};
+
 type Fetcher = typeof fetch;
 
 const memoryWindows = new Map<string, { count: number; resetAt: number }>();

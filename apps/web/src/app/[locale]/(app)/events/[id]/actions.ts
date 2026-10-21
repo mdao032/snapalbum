@@ -7,6 +7,7 @@ import {
   uuidSchema,
   type FieldErrorCode,
 } from "@snapalbum/shared";
+import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 import { getOrganiser } from "@/server/auth";
@@ -60,7 +61,9 @@ export async function personalizeEventAction(
 }
 
 export type SettingsState =
-  { status: "idle" } | { status: "saved" } | { status: "error"; error: "invalid" | "failed" };
+  | { status: "idle" }
+  | { status: "saved" }
+  | { status: "error"; error: "invalid" | "invalid_code" | "failed" };
 
 /** Saves who sees the gallery, whether uploads need approval, and the upload window (F-015, F-016). */
 export async function saveSettingsAction(
@@ -79,14 +82,22 @@ export async function saveSettingsAction(
     require_approval: formData.get("require_approval") === "on",
     upload_opens_at: text(formData, "upload_opens_at"),
     upload_closes_at: text(formData, "upload_closes_at"),
+    // An empty field leaves the code as it is; the checkbox removes it (F-017).
+    access_code:
+      formData.get("remove_access_code") === "on" ? "" : text(formData, "access_code") || undefined,
   };
-  if (!updateEventSettingsSchema.safeParse(input).success) {
-    return { status: "error", error: "invalid" };
+  const parsed = updateEventSettingsSchema.safeParse(input);
+  if (!parsed.success) {
+    const codeProblem = parsed.error.issues.some((issue) => issue.path[0] === "access_code");
+    return { status: "error", error: codeProblem ? "invalid_code" : "invalid" };
   }
 
   try {
     const result = await updateEventSettings(supabase, eventId, input);
-    return result.ok ? { status: "saved" } : { status: "error", error: "failed" };
+    if (!result.ok) return { status: "error", error: "failed" };
+    // E.g. "an access code is set" comes from the server: refresh the page that shows it.
+    revalidatePath("/[locale]/events/[id]", "page");
+    return { status: "saved" };
   } catch (error) {
     console.error("[events] settings update failed", error);
     return { status: "error", error: "failed" };

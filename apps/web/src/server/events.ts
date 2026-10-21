@@ -15,6 +15,7 @@ import {
 } from "@snapalbum/shared";
 import type { Database } from "@snapalbum/shared/db-types";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { hashAccessCode } from "./access-code";
 
 type Client = SupabaseClient<Database>;
 export type EventRow = Database["public"]["Tables"]["events"]["Row"];
@@ -147,8 +148,11 @@ export async function updateEventPresentation(
 
 export type PublicEvent = Pick<
   EventRow,
-  "title" | "welcome_message" | "accent_color" | "locale" | "status" | "expires_at"
->;
+  "id" | "title" | "welcome_message" | "accent_color" | "locale" | "status" | "expires_at"
+> & {
+  /** The guest must enter the organiser's code before joining (F-017). The hash itself never leaves. */
+  requiresAccessCode: boolean;
+};
 
 /**
  * What a guest may know about an event, found by its public code. Uses the ADMIN client on
@@ -162,11 +166,17 @@ export async function getPublicEvent(
   if (!publicCodeSchema.safeParse(publicCode).success) return null;
   const { data, error } = await admin
     .from("events")
-    .select("title, welcome_message, accent_color, locale, status, expires_at")
+    .select("id, title, welcome_message, accent_color, locale, status, expires_at, settings")
     .eq("public_code", publicCode)
     .maybeSingle();
   if (error) throw error;
-  return data;
+  if (!data) return null;
+  const { settings, ...visible } = data;
+  const hash =
+    settings && typeof settings === "object" && !Array.isArray(settings)
+      ? (settings as Record<string, unknown>).access_code_hash
+      : null;
+  return { ...visible, requiresAccessCode: typeof hash === "string" && hash !== "" };
 }
 
 export type SettingsResult = { ok: true; event: EventRow } | { ok: false; reason: "not_found" };
@@ -181,7 +191,7 @@ export async function updateEventSettings(
   eventId: string,
   rawInput: unknown,
 ): Promise<SettingsResult> {
-  const input = updateEventSettingsSchema.parse(rawInput);
+  const { access_code: accessCode, ...windowSettings } = updateEventSettingsSchema.parse(rawInput);
   const current = await getOwnEvent(client, eventId);
   if (!current) return { ok: false, reason: "not_found" };
 
@@ -189,9 +199,13 @@ export async function updateEventSettings(
     current.settings && typeof current.settings === "object" && !Array.isArray(current.settings)
       ? current.settings
       : {};
+  const settings: Record<string, unknown> = { ...existing, ...windowSettings };
+  // The code is only ever stored hashed (S-006): "" removes it, absent leaves it alone.
+  if (accessCode === "") settings.access_code_hash = null;
+  else if (accessCode) settings.access_code_hash = await hashAccessCode(accessCode);
   const { data, error } = await client
     .from("events")
-    .update({ settings: { ...existing, ...input } })
+    .update({ settings: settings as Database["public"]["Tables"]["events"]["Update"]["settings"] })
     .eq("id", eventId)
     .select()
     .maybeSingle();

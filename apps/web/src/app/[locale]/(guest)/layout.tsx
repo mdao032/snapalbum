@@ -1,10 +1,18 @@
-import type { ReactNode } from "react";
+import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { notFound } from "next/navigation";
+import { clientMessagesFor } from "@/i18n/client-messages";
+import { routing } from "@/i18n/routing";
 
 /** Guest pages: no site header or footer, the event is the only thing on screen. */
-export default function GuestLayout({ children }: { children: ReactNode }) {
+export default async function GuestLayout({ children, params }: LayoutProps<"/[locale]">) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+
   return (
-    <main id="contenu" className="bg-aurora mx-auto flex min-h-dvh w-full max-w-xl flex-col">
-      {children}
-    </main>
+    <NextIntlClientProvider messages={clientMessagesFor(locale, ["guest", "apiErrors"])}>
+      <main id="contenu" className="bg-aurora mx-auto flex min-h-dvh w-full max-w-xl flex-col">
+        {children}
+      </main>
+    </NextIntlClientProvider>
   );
 }
