@@ -15,6 +15,14 @@ async function createEvent(page: Page, title: string) {
   await expect(page).toHaveURL(/\/events\/[0-9a-f-]{36}$/);
 }
 
+/** The save button of the personalisation form (the page has one per form). */
+function savePersonalization(page: Page) {
+  return page
+    .locator("form")
+    .filter({ has: page.getByLabel("Message d’accueil") })
+    .getByRole("button", { name: "Enregistrer" });
+}
+
 test.describe("mes événements", () => {
   test("F-010: un nouvel organisateur voit un état vide et peut créer son premier événement", async ({
     page,
@@ -127,7 +135,7 @@ test.describe("personnalisation", () => {
     await page.locator('input[type="color"]').fill("#ffd400");
     await expect(page.getByRole("status").filter({ hasText: "assombrie" })).toBeVisible();
 
-    await page.getByRole("button", { name: "Enregistrer" }).click();
+    await savePersonalization(page).click();
     await expect(
       page.getByRole("status").filter({ hasText: "Modifications enregistrées" }),
     ).toBeVisible();
@@ -148,7 +156,7 @@ test.describe("personnalisation", () => {
       "aria-pressed",
       "true",
     );
-    await page.getByRole("button", { name: "Enregistrer" }).click();
+    await savePersonalization(page).click();
     await expect(
       page.getByRole("status").filter({ hasText: "Modifications enregistrées" }),
     ).toBeVisible();
@@ -160,7 +168,7 @@ test.describe("personnalisation", () => {
     await signIn(page);
     await createEvent(page, "Fête");
     await page.getByLabel("Message d’accueil").fill("a".repeat(501));
-    await page.getByRole("button", { name: "Enregistrer" }).click();
+    await savePersonalization(page).click();
     await expect(
       page.getByText("Ce texte est trop long (500 caractères au maximum)."),
     ).toBeVisible();
@@ -174,7 +182,7 @@ test.describe("personnalisation", () => {
     for (const locator of [
       page.getByRole("button", { name: "Couleur par défaut" }),
       page.getByRole("button", { name: "Couleur #be185d" }),
-      page.getByRole("button", { name: "Enregistrer" }),
+      savePersonalization(page),
     ]) {
       const box = await locator.boundingBox();
       expect(box?.height).toBeGreaterThanOrEqual(44);
