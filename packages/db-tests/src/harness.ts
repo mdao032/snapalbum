@@ -1,4 +1,4 @@
-import { randomInt, randomUUID } from "node:crypto";
+import { randomBytes, randomInt, randomUUID } from "node:crypto";
 import pg from "pg";
 
 /**
@@ -38,6 +38,18 @@ export interface TestDb extends Queryable {
   }): Promise<string>;
   /** Inserts an event as the database owner (like the server does) and returns its id. */
   createEvent(ownerId: string, overrides?: Record<string, unknown>): Promise<string>;
+  /** Inserts a guest of an event (as the server does after the anonymous sign-in) and returns its id. */
+  createGuest(
+    eventId: string,
+    userId: string,
+    overrides?: Record<string, unknown>,
+  ): Promise<string>;
+  /** Inserts a media row directly (as the database owner) and returns its id. */
+  createMedia(
+    eventId: string,
+    guestId: string,
+    overrides?: Record<string, unknown>,
+  ): Promise<string>;
   /** Makes `userId` an administrator (done as the database owner, like the server would). */
   makeAdmin(userId: string): Promise<void>;
   /** Runs `fn` with the permissions of `actor`. A failed statement does not abort the test. */
@@ -107,6 +119,47 @@ export async function withTestDb(fn: (db: TestDb) => Promise<void>): Promise<voi
           Object.values(values),
         );
         return rows[0]!.id;
+      },
+
+      async createGuest(eventId, userId, overrides = {}) {
+        const values = {
+          event_id: eventId,
+          auth_user_id: userId,
+          terms_accepted_at: new Date().toISOString(),
+          terms_version: "2026-10",
+          ...overrides,
+        };
+        const columns = Object.keys(values);
+        const { rows } = await client.query<{ id: string }>(
+          `insert into public.guests (${columns.join(", ")})
+           values (${columns.map((_, i) => `$${i + 1}`).join(", ")}) returning id`,
+          Object.values(values),
+        );
+        return rows[0]!.id;
+      },
+
+      async createMedia(eventId, guestId, overrides = {}) {
+        const id = randomUUID();
+        const values = {
+          id,
+          event_id: eventId,
+          guest_id: guestId,
+          kind: "photo",
+          status: "ready",
+          moderation: "approved",
+          sha256: randomBytes(32).toString("hex"),
+          mime_type: "image/jpeg",
+          bytes_display: 1000,
+          bytes_thumb: 100,
+          ...overrides,
+        };
+        const columns = Object.keys(values);
+        await client.query(
+          `insert into public.media (${columns.join(", ")})
+           values (${columns.map((_, i) => `$${i + 1}`).join(", ")})`,
+          Object.values(values),
+        );
+        return id;
       },
 
       async makeAdmin(userId) {

@@ -46,6 +46,14 @@ function cleanExtension(extension: string): string {
   return value;
 }
 
+/** The prepared versions are WebP, or JPEG on browsers that cannot encode WebP (SPEC 8.1). */
+function cleanPreviewExtension(extension: string): string {
+  const value = extension.replace(/^\./, "").toLowerCase();
+  if (value !== "webp" && value !== "jpg")
+    throw new Error(`Unsupported preview extension: ${extension}`);
+  return value;
+}
+
 /** `events/{event}/original/{media}.{ext}`, `.../display/{media}.webp`, `.../thumb/{media}.webp`. */
 export function mediaKey(
   eventId: string,
@@ -55,7 +63,7 @@ export function mediaKey(
 ): string {
   assertUuid("event id", eventId);
   assertUuid("media id", mediaId);
-  const ext = variant === "original" ? cleanExtension(extension) : "webp";
+  const ext = variant === "original" ? cleanExtension(extension) : cleanPreviewExtension(extension);
   return `events/${eventId}/${variant}/${mediaId}.${ext}`;
 }
 

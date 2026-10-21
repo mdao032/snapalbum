@@ -7,7 +7,10 @@ const request = {
   kind: "photo" as const,
   sha256: "a".repeat(64),
   mimeType: "image/jpeg",
+  extension: "jpg" as const,
   bytes: 1234,
+  displayBytes: 900,
+  thumbBytes: 100,
 };
 
 function jsonResponse(body: unknown, status = 200): Response {

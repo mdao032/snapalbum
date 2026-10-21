@@ -40,6 +40,52 @@ export type Database = {
                   Relationships: [
                     
                   ]
+                },"guests": {
+                  Row: {
+                    "auth_user_id": string,"blocked_at": string | null,"created_at": string,"display_name": string | null,"event_id": string,"id": string,"notify_consent_at": string | null,"notify_email": string | null,"terms_accepted_at": string | null,"terms_version": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "auth_user_id": string,"blocked_at"?: string | null,"created_at"?: string,"display_name"?: string | null,"event_id": string,"id"?: string,"notify_consent_at"?: string | null,"notify_email"?: string | null,"terms_accepted_at"?: string | null,"terms_version"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "auth_user_id"?: string,"blocked_at"?: string | null,"created_at"?: string,"display_name"?: string | null,"event_id"?: string,"id"?: string,"notify_consent_at"?: string | null,"notify_email"?: string | null,"terms_accepted_at"?: string | null,"terms_version"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "guests_event_id_fkey"
+      columns: ["event_id"]
+isOneToOne: false
+      referencedRelation: "events"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"media": {
+                  Row: {
+                    "blurhash": string | null,"bytes_display": number | null,"bytes_original": number | null,"bytes_thumb": number | null,"created_at": string,"duration_s": number | null,"event_id": string,"guest_id": string,"height": number | null,"id": string,"is_favorite": boolean,"key_display": string | null,"key_original": string | null,"key_thumb": string | null,"kind": string,"mime_type": string,"moderation": string,"sha256": string,"status": string,"taken_at": string | null,"updated_at": string,"width": number | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "blurhash"?: string | null,"bytes_display"?: number | null,"bytes_original"?: number | null,"bytes_thumb"?: number | null,"created_at"?: string,"duration_s"?: number | null,"event_id": string,"guest_id": string,"height"?: number | null,"id"?: string,"is_favorite"?: boolean,"key_display"?: string | null,"key_original"?: string | null,"key_thumb"?: string | null,"kind": string,"mime_type": string,"moderation"?: string,"sha256": string,"status"?: string,"taken_at"?: string | null,"updated_at"?: string,"width"?: number | null
+                  }
+                  Update: {
+                    "blurhash"?: string | null,"bytes_display"?: number | null,"bytes_original"?: number | null,"bytes_thumb"?: number | null,"created_at"?: string,"duration_s"?: number | null,"event_id"?: string,"guest_id"?: string,"height"?: number | null,"id"?: string,"is_favorite"?: boolean,"key_display"?: string | null,"key_original"?: string | null,"key_thumb"?: string | null,"kind"?: string,"mime_type"?: string,"moderation"?: string,"sha256"?: string,"status"?: string,"taken_at"?: string | null,"updated_at"?: string,"width"?: number | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "media_event_id_fkey"
+      columns: ["event_id"]
+isOneToOne: false
+      referencedRelation: "events"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "media_guest_id_fkey"
+      columns: ["guest_id"]
+isOneToOne: false
+      referencedRelation: "guests"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"profiles": {
                   Row: {
                     "created_at": string,"deleted_at": string | null,"display_name": string | null,"id": string,"locale": string,"role": string,"updated_at": string,"user_id": string
@@ -54,14 +100,48 @@ export type Database = {
                   Relationships: [
                     
                   ]
+                },"uploads": {
+                  Row: {
+                    "created_at": string,"expires_at": string,"id": string,"media_id": string,"multipart_upload_id": string,"parts_done": NonNullable<Json>,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"expires_at": string,"id"?: string,"media_id": string,"multipart_upload_id": string,"parts_done"?: NonNullable<Json>,"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"expires_at"?: string,"id"?: string,"media_id"?: string,"multipart_upload_id"?: string,"parts_done"?: NonNullable<Json>,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "uploads_media_id_fkey"
+      columns: ["media_id"]
+isOneToOne: true
+      referencedRelation: "media"
+      referencedColumns: ["id"]
+    }
+                  ]
                 }
           }
           Views: {
             [_ in never]: never
           }
           Functions: {
-            "is_admin":
+            "event_gallery_is_open":
+{ Args: { "p_event_id": string }; Returns: boolean
+                           },
+"event_upload_window":
+{ Args: { "p_settings": Json }; Returns: {
+              "closes_at": string,"opens_at": string
+            }[]
+                           },
+"is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"is_guest_of":
+{ Args: { "p_event_id": string }; Returns: boolean
+                           },
+"reserve_media_slot":
+{ Args: { "p_bytes_display": number,"p_bytes_original": number,"p_bytes_thumb": number,"p_duration_s": number,"p_event_id": string,"p_height": number,"p_key_display": string,"p_key_original": string,"p_key_thumb": string,"p_kind": string,"p_max_media": number,"p_max_videos": number,"p_media_id": string,"p_mime_type": string,"p_sha256": string,"p_taken_at": string,"p_user_id": string,"p_width": number }; Returns: Json
                            }
           }
           Enums: {

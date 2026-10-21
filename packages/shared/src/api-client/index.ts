@@ -2,10 +2,13 @@ import type { z } from "zod";
 import {
   apiErrorBodySchema,
   completeUploadResponseSchema,
+  multipartResponseSchema,
   reserveUploadResponseSchema,
   type ApiErrorCode,
   type CompleteUploadRequest,
   type CompleteUploadResponse,
+  type MultipartRequest,
+  type MultipartResponse,
   type ReserveUploadRequest,
   type ReserveUploadResponse,
 } from "../schemas";
@@ -33,6 +36,8 @@ export class ApiError extends Error {
 export interface ApiClient {
   reserveUpload(body: ReserveUploadRequest): Promise<ReserveUploadResponse>;
   completeUpload(body: CompleteUploadRequest): Promise<CompleteUploadResponse>;
+  /** Large videos, sent in parts (NF-013). The answer carries the same `action` as the request. */
+  multipart(body: MultipartRequest): Promise<MultipartResponse>;
 }
 
 /** Typed client of the Next.js API routes, shared by the web, the mobile apps and the App Clip. */
@@ -78,5 +83,6 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
   return {
     reserveUpload: (body) => post("/api/uploads/reserve", body, reserveUploadResponseSchema),
     completeUpload: (body) => post("/api/uploads/complete", body, completeUploadResponseSchema),
+    multipart: (body) => post("/api/uploads/multipart", body, multipartResponseSchema),
   };
 }

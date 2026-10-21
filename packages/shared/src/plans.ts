@@ -18,6 +18,8 @@ export interface Plan {
   maxVideos: number | null;
   maxVideoSeconds: number;
   maxVideoBytes: number;
+  /** Largest photo original accepted, in bytes (photos are never sent in parts). */
+  maxPhotoBytes: number;
   /** Originals are only kept on paid plans (rule R2). */
   keepsOriginals: boolean;
   displayMaxPx: number;
@@ -41,6 +43,7 @@ export const PLANS: Record<PlanId, Plan> = {
     maxVideos: 10,
     maxVideoSeconds: 30,
     maxVideoBytes: 100 * MB,
+    maxPhotoBytes: 50 * MB,
     keepsOriginals: false,
     displayMaxPx: 2048,
     zipContains: "display",
@@ -55,6 +58,7 @@ export const PLANS: Record<PlanId, Plan> = {
     maxVideos: null,
     maxVideoSeconds: 180,
     maxVideoBytes: 500 * MB,
+    maxPhotoBytes: 50 * MB,
     keepsOriginals: true,
     displayMaxPx: 2048,
     zipContains: "originals",
@@ -69,6 +73,7 @@ export const PLANS: Record<PlanId, Plan> = {
     maxVideos: null,
     maxVideoSeconds: 180,
     maxVideoBytes: 500 * MB,
+    maxPhotoBytes: 50 * MB,
     keepsOriginals: true,
     displayMaxPx: 2048,
     zipContains: "originals",
@@ -79,6 +84,10 @@ export const PLANS: Record<PlanId, Plan> = {
 };
 
 export const CURRENCY = "EUR";
+
+/** Largest prepared versions accepted (they are 2 048 px WebP and 400 px thumbnails). */
+export const MAX_DISPLAY_BYTES = 20 * MB;
+export const MAX_THUMB_BYTES = 1 * MB;
 
 export const PRO_PRICING = { monthlyCents: 5900, yearlyCents: 59_000 } as const;
 

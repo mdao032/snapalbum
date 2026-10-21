@@ -47,7 +47,10 @@
     "unsupported_format": "Ce format de fichier n’est pas pris en charge.",
     "internal_error": "Une erreur est survenue. Réessayez dans un instant.",
     "network_error": "Pas de connexion. Vos photos seront envoyées dès son retour.",
-    "invalid_response": "Réponse inattendue du serveur. Réessayez."
+    "invalid_response": "Réponse inattendue du serveur. Réessayez.",
+    "terms_required": "Vous devez d’abord accepter les conditions.",
+    "upload_incomplete": "L’envoi n’est pas terminé. Nous réessayons.",
+    "invalid_file": "Ce fichier n’est pas une photo ou une vidéo valide."
   },
   "upload": {
     "status": {

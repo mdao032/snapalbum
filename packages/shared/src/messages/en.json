@@ -47,7 +47,10 @@
     "unsupported_format": "This file format isn’t supported.",
     "internal_error": "An error occurred. Try again in a moment.",
     "network_error": "No connection. Your photos will be sent as soon as it returns.",
-    "invalid_response": "Unexpected response from the server. Try again."
+    "invalid_response": "Unexpected response from the server. Try again.",
+    "terms_required": "You need to accept the terms first.",
+    "upload_incomplete": "The upload isn’t finished. We’re trying again.",
+    "invalid_file": "This file isn’t a valid photo or video."
   },
   "upload": {
     "status": {
