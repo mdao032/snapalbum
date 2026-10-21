@@ -1,17 +1,19 @@
 import { z } from "zod";
+import {
+  DEFAULT_LOCALE,
+  EVENT_TYPES,
+  LOCALES,
+  PUBLIC_CODE_ALPHABET,
+  PUBLIC_CODE_LENGTH,
+  type EventType,
+  type Locale,
+} from "../constants";
 
-export const LOCALES = ["fr", "en"] as const;
+export { DEFAULT_LOCALE, EVENT_TYPES, LOCALES, PUBLIC_CODE_ALPHABET, PUBLIC_CODE_LENGTH };
+export type { EventType, Locale };
 export const localeSchema = z.enum(LOCALES);
-export type Locale = (typeof LOCALES)[number];
-export const DEFAULT_LOCALE: Locale = "fr";
 
-export const EVENT_TYPES = ["wedding", "birthday", "corporate", "other"] as const;
 export const eventTypeSchema = z.enum(EVENT_TYPES);
-export type EventType = (typeof EVENT_TYPES)[number];
-
-/** Alphabet without ambiguous characters (no 0/o, 1/l/i) for public event codes (F-012). */
-export const PUBLIC_CODE_ALPHABET = "23456789abcdefghjkmnpqrstuvwxyz";
-export const PUBLIC_CODE_LENGTH = 10;
 
 export const publicCodeSchema = z
   .string()

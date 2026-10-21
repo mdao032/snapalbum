@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { DISPLAY_NAME_MAX_LENGTH } from "../constants";
 import { localeSchema } from "../schemas/common";
 
-export const DISPLAY_NAME_MAX_LENGTH = 100;
+export { DISPLAY_NAME_MAX_LENGTH };
 
 /** Sign-in with a magic link (F-001). The address is normalised so one person has one account. */
 export const emailSchema = z.string().trim().toLowerCase().max(254).pipe(z.email());

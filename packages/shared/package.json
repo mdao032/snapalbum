@@ -7,6 +7,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./brand": "./src/brand.ts",
+    "./constants": "./src/constants.ts",
+    "./color": "./src/events/color.ts",
+    "./lifecycle": "./src/events/lifecycle.ts",
     "./plans": "./src/plans.ts",
     "./schemas": "./src/schemas/index.ts",
     "./api-client": "./src/api-client/index.ts",

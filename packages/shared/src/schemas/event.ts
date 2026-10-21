@@ -1,8 +1,8 @@
 import { z } from "zod";
+import { ACCENT_PRESETS, EVENT_TITLE_MAX_LENGTH, WELCOME_MESSAGE_MAX_LENGTH } from "../constants";
 import { accentColorSchema, eventTypeSchema, localeSchema } from "./common";
 
-export const WELCOME_MESSAGE_MAX_LENGTH = 500;
-export const EVENT_TITLE_MAX_LENGTH = 80;
+export { ACCENT_PRESETS, EVENT_TITLE_MAX_LENGTH, WELCOME_MESSAGE_MAX_LENGTH };
 
 /** Event creation form (F-010, F-011), validated on the client and on the server. */
 export const createEventSchema = z.object({
@@ -32,13 +32,3 @@ export const updateEventSchema = z.object({
   accentColor: z.union([accentColorSchema, z.literal("")]).transform((v) => (v === "" ? null : v)),
 });
 export type UpdateEventInput = z.infer<typeof updateEventSchema>;
-
-/** Accent colors offered as one-tap choices; each keeps white text readable (WCAG AA). */
-export const ACCENT_PRESETS = [
-  "#6d4aff",
-  "#be185d",
-  "#1d4ed8",
-  "#15803d",
-  "#c2410c",
-  "#334155",
-] as const;

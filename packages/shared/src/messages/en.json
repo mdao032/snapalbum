@@ -6,7 +6,6 @@
   "common": {
     "loading": "Loading…",
     "retry": "Try again",
-    "close": "Close",
     "back": "Back",
     "language": "Language"
   },

@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALES, type Locale } from "../schemas/common";
+import { DEFAULT_LOCALE, LOCALES, type Locale } from "../constants";
 import en from "./en.json";
 import fr from "./fr.json";
 
@@ -15,4 +15,16 @@ export function flattenMessageKeys(tree: unknown, prefix = ""): string[] {
   return Object.entries(tree).flatMap(([key, value]) =>
     flattenMessageKeys(value, prefix ? `${prefix}.${key}` : key),
   );
+}
+
+/**
+ * Only the top-level groups a screen needs, for the browser provider: sending every translation
+ * to every page made each page heavier for nothing (NF-002).
+ */
+export function pickMessages(
+  locale: Locale,
+  namespaces: readonly (keyof Messages)[],
+): Partial<Messages> {
+  const all = messages[locale];
+  return Object.fromEntries(namespaces.map((namespace) => [namespace, all[namespace]]));
 }
