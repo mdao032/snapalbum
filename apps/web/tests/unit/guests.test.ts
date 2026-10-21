@@ -293,6 +293,7 @@ describe("refus généraux", () => {
     expect(await getGuestOfEvent(client, EVENT, USER)).toEqual({
       id: "guest-1",
       displayName: "Léa",
+      notifyEmail: null,
     });
     expect(await getGuestOfEvent(fakeAdmin({ guest: null }).client, EVENT, USER)).toBeNull();
   });

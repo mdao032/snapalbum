@@ -101,6 +101,8 @@ describe("F-012: événement vu par un invité", () => {
     expect(await getPublicEvent(client, "k7m2x9qvbr")).toEqual({
       title: "Fête",
       requiresAccessCode: true,
+      galleryVisible: false,
+      phase: "closed",
     });
     const columns = (chain.select as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as string;
     expect(columns).not.toMatch(/owner_id|bytes_used|media_count/);
