@@ -1,11 +1,13 @@
-import { uuidSchema, type EventType, type Locale } from "@snapalbum/shared";
+import { buildShortLink, uuidSchema, type EventType, type Locale } from "@snapalbum/shared";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { EventCover } from "@/components/events/event-cover";
+import { SharePanel } from "@/components/events/share-panel";
 import { PersonalizeForm } from "@/components/events/personalize-form";
+import { clientEnv } from "@/config/env";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { eventDisplayStatus, formatEventDate } from "@/lib/events";
@@ -48,6 +50,12 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
             </p>
           </div>
         </div>
+
+        <SharePanel
+          eventId={event.id}
+          title={event.title}
+          link={buildShortLink(clientEnv.NEXT_PUBLIC_SHORT_LINK_BASE, event.public_code)}
+        />
 
         <PersonalizeForm
           eventId={event.id}

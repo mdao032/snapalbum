@@ -1,3 +1,4 @@
+import { shortLinkCodeOf } from "@snapalbum/shared";
 import type { Database } from "@snapalbum/shared/db-types";
 import { createServerClient } from "@supabase/ssr";
 import createMiddleware from "next-intl/middleware";
@@ -17,6 +18,10 @@ function localeOf(request: NextRequest): (typeof routing.locales)[number] {
 // Next.js 16 renamed `middleware` to `proxy`. It routes by language, keeps the Supabase session
 // fresh and sends visitors without an organiser session away from protected pages (F-001).
 export default async function proxy(request: NextRequest) {
+  // A printed QR code: `/{code}` is looked up by `/s/{code}`, which sends the guest to the event page.
+  const shortCode = shortLinkCodeOf(request.nextUrl.pathname);
+  if (shortCode) return NextResponse.rewrite(new URL(`/s/${shortCode}`, request.url));
+
   const response = handleI18nRouting(request);
   // Language redirects (`/` to `/en`) are final; the guard runs on the next request.
   if (response.status >= 300 && response.status < 400) return response;
@@ -58,6 +63,6 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Everything except API routes, the sign-in return route, Next.js internals and static files.
-  matcher: ["/((?!api|auth/|_next|_vercel|.*\\..*).*)"],
+  // Everything except API routes, the sign-in return and short link routes, Next.js internals and static files.
+  matcher: ["/((?!api|auth/|s/|_next|_vercel|.*\\..*).*)"],
 };

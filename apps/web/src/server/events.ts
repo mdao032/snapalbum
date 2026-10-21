@@ -6,6 +6,7 @@ import {
   defaultEventSettings,
   generatePublicCode,
   makeAccentReadable,
+  publicCodeSchema,
   updateEventSchema,
   type CreateEventInput,
 } from "@snapalbum/shared";
@@ -121,4 +122,28 @@ export async function updateEventPresentation(
     .maybeSingle();
   if (error) throw error;
   return data ? { ok: true, event: data } : { ok: false, reason: "not_found" };
+}
+
+export type PublicEvent = Pick<
+  EventRow,
+  "title" | "welcome_message" | "accent_color" | "locale" | "status" | "expires_at"
+>;
+
+/**
+ * What a guest may know about an event, found by its public code. Uses the ADMIN client on
+ * purpose (visitors have no database rights) and returns only presentation fields, never the
+ * owner, the plan, the counters or the settings.
+ */
+export async function getPublicEvent(
+  admin: Client,
+  publicCode: string,
+): Promise<PublicEvent | null> {
+  if (!publicCodeSchema.safeParse(publicCode).success) return null;
+  const { data, error } = await admin
+    .from("events")
+    .select("title, welcome_message, accent_color, locale, status, expires_at")
+    .eq("public_code", publicCode)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
 }

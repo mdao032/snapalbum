@@ -13,6 +13,8 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    // QR code and PDF generation are slow under coverage instrumentation.
+    testTimeout: 20_000,
     setupFiles: ["./tests/unit/setup.ts"],
     // next-intl imports `next/navigation` without an extension: let Vite resolve it.
     server: { deps: { inline: [/next-intl/] } },
