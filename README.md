@@ -30,15 +30,17 @@ docs             décisions, journal, installation, tests manuels, RGPD
 
 ## Commandes
 
-| Commande                       | Rôle                                                   |
-| ------------------------------ | ------------------------------------------------------ |
-| `pnpm dev`                     | Serveur de développement                               |
-| `pnpm lint` / `pnpm typecheck` | Lint et vérification des types                         |
-| `pnpm test`                    | Tests unitaires (Vitest)                               |
-| `pnpm test:db`                 | Tests de sécurité de la base (Docker)                  |
-| `pnpm test:e2e`                | Tests bout en bout (Playwright, Supabase local requis) |
-| `pnpm build`                   | Build de production                                    |
-| `pnpm format`                  | Formatage Prettier                                     |
+| Commande                              | Rôle                                                   |
+| ------------------------------------- | ------------------------------------------------------ |
+| `pnpm dev`                            | Serveur de développement                               |
+| `pnpm lint` / `pnpm typecheck`        | Lint et vérification des types                         |
+| `pnpm test`                           | Tests unitaires (Vitest)                               |
+| `pnpm test:db`                        | Tests de sécurité de la base (Docker)                  |
+| `pnpm test:e2e`                       | Tests bout en bout (Playwright, Supabase local requis) |
+| `pnpm storage:start` / `storage:stop` | Émulateur de stockage S3 local (Docker)                |
+| `pnpm test:integration`               | Tests du stockage contre l'émulateur                   |
+| `pnpm build`                          | Build de production                                    |
+| `pnpm format`                         | Formatage Prettier                                     |
 
 ## Documents de référence
 
