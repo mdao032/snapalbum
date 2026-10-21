@@ -194,5 +194,35 @@
       "saving": "Enregistrement…",
       "saved": "Modifications enregistrées."
     }
+  },
+  "printables": {
+    "instruction": "Scannez pour partager vos photos",
+    "subInstruction": "Sans appli, sans compte",
+    "foldHere": "Pliez ici"
+  },
+  "share": {
+    "title": "Partager l’album",
+    "subtitle": "Imprimez le QR code ou envoyez le lien : vos invités n’ont rien à installer.",
+    "qrAlt": "QR code de l’événement {title}",
+    "linkLabel": "Lien de l’événement",
+    "copy": "Copier le lien",
+    "copied": "Lien copié",
+    "copyFailed": "Copie impossible : sélectionnez le lien et copiez-le.",
+    "share": "Partager",
+    "shareText": "Partagez vos photos de {title}",
+    "accentQr": "QR code aux couleurs de l’événement",
+    "accentQrHint": "Le contraste reste suffisant pour être scanné sans difficulté.",
+    "downloadsTitle": "Télécharger",
+    "qrSvg": "QR code (SVG)",
+    "qrPng": "QR code (PNG, 1 024 px)",
+    "cardsTitle": "Cartes à imprimer",
+    "cardA6": "Carte A6 (PDF)",
+    "cardA5": "Carte A5 (PDF)",
+    "cardTent": "Chevalet de table (PDF, A4 à plier)",
+    "printHint": "Testez le QR code avec l’appareil photo d’un iPhone et d’un Android avant d’imprimer."
+  },
+  "guest": {
+    "comingSoonTitle": "L’envoi de photos ouvre bientôt",
+    "comingSoonDescription": "L’organisateur prépare l’album. Repassez scanner le QR code dans quelques instants."
   }
 }

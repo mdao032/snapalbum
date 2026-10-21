@@ -3,3 +3,5 @@ export * from "./color";
 export * from "./expiry";
 export * from "./quota";
 export * from "./settings";
+export * from "./short-link";
+export * from "./printables";

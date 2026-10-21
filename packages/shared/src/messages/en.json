@@ -194,5 +194,35 @@
       "saving": "Saving…",
       "saved": "Changes saved."
     }
+  },
+  "printables": {
+    "instruction": "Scan to share your photos",
+    "subInstruction": "No app, no account",
+    "foldHere": "Fold here"
+  },
+  "share": {
+    "title": "Share the album",
+    "subtitle": "Print the QR code or send the link: your guests have nothing to install.",
+    "qrAlt": "QR code of the event {title}",
+    "linkLabel": "Event link",
+    "copy": "Copy the link",
+    "copied": "Link copied",
+    "copyFailed": "Couldn’t copy: select the link and copy it.",
+    "share": "Share",
+    "shareText": "Share your photos of {title}",
+    "accentQr": "QR code in the event’s colors",
+    "accentQrHint": "The contrast stays high enough to scan without trouble.",
+    "downloadsTitle": "Download",
+    "qrSvg": "QR code (SVG)",
+    "qrPng": "QR code (PNG, 1,024 px)",
+    "cardsTitle": "Printable cards",
+    "cardA6": "A6 card (PDF)",
+    "cardA5": "A5 card (PDF)",
+    "cardTent": "Table tent (PDF, A4 to fold)",
+    "printHint": "Test the QR code with an iPhone camera and an Android camera before printing."
+  },
+  "guest": {
+    "comingSoonTitle": "Photo uploads open soon",
+    "comingSoonDescription": "The organiser is preparing the album. Scan the QR code again in a few moments."
   }
 }
