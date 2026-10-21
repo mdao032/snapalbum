@@ -22,6 +22,8 @@ export const eventSettingsSchema = z
     upload_closes_at: z.iso.datetime(),
     /** Hash of the optional access code (F-017). Never the code itself. */
     access_code_hash: z.string().nullable().optional(),
+    /** When the organiser declared the album ready: guests who asked get its link (F-044). */
+    album_ready_at: z.iso.datetime().nullable().optional(),
   })
   .refine((s) => Date.parse(s.upload_opens_at) < Date.parse(s.upload_closes_at), {
     message: "The upload window must open before it closes",

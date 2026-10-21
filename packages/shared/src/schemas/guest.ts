@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { emailSchema } from "../auth/schemas";
 import { GUEST_NAME_MAX_LENGTH } from "../constants";
 import { publicCodeSchema, uuidSchema } from "./common";
 
@@ -44,3 +45,28 @@ export const joinEventResponseSchema = z.object({
     .nullable(),
 });
 export type JoinEventResponse = z.infer<typeof joinEventResponseSchema>;
+
+/**
+ * `POST /api/guests/notify` body (F-044): a guest leaves an e-mail address, with a consent of its own
+ * (never bundled with the terms), to receive the link of the album once it is ready, or takes it
+ * back. The address is only used for that one e-mail and is deleted when the event expires.
+ */
+export const notifyRequestSchema = z.discriminatedUnion("action", [
+  z.object({
+    action: z.literal("set"),
+    eventCode: publicCodeSchema,
+    email: emailSchema,
+    /** The separate, explicit consent to receive the e-mail. */
+    consent: z.literal(true),
+  }),
+  z.object({ action: z.literal("clear"), eventCode: publicCodeSchema }),
+]);
+export type NotifyRequest = z.input<typeof notifyRequestSchema>;
+/** The request once validated (address cleaned): what the server works with. */
+export type NotifyRequestParsed = z.output<typeof notifyRequestSchema>;
+
+export const notifyResponseSchema = z.discriminatedUnion("action", [
+  z.object({ action: z.literal("set"), email: z.string() }),
+  z.object({ action: z.literal("clear") }),
+]);
+export type NotifyResponse = z.infer<typeof notifyResponseSchema>;

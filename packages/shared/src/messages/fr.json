@@ -284,7 +284,9 @@
         "open": "Ouvrir dans le navigateur",
         "copy": "Copier le lien",
         "copied": "Lien copié. Collez-le dans Safari ou Chrome."
-      }
+      },
+      "afterHint": "Il vous reste des photos à partager ? Vous pouvez encore les ajouter.",
+      "closed": "L’envoi de photos est terminé pour cet événement."
     },
     "mine": {
       "open": "Mes photos",
@@ -310,6 +312,27 @@
       "label": "Sections de la page",
       "upload": "Envoyer",
       "gallery": "Galerie"
+    },
+    "album": {
+      "view": "Voir l’album",
+      "hidden": "L’organisateur n’a pas ouvert l’album aux invités."
+    },
+    "notify": {
+      "open": "Prévenez-moi quand l’album est prêt",
+      "title": "Recevez le lien de l’album",
+      "intro": "Laissez votre e-mail : nous vous écrirons une seule fois, quand l’album sera prêt.",
+      "emailLabel": "Votre adresse e-mail",
+      "consentLabel": "J’accepte de recevoir un e-mail à cette adresse, une seule fois, avec le lien de l’album. Elle sera effacée à la fin de l’événement.",
+      "consentRequired": "Cochez la case pour continuer.",
+      "emailInvalid": "Cette adresse ne semble pas valide.",
+      "submit": "Me prévenir",
+      "submitting": "Un instant…",
+      "saved": "C’est noté. Nous écrirons à {email} quand l’album sera prêt.",
+      "change": "Changer d’adresse",
+      "withdraw": "Ne plus me prévenir",
+      "withdrawn": "C’est fait : nous n’écrirons pas à cette adresse.",
+      "failed": "L’enregistrement a échoué. Réessayez dans un instant.",
+      "close": "Fermer"
     }
   },
   "dashboard": {
@@ -378,6 +401,19 @@
       "revoked": "Lien révoqué : il ne fonctionne plus.",
       "createdOn": "Créé le {date}",
       "empty": "Aucun lien de partage actif.",
+      "failed": "L’opération a échoué. Réessayez.",
+      "tooMany": "Vous avez déjà 5 liens actifs. Révoquez-en un pour en créer un autre."
+    },
+    "albumReady": {
+      "title": "Album prêt",
+      "subtitle": "Quand toutes les photos sont arrivées, prévenez vos invités : ceux qui ont laissé leur e-mail reçoivent le lien de l’album.",
+      "waiting": "{count, plural, =0 {Aucun invité n’a laissé son e-mail pour le moment.} one {# invité a laissé son e-mail.} other {# invités ont laissé leur e-mail.}}",
+      "action": "L’album est prêt",
+      "ask": "Prévenir maintenant les invités qui ont laissé leur e-mail ? Cela ne se fait qu’une fois.",
+      "askYes": "Oui, l’album est prêt",
+      "askNo": "Pas encore",
+      "done": "Album déclaré prêt le {date}.",
+      "doneHint": "Le lien de l’album est envoyé aux invités qui ont laissé leur e-mail.",
       "failed": "L’opération a échoué. Réessayez."
     }
   },
@@ -440,6 +476,7 @@
       "title": "Album partagé",
       "readOnly": "Cet album est en lecture seule.",
       "by": "Souvenirs de {title}"
-    }
+    },
+    "closed": "L’organisateur n’a pas ouvert la galerie aux invités."
   }
 }

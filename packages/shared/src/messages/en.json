@@ -284,7 +284,9 @@
         "open": "Open in browser",
         "copy": "Copy link",
         "copied": "Link copied. Paste it into Safari or Chrome."
-      }
+      },
+      "afterHint": "Still have photos to share? You can still add them.",
+      "closed": "Sending photos is over for this event."
     },
     "mine": {
       "open": "My photos",
@@ -310,6 +312,27 @@
       "label": "Page sections",
       "upload": "Send",
       "gallery": "Gallery"
+    },
+    "album": {
+      "view": "View the album",
+      "hidden": "The organiser has not opened the album to guests."
+    },
+    "notify": {
+      "open": "Tell me when the album is ready",
+      "title": "Get the link to the album",
+      "intro": "Leave your e-mail: we will write to you once, when the album is ready.",
+      "emailLabel": "Your e-mail address",
+      "consentLabel": "I agree to receive one e-mail at this address with the link to the album. It will be erased when the event ends.",
+      "consentRequired": "Tick the box to continue.",
+      "emailInvalid": "This address does not look valid.",
+      "submit": "Tell me",
+      "submitting": "One moment…",
+      "saved": "Noted. We will write to {email} when the album is ready.",
+      "change": "Change address",
+      "withdraw": "Stop telling me",
+      "withdrawn": "Done: we will not write to this address.",
+      "failed": "Saving failed. Try again in a moment.",
+      "close": "Close"
     }
   },
   "dashboard": {
@@ -378,6 +401,19 @@
       "revoked": "Link revoked: it no longer works.",
       "createdOn": "Created on {date}",
       "empty": "No active share link.",
+      "failed": "That did not work. Try again.",
+      "tooMany": "You already have 5 active links. Revoke one to create another."
+    },
+    "albumReady": {
+      "title": "Album ready",
+      "subtitle": "Once all the photos have arrived, let your guests know: those who left their e-mail get the link to the album.",
+      "waiting": "{count, plural, =0 {No guest has left an e-mail yet.} one {# guest has left an e-mail.} other {# guests have left their e-mail.}}",
+      "action": "The album is ready",
+      "ask": "Tell the guests who left their e-mail now? This can only be done once.",
+      "askYes": "Yes, the album is ready",
+      "askNo": "Not yet",
+      "done": "Album declared ready on {date}.",
+      "doneHint": "The link to the album is sent to the guests who left their e-mail.",
       "failed": "That did not work. Try again."
     }
   },
@@ -440,6 +476,7 @@
       "title": "Shared album",
       "readOnly": "This album is read-only.",
       "by": "Memories of {title}"
-    }
+    },
+    "closed": "The organiser has not opened the gallery to guests."
   }
 }
