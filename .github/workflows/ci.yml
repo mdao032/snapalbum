@@ -59,6 +59,16 @@ jobs:
           restore-keys: turbo-e2e-${{ runner.os }}-
       - run: pnpm install --frozen-lockfile
       - run: cp .env.example apps/web/.env.local
+      # The sign-in tests read their e-mails in the local test inbox (Mailpit) of Supabase.
+      - name: Start local Supabase
+        run: pnpm exec supabase start -x studio,imgproxy,edge-runtime,logflare,vector,supavisor
+      - name: Point the app at local Supabase
+        run: |
+          pnpm exec supabase status -o env > "$RUNNER_TEMP/supabase.env"
+          set -a
+          . "$RUNNER_TEMP/supabase.env"
+          set +a
+          sed -i "s|^NEXT_PUBLIC_SUPABASE_ANON_KEY=.*|NEXT_PUBLIC_SUPABASE_ANON_KEY=${ANON_KEY}|; s|^SUPABASE_SERVICE_ROLE_KEY=.*|SUPABASE_SERVICE_ROLE_KEY=${SERVICE_ROLE_KEY}|" apps/web/.env.local
       - name: Install browsers
         run: pnpm --filter web exec playwright install --with-deps chromium webkit
       - run: pnpm test:e2e
