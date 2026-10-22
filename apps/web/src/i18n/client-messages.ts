@@ -9,6 +9,14 @@ const BASE = ["language", "layout", "error", "notFound", "common", "states"] as 
 
 type Namespace = keyof Messages;
 
-export function clientMessagesFor(locale: Locale, extra: readonly Namespace[] = []) {
-  return pickMessages(locale, [...BASE, ...extra]);
+export function clientMessagesFor(
+  locale: Locale,
+  extra: readonly Namespace[] = [],
+  /** Base groups this area never reads in the browser (a page with no site header or footer). */
+  omit: readonly Namespace[] = [],
+) {
+  return pickMessages(
+    locale,
+    [...BASE, ...extra].filter((namespace) => !omit.includes(namespace)),
+  );
 }

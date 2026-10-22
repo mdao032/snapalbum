@@ -9,7 +9,7 @@ export default async function LiveLayout({ children, params }: LayoutProps<"/[lo
   if (!hasLocale(routing.locales, locale)) notFound();
 
   return (
-    <NextIntlClientProvider messages={clientMessagesFor(locale, ["live", "apiErrors"])}>
+    <NextIntlClientProvider messages={clientMessagesFor(locale, ["live", "apiErrors"], ["layout"])}>
       <main id="contenu" className="min-h-dvh bg-black text-white">
         {children}
       </main>

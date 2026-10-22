@@ -5,7 +5,6 @@ import type { PlanId } from "@snapalbum/shared/plans";
 import type { StorageProblem, UploadEngine, UploadItem } from "@snapalbum/shared/upload";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -106,7 +105,6 @@ export function GuestExperience({
     () => LOOKS_IN_APP.test(navigator.userAgent),
     () => false,
   );
-  const router = useRouter();
   const engineRef = useRef<Promise<UploadEngine<File>> | null>(null);
   const engineSync = useRef<UploadEngine<File> | null>(null);
   const planRef = useRef(plan);
@@ -120,25 +118,11 @@ export function GuestExperience({
         onStorageProblem: setStorageProblem,
       });
       engineSync.current = engine;
-      // Files that waited for room went through: the organiser changed the plan (R2). The page is
-      // asked again so the limits it applies before sending follow the new plan.
-      let hadWaiting = false;
-      let sentBefore = 0;
-      engine.subscribe(() => {
-        const list = engine.getItems();
-        setItems(list);
-        const sent = list.filter((item) => item.status === "sent").length;
-        if (hadWaiting && sent > sentBefore) {
-          hadWaiting = false;
-          router.refresh();
-        }
-        sentBefore = sent;
-        if (list.some((item) => item.status === "waiting_quota")) hadWaiting = true;
-      });
+      engine.subscribe(() => setItems(engine.getItems()));
       return engine;
     });
     return engineRef.current;
-  }, [eventCode, router]);
+  }, [eventCode]);
 
   // The server page was rendered again with another plan: the engine applies its limits (R2).
   useEffect(() => {

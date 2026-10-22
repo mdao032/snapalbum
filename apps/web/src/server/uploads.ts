@@ -189,6 +189,7 @@ export async function reserveUpload(
     body: {
       status: "reserved",
       mediaId: media.id,
+      plan: plan.id,
       original:
         media.key_original && media.bytes_original && !multipart
           ? await sign(media.key_original, media.mime_type, media.bytes_original)

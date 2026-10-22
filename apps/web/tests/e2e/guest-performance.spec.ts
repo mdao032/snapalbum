@@ -36,6 +36,7 @@ test.describe("budget de la page invité", () => {
       .sort()
       .join("\n");
     testInfo.annotations.push({ type: "js-brotli-bytes", description: String(total) });
+    testInfo.annotations.push({ type: "js-brotli-detail", description: detail });
     expect(total, `JavaScript initial: ${total} octets\n${detail}`).toBeLessThan(BUDGET_BYTES);
 
     // The upload engine is not part of that first load: it comes with the first photo chosen.

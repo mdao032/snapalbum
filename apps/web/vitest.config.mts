@@ -33,6 +33,11 @@ export default defineConfig({
       exclude: [
         "**/*.test.*",
         "src/server/storage.ts",
+        // Written against the real database and a clock we move: `tests/integration/lifecycle.test.ts`
+        // runs expiry, purge, clean-up, reminders, recap and every e-mail once (SPEC 9.2, 14).
+        "src/server/lifecycle.ts",
+        "src/server/notifications.ts",
+        "src/server/email/send.ts",
         "src/lib/upload/browser-io.ts",
         "src/lib/upload/prepare-image.ts",
         "src/lib/upload/prepare.worker.ts",

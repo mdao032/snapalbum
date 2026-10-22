@@ -460,6 +460,40 @@ describe("SPEC 8.3: refus et attentes", () => {
     expect(engine.getItems()[1]?.status).toBe("sent");
   });
 
+  it("R2: la réponse du serveur donne l'offre actuelle : une vidéo longue passe ensuite sans recharger la page", async () => {
+    const long = photo({
+      kind: "video",
+      mimeType: "video/mp4",
+      extension: "mp4",
+      display: undefined,
+      displayBytes: undefined,
+      durationSeconds: 120,
+      sha256: "c".repeat(64),
+    });
+    const { engine } = setup({
+      plan: "free",
+      prepare: async (f) => (f.name.endsWith(".mp4") ? long : photo()),
+      reserve: async () => ({
+        status: "reserved",
+        mediaId: MEDIA,
+        plan: "event",
+        original: null,
+        multipart: null,
+        display: target("display"),
+        thumb: target("thumb"),
+      }),
+    });
+    engine.add([file("clip.mp4")]);
+    await flush();
+    expect(engine.getItems()[0]).toMatchObject({ status: "rejected", reason: "video_too_long" });
+    engine.add([file("photo.jpg")]);
+    await flush();
+    expect(engine.getItems()[1]?.status).toBe("sent");
+    engine.add([file("clip2.mp4")]);
+    await flush();
+    expect(engine.getItems()[2]?.status).toBe("sent");
+  });
+
   it("S-002: un fichier jugé invalide par le serveur est refusé définitivement", async () => {
     const { engine } = setup({
       complete: async () => {

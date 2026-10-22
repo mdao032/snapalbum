@@ -9,7 +9,9 @@ export default async function GuestLayout({ children, params }: LayoutProps<"/[l
   if (!hasLocale(routing.locales, locale)) notFound();
 
   return (
-    <NextIntlClientProvider messages={clientMessagesFor(locale, ["guest", "gallery", "apiErrors"])}>
+    <NextIntlClientProvider
+      messages={clientMessagesFor(locale, ["guest", "gallery", "apiErrors"], ["layout"])}
+    >
       <main id="contenu" className="bg-aurora mx-auto flex min-h-dvh w-full max-w-xl flex-col">
         {children}
       </main>

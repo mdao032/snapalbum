@@ -9,7 +9,9 @@ export default async function SharedLayout({ children, params }: LayoutProps<"/[
   if (!hasLocale(routing.locales, locale)) notFound();
 
   return (
-    <NextIntlClientProvider messages={clientMessagesFor(locale, ["gallery", "apiErrors"])}>
+    <NextIntlClientProvider
+      messages={clientMessagesFor(locale, ["gallery", "apiErrors"], ["layout"])}
+    >
       <main id="contenu" className="bg-aurora mx-auto flex min-h-dvh w-full max-w-6xl flex-col">
         {children}
       </main>

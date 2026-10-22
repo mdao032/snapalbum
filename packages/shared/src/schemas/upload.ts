@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PLAN_IDS } from "../plans";
 import { ORIGINAL_EXTENSIONS } from "../storage/keys";
 import { BLURHASH_PATTERN } from "../upload/blurhash";
 import { publicCodeSchema, sha256Schema, uuidSchema } from "./common";
@@ -74,6 +75,11 @@ export const reserveUploadResponseSchema = z.discriminatedUnion("status", [
     multipart: z
       .object({ partSize: z.number().int().positive(), partCount: z.number().int().positive() })
       .nullable(),
+    /**
+     * The plan of the event right now: a device that was waiting for room learns here that the
+     * organiser upgraded, without reloading the page (R2). Absent in answers of older servers.
+     */
+    plan: z.enum(PLAN_IDS).optional(),
     /** Photos only. */
     display: signedTargetSchema.nullable(),
     thumb: signedTargetSchema,

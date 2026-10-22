@@ -298,6 +298,8 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
     });
     if (reserved.status === "already_received") return reserved.mediaId;
     update(id, (item) => ({ ...item, mediaId: reserved.mediaId }));
+    // The server says which plan the event is on now: limits applied before sending follow it.
+    if (reserved.plan) plan = reserved.plan;
 
     // Prepared versions first: they are small and make the photo visible sooner.
     const sends: { target: SignedTarget; body: B }[] = [];
