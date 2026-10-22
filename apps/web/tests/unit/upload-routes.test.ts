@@ -11,6 +11,14 @@ vi.mock("@/server/rate-limit", () => ({
   EVENT_RESERVE_RATE_LIMIT: { name: "event", limit: 1000, windowSeconds: 60 },
 }));
 
+vi.mock("@/server/notify-after", () => ({
+  scheduleWelcome: vi.fn(),
+  scheduleQuotaReached: vi.fn(),
+  schedulePaymentConfirmed: vi.fn(),
+  scheduleDeletionNotice: vi.fn(),
+  scheduleAlbumReady: vi.fn(),
+}));
+
 const reserveUpload = vi.fn();
 const completeUpload = vi.fn();
 const multipartAction = vi.fn();

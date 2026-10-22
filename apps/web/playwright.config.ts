@@ -50,6 +50,10 @@ export default defineConfig({
         // Payment tests sign their own webhooks with this secret; no Stripe key is given, so no
         // test ever reaches Stripe's servers.
         STRIPE_WEBHOOK_SECRET: "whsec_e2e_secret_for_tests_only",
+        // The scheduled tasks are called with this secret, and e-mails go to the server log and
+        // to `email_log`: no test sends a real message.
+        CRON_SECRET: "cron-secret-for-e2e-tests-only-1234",
+        EMAIL_MODE: "log",
       },
     },
   ],

@@ -47,7 +47,7 @@ test.describe("tableau de bord", () => {
     await expect(bar).toHaveAttribute("aria-valuenow", "0");
     await expect(page.getByText("0 sur 200 fichiers")).toBeVisible();
     await expect(page.getByText("Encore 200 places")).toBeVisible();
-    await expect(page.getByText("jusqu’à 10 vidéos")).toBeVisible();
+    await expect(page.getByText("accepte jusqu’à 10 vidéos")).toBeVisible();
     await expectNoAccessibilityViolations(page);
     await expectNoHorizontalScroll(page);
   });

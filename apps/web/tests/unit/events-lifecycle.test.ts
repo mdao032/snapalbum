@@ -86,6 +86,7 @@ describe("R5: suppression d'un événement", () => {
     expect(chain.update).toHaveBeenCalledWith({
       status: "pending_deletion",
       deleted_at: NOW.toISOString(),
+      deletion_reason: "user",
     });
     expect(chain.eq).toHaveBeenCalledWith("owner_id", OWNER);
     expect(chain.eq).toHaveBeenCalledWith("status", "active");
@@ -124,6 +125,24 @@ describe("R5: suppression d'un événement", () => {
     });
   });
 
+  it("SPEC 9.2: un album expiré ne s'annule pas, il se récupère en payant", async () => {
+    const { client, chain } = fakeClient({
+      lookup: {
+        data: {
+          id: EVENT_ID,
+          status: "pending_deletion",
+          deleted_at: "2026-10-20T10:00:00Z",
+          deletion_reason: "expired",
+        },
+      },
+    });
+    expect(await cancelEventDeletion(client, OWNER, EVENT_ID, NOW)).toEqual({
+      ok: false,
+      reason: "not_allowed",
+    });
+    expect(chain.update).not.toHaveBeenCalled();
+  });
+
   it("R5: annule la suppression dans le délai de 7 jours", async () => {
     const { client, chain } = fakeClient({
       lookup: {
@@ -131,7 +150,11 @@ describe("R5: suppression d'un événement", () => {
       },
     });
     expect(await cancelEventDeletion(client, OWNER, EVENT_ID, NOW)).toEqual({ ok: true });
-    expect(chain.update).toHaveBeenCalledWith({ status: "active", deleted_at: null });
+    expect(chain.update).toHaveBeenCalledWith({
+      status: "active",
+      deleted_at: null,
+      deletion_reason: null,
+    });
     expect(chain.eq).toHaveBeenCalledWith("status", "pending_deletion");
   });
 

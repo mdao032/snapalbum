@@ -17,6 +17,14 @@ vi.mock("@/server/supabase/server", () => ({ createSupabaseServerClient: async (
 vi.mock("@/server/supabase/admin", () => ({ createSupabaseAdminClient: () => ({ admin: true }) }));
 vi.mock("next-intl/server", () => ({ getLocale: async () => "fr" }));
 
+vi.mock("@/server/notify-after", () => ({
+  scheduleWelcome: vi.fn(),
+  scheduleQuotaReached: vi.fn(),
+  schedulePaymentConfirmed: vi.fn(),
+  scheduleDeletionNotice: vi.fn(),
+  scheduleAlbumReady: vi.fn(),
+}));
+
 const redirect = vi.fn((_target: unknown): never => {
   throw new Error("NEXT_REDIRECT");
 });

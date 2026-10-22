@@ -6,6 +6,14 @@ const SECRET = "whsec_unit_test_secret";
 const serverEnv: { STRIPE_WEBHOOK_SECRET?: string } = { STRIPE_WEBHOOK_SECRET: SECRET };
 vi.mock("@/config/env.server", () => ({ getServerEnv: () => serverEnv }));
 
+vi.mock("@/server/notify-after", () => ({
+  scheduleWelcome: vi.fn(),
+  scheduleQuotaReached: vi.fn(),
+  schedulePaymentConfirmed: vi.fn(),
+  scheduleDeletionNotice: vi.fn(),
+  scheduleAlbumReady: vi.fn(),
+}));
+
 const handleStripeEvent = vi.fn();
 vi.mock("@/server/payments", () => ({ handleStripeEvent }));
 vi.mock("@/server/supabase/admin", () => ({ createSupabaseAdminClient: () => ({ admin: true }) }));
