@@ -22,6 +22,7 @@ import { DeleteEvent } from "@/components/events/delete-event";
 import { DownloadAlbum } from "@/components/events/download-album";
 import { EventCover } from "@/components/events/event-cover";
 import { EventStatsPanel } from "@/components/events/event-stats";
+import { PlanCard } from "@/components/events/plan-card";
 import { PersonalizeForm } from "@/components/events/personalize-form";
 import { SettingsForm } from "@/components/events/settings-form";
 import { SharePanel } from "@/components/events/share-panel";
@@ -33,7 +34,12 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { eventDisplayStatus, formatEventDate, formatInstantDate } from "@/lib/events";
 import { requireOrganiser } from "@/server/auth";
-import { countNotifyGuests, getEventStats, getOwnEvent } from "@/server/events";
+import {
+  countNotifyGuests,
+  countOptimizedOnlyPhotos,
+  getEventStats,
+  getOwnEvent,
+} from "@/server/events";
 import { moderationCounts } from "@/server/moderation";
 import { shareLinkViews } from "@/server/share-links";
 import { createSupabaseAdminClient } from "@/server/supabase/admin";
@@ -73,6 +79,9 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
   const attention = pendingDeletion
     ? null
     : await moderationCounts(createSupabaseAdminClient(), event.id);
+  const optimizedOnlyCount = pendingDeletion
+    ? 0
+    : await countOptimizedOnlyPhotos(createSupabaseAdminClient(), event.id);
   const shareLinks = pendingDeletion
     ? []
     : await shareLinkViews(createSupabaseAdminClient(), user.id, event.id);
@@ -122,6 +131,12 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
         ) : null}
 
         <EventStatsPanel stats={getEventStats(event)} usage={usage} />
+
+        <PlanCard
+          plan={event.plan as PlanId}
+          expiresAt={event.expires_at}
+          optimizedOnlyCount={optimizedOnlyCount}
+        />
 
         {pendingDeletion ? null : (
           <>

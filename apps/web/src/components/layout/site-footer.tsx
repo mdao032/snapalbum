@@ -1,6 +1,7 @@
 import { APP_NAME } from "@snapalbum/shared/brand";
 import { useTranslations } from "next-intl";
 import { Logo } from "@/components/brand/logo";
+import { Link } from "@/i18n/navigation";
 
 export function SiteFooter() {
   const t = useTranslations("layout");
@@ -12,6 +13,14 @@ export function SiteFooter() {
           <Logo />
           <p className="max-w-sm text-sm text-muted-foreground">{t("footerTagline")}</p>
         </div>
+        <nav aria-label={t("footerNav")} className="flex flex-col gap-1 sm:items-end">
+          <Link
+            href="/pricing"
+            className="inline-flex min-h-11 items-center font-medium hover:underline"
+          >
+            {t("pricingLink")}
+          </Link>
+        </nav>
         <p className="text-sm text-muted-foreground">
           {t("copyright", { year: new Date().getFullYear(), appName: APP_NAME })}
         </p>

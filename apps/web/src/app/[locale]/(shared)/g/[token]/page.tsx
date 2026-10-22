@@ -1,11 +1,14 @@
 import { shareTokenSchema } from "@snapalbum/shared";
+import { getPlan } from "@snapalbum/shared/plans";
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { MadeWith } from "@/components/brand/made-with";
 import { EventCover } from "@/components/events/event-cover";
 import { Gallery } from "@/components/gallery/gallery";
 import { routing } from "@/i18n/routing";
+import { getEventPlan } from "@/server/events";
 import { resolveGalleryAccess } from "@/server/gallery";
 import { createSupabaseAdminClient } from "@/server/supabase/admin";
 
@@ -28,7 +31,8 @@ export default async function SharedAlbumPage({ params }: PageProps<"/[locale]/g
     token,
   });
   if (!access.ok) notFound();
-  const { title, accentColor } = access.body;
+  const { title, accentColor, eventId } = access.body;
+  const watermark = getPlan(await getEventPlan(createSupabaseAdminClient(), eventId)).watermark;
   const t = await getTranslations("gallery.shared");
 
   return (
@@ -40,6 +44,7 @@ export default async function SharedAlbumPage({ params }: PageProps<"/[locale]/g
           <p className="text-muted-foreground">{t("readOnly")}</p>
         </header>
         <Gallery access={{ type: "share", token }} title={title} />
+        <MadeWith mode={watermark} className="mt-auto" />
       </div>
     </>
   );

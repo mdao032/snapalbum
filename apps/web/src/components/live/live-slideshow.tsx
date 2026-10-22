@@ -49,12 +49,15 @@ export function LiveSlideshow({
   eventId,
   title,
   qr,
+  madeWith,
 }: {
   eventCode: string;
   eventId: string;
   title: string;
   /** The QR code of the event link, as an image address. */
   qr: string;
+  /** The "Made with" notice of the plan, already worded; null when the plan has none. */
+  madeWith: { label: string; mode: "visible" | "discreet" } | null;
 }) {
   const t = useTranslations("live");
   const [slides, setSlides] = useState<Slide[]>([]);
@@ -311,6 +314,20 @@ export function LiveSlideshow({
           {t("addPhotos")}
         </p>
       </div>
+
+      {madeWith ? (
+        <p
+          data-testid="made-with"
+          data-mode={madeWith.mode}
+          className={`absolute bottom-[2vmin] left-[2vmin] ${
+            madeWith.mode === "visible"
+              ? "text-[clamp(0.9rem,2.2vmin,1.8rem)] font-medium text-white/90"
+              : "text-[clamp(0.75rem,1.6vmin,1.3rem)] text-white/70"
+          }`}
+        >
+          {madeWith.label}
+        </p>
+      ) : null}
 
       <button
         type="button"

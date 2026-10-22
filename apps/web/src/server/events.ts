@@ -15,6 +15,7 @@ import {
   updateEventSettingsSchema,
   type CreateEventInput,
   type GuestPhase,
+  type PlanId,
 } from "@snapalbum/shared";
 import type { Database } from "@snapalbum/shared/db-types";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -322,6 +323,29 @@ export async function countNotifyGuests(admin: Client, eventId: string): Promise
     .eq("event_id", eventId)
     .not("notify_email", "is", null)
     .not("notify_consent_at", "is", null);
+  if (error) throw error;
+  return count ?? 0;
+}
+
+/** The plan of an event, for what depends on it on pages that only know the event's id. */
+export async function getEventPlan(admin: Client, eventId: string): Promise<PlanId> {
+  const { data, error } = await admin.from("events").select("plan").eq("id", eventId).maybeSingle();
+  if (error) throw error;
+  return (data?.plan as PlanId | undefined) ?? "free";
+}
+
+/**
+ * Photos that only have their optimised version because they were sent while the event was on the
+ * free plan (R2: originals are kept for what is sent after the upgrade). Counted by the database.
+ */
+export async function countOptimizedOnlyPhotos(admin: Client, eventId: string): Promise<number> {
+  const { count, error } = await admin
+    .from("media")
+    .select("id", { count: "exact", head: true })
+    .eq("event_id", eventId)
+    .eq("kind", "photo")
+    .eq("status", "ready")
+    .is("key_original", null);
   if (error) throw error;
   return count ?? 0;
 }

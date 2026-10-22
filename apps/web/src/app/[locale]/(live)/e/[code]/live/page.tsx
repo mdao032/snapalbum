@@ -1,12 +1,15 @@
 import { buildShortLink } from "@snapalbum/shared";
+import { APP_NAME } from "@snapalbum/shared/brand";
+import { getPlan } from "@snapalbum/shared/plans";
 import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { LiveSlideshow } from "@/components/live/live-slideshow";
 import { clientEnv } from "@/config/env";
 import { redirect } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { getEventPlan } from "@/server/events";
 import { resolveGalleryAccess } from "@/server/gallery";
 import { qrDarkColor, qrSvg } from "@/server/qr";
 import { createSupabaseAdminClient } from "@/server/supabase/admin";
@@ -47,12 +50,20 @@ export default async function LivePage({ params }: PageProps<"/[locale]/e/[code]
   const link = buildShortLink(clientEnv.NEXT_PUBLIC_SHORT_LINK_BASE, code);
   const svg = await qrSvg(link, qrDarkColor("ink", access.body.accentColor));
 
+  const watermark = getPlan(await getEventPlan(admin, access.body.eventId)).watermark;
+  const tLayout = await getTranslations("layout");
+
   return (
     <LiveSlideshow
       eventCode={code}
       eventId={access.body.eventId}
       title={access.body.title}
       qr={`data:image/svg+xml;utf8,${encodeURIComponent(svg)}`}
+      madeWith={
+        watermark === "none"
+          ? null
+          : { label: tLayout("madeWith", { appName: APP_NAME }), mode: watermark }
+      }
     />
   );
 }

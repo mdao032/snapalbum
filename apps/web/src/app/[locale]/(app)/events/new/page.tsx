@@ -3,6 +3,7 @@ import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { CreateEventForm } from "@/components/events/create-event-form";
+import { QualityNotice } from "@/components/events/quality-notice";
 import { routing } from "@/i18n/routing";
 import { todayIsoDate } from "@/lib/events";
 import { requireOrganiser } from "@/server/auth";
@@ -32,6 +33,7 @@ export default async function NewEventPage({ params }: PageProps<"/[locale]/even
           <h1 className="text-title">{t("title")}</h1>
           <p className="text-muted-foreground">{t("subtitle")}</p>
         </div>
+        <QualityNotice />
         <CreateEventForm today={todayIsoDate()} />
       </div>
     </div>

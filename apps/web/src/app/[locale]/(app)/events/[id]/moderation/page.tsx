@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { QualityNotice } from "@/components/events/quality-notice";
 import { ModerationBoard } from "@/components/moderation/moderation-board";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
@@ -52,6 +53,7 @@ export default async function ModerationPage({
           <h1 className="text-title text-balance">{t("title")}</h1>
           <p className="text-muted-foreground">{t("subtitle")}</p>
         </header>
+        {event.plan === "free" ? <QualityNotice compact /> : null}
         <ModerationBoard eventId={id} initialFilter={filter} initialPage={first.body} />
       </div>
     </div>
