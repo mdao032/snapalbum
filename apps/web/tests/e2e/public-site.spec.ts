@@ -397,14 +397,21 @@ test.describe("démonstration publique sans compte", () => {
     await expect(page.getByTestId("demo-counter")).toHaveText("2 photos reçues");
 
     // Nothing is chosen from the device and nothing is sent: the page asks for nothing more.
-    const after = requests.slice(before).filter((request) => !request.url.includes("_rsc="));
+    // Prefetches of the site's own pages and the pieces of script the page loads are not sends.
+    const after = requests
+      .slice(before)
+      .filter(
+        (request) => !request.url.includes("_rsc=") && !request.url.includes("/_next/static/"),
+      );
     expect(after).toEqual([]);
     expect(
       requests.filter((request) => request.method !== "GET" && request.method !== "HEAD"),
     ).toEqual([]);
-    expect(requests.some((request) => new URL(request.url).pathname.startsWith("/api/"))).toBe(
-      false,
-    );
+    // The only call to the API is the banner asking whether a tracker is set up (a read, at load).
+    const apiCalls = requests
+      .map((request) => new URL(request.url).pathname)
+      .filter((pathname) => pathname.startsWith("/api/"));
+    expect(apiCalls.every((pathname) => pathname === "/api/analytics-config")).toBe(true);
     await expect(page.locator("input[type='file']")).toHaveCount(0);
   });
 

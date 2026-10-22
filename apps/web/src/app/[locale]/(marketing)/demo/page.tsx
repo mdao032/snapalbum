@@ -9,6 +9,11 @@ import { clientMessagesFor } from "@/i18n/client-messages";
 import { routing } from "@/i18n/routing";
 import { pageAlternates } from "@/lib/seo";
 
+/** The page exists once per language: both are built ahead of time and served from the cache. */
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export async function generateMetadata({ params }: PageProps<"/[locale]/demo">): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) return {};

@@ -1,5 +1,4 @@
 import { APP_NAME, BRAND_COLORS } from "@snapalbum/shared/brand";
-import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata, Viewport } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -40,7 +39,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   setRequestLocale(locale);
 
   return (
-    <html lang={locale} className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang={locale} className={GeistSans.variable}>
       <body className="min-h-dvh antialiased">
         <NextIntlClientProvider messages={clientMessagesFor(locale)}>
           {children}

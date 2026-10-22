@@ -8,7 +8,7 @@ import { USAGES, usageSlug } from "@/lib/usages";
 
 const LINK = "inline-flex min-h-11 items-center hover:underline";
 
-export function SiteFooter({ canManageCookies = false }: { canManageCookies?: boolean }) {
+export function SiteFooter() {
   const t = useTranslations("layout");
   const tUsages = useTranslations("usages.common.names");
   const locale = useLocale() as "fr" | "en";
@@ -58,12 +58,11 @@ export function SiteFooter({ canManageCookies = false }: { canManageCookies?: bo
                 {legalLabels[page]}
               </Link>
             ))}
-            {canManageCookies ? (
-              // A plain button: the banner (loaded after the page) listens for clicks on it.
-              <button type="button" data-manage-cookies className={`${LINK} text-left`}>
-                {t("manageCookies")}
-              </button>
-            ) : null}
+            {/* Hidden until the banner's script finds that a tracker is set up: with none there is
+                nothing to choose. A plain button: the script listens for clicks on it. */}
+            <button type="button" data-manage-cookies hidden className={`${LINK} text-left`}>
+              {t("manageCookies")}
+            </button>
           </div>
         </nav>
       </div>

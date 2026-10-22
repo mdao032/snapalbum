@@ -18,6 +18,11 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
+/** The page exists once per language: both are built ahead of time and served from the cache. */
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/pricing">): Promise<Metadata> {
