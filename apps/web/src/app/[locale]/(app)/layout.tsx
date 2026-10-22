@@ -21,7 +21,14 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
 
   return (
     <NextIntlClientProvider
-      messages={clientMessagesFor(locale, ["account", "events", "share", "dashboard", "apiErrors"])}
+      messages={clientMessagesFor(locale, [
+        "account",
+        "events",
+        "share",
+        "dashboard",
+        "moderation",
+        "apiErrors",
+      ])}
     >
       <PageShell
         actions={

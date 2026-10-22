@@ -484,6 +484,8 @@ export async function myMedia(
     .select("id, kind, moderation, created_at, key_thumb")
     .eq("guest_id", guest.id)
     .eq("status", "ready")
+    // A photo the organiser refused is not shown back to its author as waiting.
+    .neq("moderation", "rejected")
     .order("created_at", { ascending: false })
     .limit(MY_MEDIA_LIMIT);
   if (error) throw error;

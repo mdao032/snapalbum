@@ -59,6 +59,13 @@ export const NOTIFY_RATE_LIMIT: RateLimitRule = {
   windowSeconds: 60 * 60,
 };
 
+/** Reporting photos (F-073): 20 per hour per person. */
+export const REPORT_RATE_LIMIT: RateLimitRule = {
+  name: "gallery-report",
+  limit: 20,
+  windowSeconds: 60 * 60,
+};
+
 /** Wrong access codes (S-006): 5 attempts per 10 minutes per address and event. */
 export const ACCESS_CODE_RATE_LIMIT: RateLimitRule = {
   name: "access-code",

@@ -17,6 +17,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { AlbumReady } from "@/components/events/album-ready";
 import { LiveCard } from "@/components/events/live-card";
+import { ModerationCard } from "@/components/events/moderation-card";
 import { DeleteEvent } from "@/components/events/delete-event";
 import { EventCover } from "@/components/events/event-cover";
 import { EventStatsPanel } from "@/components/events/event-stats";
@@ -32,6 +33,7 @@ import { routing } from "@/i18n/routing";
 import { eventDisplayStatus, formatEventDate, formatInstantDate } from "@/lib/events";
 import { requireOrganiser } from "@/server/auth";
 import { countNotifyGuests, getEventStats, getOwnEvent } from "@/server/events";
+import { moderationCounts } from "@/server/moderation";
 import { shareLinkViews } from "@/server/share-links";
 import { createSupabaseAdminClient } from "@/server/supabase/admin";
 import {
@@ -66,6 +68,9 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
   const notifyCount = pendingDeletion
     ? 0
     : await countNotifyGuests(createSupabaseAdminClient(), event.id);
+  const attention = pendingDeletion
+    ? null
+    : await moderationCounts(createSupabaseAdminClient(), event.id);
   const shareLinks = pendingDeletion
     ? []
     : await shareLinkViews(createSupabaseAdminClient(), user.id, event.id);
@@ -123,6 +128,14 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
               title={event.title}
               link={buildShortLink(clientEnv.NEXT_PUBLIC_SHORT_LINK_BASE, event.public_code)}
             />
+
+            {attention ? (
+              <ModerationCard
+                eventId={event.id}
+                pending={attention.pending}
+                reported={attention.reported}
+              />
+            ) : null}
 
             <LiveCard code={event.public_code} />
 

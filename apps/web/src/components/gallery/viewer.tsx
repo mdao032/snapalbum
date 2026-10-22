@@ -15,8 +15,22 @@ import {
   type Size,
   type View,
 } from "@snapalbum/shared/gallery";
-import type { GalleryAccess, GalleryFile } from "@snapalbum/shared/schemas";
-import { ChevronLeft, ChevronRight, Download, Share2, X, ZoomIn, ZoomOut } from "lucide-react";
+import {
+  REPORT_REASONS,
+  type GalleryAccess,
+  type GalleryFile,
+  type ReportReason,
+} from "@snapalbum/shared/schemas";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  Flag,
+  Share2,
+  X,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { galleryApi, type GalleryEntry } from "@/lib/gallery/use-gallery";
@@ -78,6 +92,8 @@ export function Viewer({
   // A finger is down: the photo follows it with no easing; otherwise changes ease in.
   const [gesturing, setGesturing] = useState(false);
   const [shareProblem, setShareProblem] = useState(false);
+  const [reporting, setReporting] = useState(false);
+  const [reportNotice, setReportNotice] = useState<"thanks" | "failed" | null>(null);
   const shareable = useSyncExternalStore(noopSubscribe, canShareFiles, () => false);
 
   const entry = entries[index]!;
@@ -91,6 +107,8 @@ export function Viewer({
       setView(RESET_VIEW);
       setDragX(0);
       setShareProblem(false);
+      setReporting(false);
+      setReportNotice(null);
       onIndexChange(target);
     },
     [entries.length, onIndexChange],
@@ -309,6 +327,16 @@ export function Viewer({
     event.preventDefault();
   }
 
+  async function report(reason: ReportReason) {
+    setReporting(false);
+    try {
+      await galleryApi.report({ access, mediaId: entry.mediaId, reason });
+      setReportNotice("thanks");
+    } catch {
+      setReportNotice("failed");
+    }
+  }
+
   async function share() {
     const source = file?.displayUrl;
     if (!source) return;
@@ -462,6 +490,39 @@ export function Viewer({
       ) : null}
 
       <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2 bg-gradient-to-t from-black/70 to-transparent p-3">
+        {reportNotice ? (
+          <p role="status" className="rounded-full bg-black/70 px-4 py-2 text-sm">
+            {t(reportNotice === "thanks" ? "reportThanks" : "reportFailed")}
+          </p>
+        ) : null}
+        {reporting ? (
+          <div
+            role="group"
+            aria-label={t("reportTitle")}
+            className="flex flex-col items-center gap-2 rounded-2xl bg-black/80 p-3"
+          >
+            <p className="text-sm font-medium">{t("reportTitle")}</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {REPORT_REASONS.map((reason) => (
+                <button
+                  key={reason}
+                  type="button"
+                  className="min-h-11 cursor-pointer rounded-full bg-white px-4 text-sm font-medium text-black"
+                  onClick={() => void report(reason)}
+                >
+                  {t(`reportReasons.${reason}`)}
+                </button>
+              ))}
+              <button
+                type="button"
+                className="min-h-11 cursor-pointer rounded-full bg-white/20 px-4 text-sm"
+                onClick={() => setReporting(false)}
+              >
+                {t("reportCancel")}
+              </button>
+            </div>
+          </div>
+        ) : null}
         {shareProblem ? (
           <p role="alert" className="rounded-full bg-black/70 px-4 py-2 text-sm">
             {t("shareFailed")}
@@ -489,6 +550,16 @@ export function Viewer({
               </button>
             </>
           )}
+          <button
+            type="button"
+            className={cn(iconButton, "w-auto gap-2 px-4 text-sm font-medium")}
+            aria-expanded={reporting}
+            data-testid="viewer-report"
+            onClick={() => setReporting(!reporting)}
+          >
+            <Flag aria-hidden />
+            {t("report")}
+          </button>
           {file ? (
             <a
               href={file.downloadUrl}
