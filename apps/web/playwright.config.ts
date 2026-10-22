@@ -14,6 +14,22 @@ export default defineConfig({
   reporter: isCI ? [["github"], ["html", { open: "never" }]] : [["list"]],
   use: {
     baseURL: `http://localhost:${PORT}`,
+    // Every test starts as a visitor who has already refused the cookies, so the banner never gets in
+    // the way; `consent.spec.ts` starts without a choice. (A fixed day is enough: the choice lasts months.)
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: `http://localhost:${PORT}`,
+          localStorage: [
+            {
+              name: "snapalbum:consent",
+              value: JSON.stringify({ choice: "refused", at: Date.now() }),
+            },
+          ],
+        },
+      ],
+    },
     // next-intl detects the browser language: tests run as a French visitor unless they say otherwise.
     locale: "fr-FR",
     timezoneId: "Europe/Paris",
@@ -54,6 +70,9 @@ export default defineConfig({
         // to `email_log`: no test sends a real message.
         CRON_SECRET: "cron-secret-for-e2e-tests-only-1234",
         EMAIL_MODE: "log",
+        // A made-up key turns the audience measurement and its banner on; the tests intercept
+        // every request to PostHog, none reaches it.
+        POSTHOG_KEY: "phc_e2e_key_that_is_not_real",
       },
     },
   ],

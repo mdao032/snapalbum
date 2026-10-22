@@ -17,7 +17,6 @@ const clientSchema = z.object({
   NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: z.stringbool().optional(),
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1).optional(),
   NEXT_PUBLIC_SENTRY_DSN: z.string().min(1).optional(),
-  NEXT_PUBLIC_POSTHOG_KEY: z.string().min(1).optional(),
 });
 
 export type ClientEnv = z.infer<typeof clientSchema>;
@@ -46,5 +45,4 @@ export const clientEnv: ClientEnv = parseClientEnv({
   NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED,
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
 });

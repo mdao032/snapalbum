@@ -9,7 +9,6 @@ const valid = {
   NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: undefined,
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: undefined,
   NEXT_PUBLIC_SENTRY_DSN: "",
-  NEXT_PUBLIC_POSTHOG_KEY: undefined,
 };
 
 describe("NF-043: variables d'environnement publiques", () => {

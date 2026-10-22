@@ -188,7 +188,8 @@
     "legalTerms": "Conditions d’utilisation",
     "legalSales": "Conditions de vente",
     "legalPrivacy": "Confidentialité",
-    "legalCookies": "Cookies"
+    "legalCookies": "Cookies",
+    "manageCookies": "Gérer les cookies"
   },
   "language": {
     "label": "Langue",
@@ -1381,5 +1382,12 @@
         }
       }
     }
+  },
+  "consent": {
+    "title": "Votre choix sur les cookies",
+    "text": "Le site utilise des cookies nécessaires à son fonctionnement. Avec votre accord, nous mesurons aussi l’audience pour l’améliorer. Refuser ne change rien à votre usage.",
+    "more": "En savoir plus",
+    "refuse": "Refuser",
+    "accept": "Accepter"
   }
 }

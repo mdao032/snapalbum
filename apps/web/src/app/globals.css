@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* The cookie banner builds its markup in a script served from `public/consent`. */
+@source "../../public/consent";
+
 /*
  * Design system.
  *

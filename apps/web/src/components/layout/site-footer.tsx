@@ -8,7 +8,7 @@ import { USAGES, usageSlug } from "@/lib/usages";
 
 const LINK = "inline-flex min-h-11 items-center hover:underline";
 
-export function SiteFooter() {
+export function SiteFooter({ canManageCookies = false }: { canManageCookies?: boolean }) {
   const t = useTranslations("layout");
   const tUsages = useTranslations("usages.common.names");
   const locale = useLocale() as "fr" | "en";
@@ -58,6 +58,12 @@ export function SiteFooter() {
                 {legalLabels[page]}
               </Link>
             ))}
+            {canManageCookies ? (
+              // A plain button: the banner (loaded after the page) listens for clicks on it.
+              <button type="button" data-manage-cookies className={`${LINK} text-left`}>
+                {t("manageCookies")}
+              </button>
+            ) : null}
           </div>
         </nav>
       </div>

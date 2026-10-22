@@ -96,7 +96,7 @@ export function robotsConfig(siteUrl: string) {
   };
 }
 
-/** JSON-LD for a `<script type="application/ld+json">`: `<` is escaped so text can never close the tag. */
+/** JSON for a `<script type="application/ld+json">` or `application/json`: `<` is escaped so text can never close the tag. */
 export function jsonLdScript(data: unknown): string {
   return JSON.stringify(data).replaceAll("<", "\\u003c");
 }

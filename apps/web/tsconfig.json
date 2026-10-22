@@ -2,12 +2,16 @@
   "extends": "@snapalbum/config/tsconfig.nextjs.json",
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
+    // The cookie banner is plain JavaScript served from `public/consent` (see its header comment);
+    // each file starts with `// @ts-check`, so it is type checked like the rest.
+    "allowJs": true,
     "paths": { "@/*": ["./src/*"] }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "public/consent/*.js",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
