@@ -114,6 +114,26 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"purchases": {
+                  Row: {
+                    "amount_cents": number,"created_at": string,"currency": string,"event_id": string | null,"event_title": string,"id": string,"product": string,"refunded_at": string | null,"source": string,"status": string,"store_transaction_id": string | null,"stripe_checkout_session_id": string | null,"stripe_payment_intent_id": string | null,"updated_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount_cents": number,"created_at"?: string,"currency": string,"event_id"?: string | null,"event_title": string,"id"?: string,"product": string,"refunded_at"?: string | null,"source"?: string,"status"?: string,"store_transaction_id"?: string | null,"stripe_checkout_session_id"?: string | null,"stripe_payment_intent_id"?: string | null,"updated_at"?: string,"user_id": string
+                  }
+                  Update: {
+                    "amount_cents"?: number,"created_at"?: string,"currency"?: string,"event_id"?: string | null,"event_title"?: string,"id"?: string,"product"?: string,"refunded_at"?: string | null,"source"?: string,"status"?: string,"store_transaction_id"?: string | null,"stripe_checkout_session_id"?: string | null,"stripe_payment_intent_id"?: string | null,"updated_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "purchases_event_id_fkey"
+      columns: ["event_id"]
+isOneToOne: false
+      referencedRelation: "events"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"reports": {
                   Row: {
                     "created_at": string,"id": string,"media_id": string,"reason": string,"reporter_fingerprint": string,"resolved_at": string | null
@@ -154,6 +174,20 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"stripe_events": {
+                  Row: {
+                    "created_at": string,"id": string,"processed_at": string,"stripe_event_id": string,"type": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"processed_at"?: string,"stripe_event_id": string,"type": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"processed_at"?: string,"stripe_event_id"?: string,"type"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"uploads": {
                   Row: {
                     "created_at": string,"expires_at": string,"id": string,"media_id": string,"multipart_upload_id": string,"parts_done": NonNullable<Json>,"updated_at": string
@@ -180,7 +214,13 @@ isOneToOne: true
             [_ in never]: never
           }
           Functions: {
-            "event_gallery_is_open":
+            "apply_purchase":
+{ Args: { "p_amount_cents": number,"p_currency": string,"p_event_id": string,"p_months": number,"p_payment_intent": string,"p_product": string,"p_session_id": string,"p_stripe_event_id": string,"p_stripe_event_type": string,"p_user_id": string }; Returns: Json
+                           },
+"apply_refund":
+{ Args: { "p_free_expires_at": string,"p_months": number,"p_payment_intent": string,"p_stripe_event_id": string,"p_stripe_event_type": string }; Returns: Json
+                           },
+"event_gallery_is_open":
 { Args: { "p_event_id": string }; Returns: boolean
                            },
 "event_upload_window":
