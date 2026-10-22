@@ -47,6 +47,9 @@ export default defineConfig({
         R2_ACCESS_KEY_ID: "snapalbum",
         R2_SECRET_ACCESS_KEY: "snapalbum-secret",
         R2_BUCKET: STORAGE_BUCKET,
+        // Payment tests sign their own webhooks with this secret; no Stripe key is given, so no
+        // test ever reaches Stripe's servers.
+        STRIPE_WEBHOOK_SECRET: "whsec_e2e_secret_for_tests_only",
       },
     },
   ],

@@ -59,6 +59,13 @@ export const NOTIFY_RATE_LIMIT: RateLimitRule = {
   windowSeconds: 60 * 60,
 };
 
+/** Opening a payment page (SPEC 13): 10 per hour per organiser. */
+export const CHECKOUT_RATE_LIMIT: RateLimitRule = {
+  name: "checkout",
+  limit: 10,
+  windowSeconds: 60 * 60,
+};
+
 /** Reporting photos (F-073): 20 per hour per person. */
 export const REPORT_RATE_LIMIT: RateLimitRule = {
   name: "gallery-report",

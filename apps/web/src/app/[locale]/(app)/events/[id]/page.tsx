@@ -1,9 +1,11 @@
 import {
   buildShortLink,
+  canBuy,
   canCancelDeletion,
   computeEventUsage,
   defaultEventSettings,
   eventSettingsSchema,
+  paymentReturnSchema,
   purgeDeadline,
   uuidSchema,
   type EventType,
@@ -22,6 +24,7 @@ import { DeleteEvent } from "@/components/events/delete-event";
 import { DownloadAlbum } from "@/components/events/download-album";
 import { EventCover } from "@/components/events/event-cover";
 import { EventStatsPanel } from "@/components/events/event-stats";
+import { PaymentReturn } from "@/components/events/payment-return";
 import { PlanCard } from "@/components/events/plan-card";
 import { PersonalizeForm } from "@/components/events/personalize-form";
 import { SettingsForm } from "@/components/events/settings-form";
@@ -50,11 +53,17 @@ import {
   revokeShareLinkAction,
 } from "./actions";
 import { planAlbumAction, signAlbumFilesAction } from "./download/actions";
+import { checkoutAction, confirmPaymentAction } from "./payment/actions";
 
 export const metadata: Metadata = { robots: { index: false } };
 
-export default async function EventPage({ params }: PageProps<"/[locale]/events/[id]">) {
+export default async function EventPage({
+  params,
+  searchParams,
+}: PageProps<"/[locale]/events/[id]">) {
   const { locale, id } = await params;
+  // Where Stripe sends the organiser back to (SPEC 13); anything else is ignored.
+  const payment = paymentReturnSchema.safeParse(await searchParams);
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const { supabase, user } = await requireOrganiser(locale);
@@ -132,10 +141,28 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
 
         <EventStatsPanel stats={getEventStats(event)} usage={usage} />
 
+        {payment.success ? (
+          <PaymentReturn
+            state={payment.data.payment}
+            sessionId={payment.data.session_id}
+            onConfirm={confirmPaymentAction.bind(null, event.id)}
+          />
+        ) : null}
+
         <PlanCard
           plan={event.plan as PlanId}
           expiresAt={event.expires_at}
           optimizedOnlyCount={optimizedOnlyCount}
+          upgrade={
+            canBuy({ product: "event", plan: event.plan as PlanId, status: event.status }).ok
+              ? checkoutAction.bind(null, event.id, "event")
+              : null
+          }
+          extend={
+            canBuy({ product: "extension", plan: event.plan as PlanId, status: event.status }).ok
+              ? checkoutAction.bind(null, event.id, "extension")
+              : null
+          }
         />
 
         {pendingDeletion ? null : (

@@ -3,8 +3,10 @@ import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { AccountForm } from "@/components/auth/account-form";
+import { PurchaseHistory } from "@/components/auth/purchase-history";
 import { routing } from "@/i18n/routing";
 import { getProfile, requireOrganiser } from "@/server/auth";
+import { listPurchases } from "@/server/payments";
 
 export async function generateMetadata({
   params,
@@ -24,6 +26,7 @@ export default async function AccountPage({ params }: PageProps<"/[locale]/accou
   // A layout is not re-checked on client-side navigation: the page asks again.
   const { supabase, user } = await requireOrganiser(locale);
   const profile = await getProfile(supabase, user.id);
+  const purchases = await listPurchases(supabase);
   const t = await getTranslations("account");
 
   return (
@@ -38,6 +41,7 @@ export default async function AccountPage({ params }: PageProps<"/[locale]/accou
           displayName={profile?.display_name ?? ""}
           locale={profile && hasLocale(routing.locales, profile.locale) ? profile.locale : locale}
         />
+        <PurchaseHistory purchases={purchases} />
       </div>
     </div>
   );

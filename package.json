@@ -16,6 +16,7 @@
     "db:migrate": "supabase db push",
     "db:types": "node scripts/db-types.mjs",
     "fixtures:make": "node scripts/make-fixtures.mjs",
+    "stripe:setup": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/stripe-setup.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky",
