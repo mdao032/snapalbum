@@ -10,6 +10,7 @@ export type Row = Record<string, unknown>;
 export function fakeAdmin(
   tables: Record<string, Row[]>,
   rpc: Record<string, (args: Row) => unknown> = {},
+  insertErrors: Record<string, { code: string }> = {},
 ) {
   const from = (table: string) => {
     const rows = (tables[table] ??= []);
@@ -21,6 +22,14 @@ export function fakeAdmin(
     let mode: "select" | "update" | "insert" = "select";
     let patch: Row = {};
     let inserted: Row | null = null;
+    let insertError: { code: string } | null = null;
+
+    // `media.event_id` on a report: the column of the media it points to.
+    const valueOf = (row: Row, column: string) => {
+      if (!column.startsWith("media.")) return row[column];
+      const media = (tables.media ?? []).find((candidate) => candidate.id === row.media_id);
+      return media?.[column.slice(6)];
+    };
 
     const run = () => {
       let result = rows.filter((row) => filters.every((filter) => filter(row)));
@@ -49,11 +58,11 @@ export function fakeAdmin(
         return chain;
       },
       eq(column: string, value: unknown) {
-        filters.push((row) => row[column] === value);
+        filters.push((row) => valueOf(row, column) === value);
         return chain;
       },
       is(column: string, value: unknown) {
-        filters.push((row) => (row[column] ?? null) === value);
+        filters.push((row) => (valueOf(row, column) ?? null) === value);
         return chain;
       },
       // Only `not(column, "is", null)`: the column has a value.
@@ -61,8 +70,12 @@ export function fakeAdmin(
         filters.push((row) => (row[column] ?? null) !== null);
         return chain;
       },
+      neq(column: string, value: unknown) {
+        filters.push((row) => valueOf(row, column) !== value);
+        return chain;
+      },
       in(column: string, values: unknown[]) {
-        filters.push((row) => values.includes(row[column]));
+        filters.push((row) => values.includes(valueOf(row, column)));
         return chain;
       },
       // Only the keyset form the gallery builds: `col.op."V",and(col.eq."V",id.op.ID)`.
@@ -103,13 +116,14 @@ export function fakeAdmin(
       },
       insert(values: Row) {
         mode = "insert";
+        insertError = insertErrors[table] ?? null;
         inserted = {
           id: `link-${rows.length + 1}`,
           created_at: "2026-10-21T10:00:00Z",
           revoked_at: null,
           ...values,
         };
-        rows.push(inserted);
+        if (!insertError) rows.push(inserted);
         return chain;
       },
       maybeSingle: async () => {
@@ -118,7 +132,9 @@ export function fakeAdmin(
       },
       single: async () => ({ data: inserted ?? run().data?.[0] ?? null, error: null }),
       then: (resolve: (value: unknown) => void) =>
-        resolve(mode === "insert" ? { data: [inserted], error: null } : run()),
+        resolve(
+          mode === "insert" ? { data: insertError ? null : [inserted], error: insertError } : run(),
+        ),
     };
     return chain;
   };
