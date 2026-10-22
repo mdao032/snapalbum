@@ -160,3 +160,33 @@ describe("S-001: table audit_log", () => {
       ).rejects.toThrow(/permission denied/);
     }));
 });
+
+describe("F-070: décompte des médias par invité (exact au-delà de 1 000)", () => {
+  it("F-070: compte les médias visibles et masqués de chaque invité, pas les supprimés ni ceux d'un autre événement", () =>
+    withTestDb(async (db) => {
+      const { event, guest } = await setup(db);
+      await db.createMedia(event, guest, { status: "hidden" });
+      await db.createMedia(event, guest, { status: "deleted" });
+      const other = await setup(db);
+      const { rows } = await db.query<{ guest_id: string; media_count: string }>(
+        "select * from public.moderation_guest_counts($1)",
+        [event],
+      );
+      // `setup` made one ready media, plus the hidden one above: the deleted one is not counted.
+      expect(rows).toEqual([{ guest_id: guest, media_count: "2" }]);
+      const { rows: others } = await db.query("select * from public.moderation_guest_counts($1)", [
+        other.event,
+      ]);
+      expect(others).toHaveLength(1);
+    }));
+
+  it("S-001: la fonction n'est appelable que par le serveur", () =>
+    withTestDb(async (db) => {
+      const { event, organiser } = await setup(db);
+      await expect(
+        db.as({ kind: "user", id: organiser }, (q) =>
+          q.query("select * from public.moderation_guest_counts($1)", [event]),
+        ),
+      ).rejects.toThrow(/permission denied/);
+    }));
+});

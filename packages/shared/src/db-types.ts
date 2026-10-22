@@ -202,6 +202,11 @@ isOneToOne: true
 "mark_album_ready":
 { Args: { "p_event_id": string,"p_owner_id": string }; Returns: Json
                            },
+"moderation_guest_counts":
+{ Args: { "p_event_id": string }; Returns: {
+              "guest_id": string,"media_count": number
+            }[]
+                           },
 "reserve_media_slot":
 { Args: { "p_bytes_display": number,"p_bytes_original": number,"p_bytes_thumb": number,"p_duration_s": number,"p_event_id": string,"p_height": number,"p_key_display": string,"p_key_original": string,"p_key_thumb": string,"p_kind": string,"p_max_media": number,"p_max_videos": number,"p_media_id": string,"p_mime_type": string,"p_sha256": string,"p_taken_at": string,"p_user_id": string,"p_width": number }; Returns: Json
                            }
