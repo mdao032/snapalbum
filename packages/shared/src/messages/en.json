@@ -421,6 +421,13 @@
       "subtitle": "Show the photos on a screen or projector during the party: new ones appear by themselves, with the QR code in a corner. Only approved photos are shown.",
       "open": "Open the slideshow",
       "hint": "Open the page on the computer connected to the screen, signed in to your account, then go full screen."
+    },
+    "moderationCard": {
+      "title": "Moderation",
+      "subtitle": "Approve, hide or delete the photos of your album, and block a guest if needed.",
+      "pending": "{count, plural, =0 {No photo to approve.} one {# photo to approve.} other {# photos to approve.}}",
+      "reported": "{count, plural, =0 {No report.} one {# photo reported.} other {# photos reported.}}",
+      "open": "Open moderation"
     }
   },
   "gallery": {
@@ -476,7 +483,17 @@
       "loading": "Loading…",
       "fileError": "This file cannot be shown right now.",
       "retry": "Try again",
-      "shareText": "{title}"
+      "shareText": "{title}",
+      "report": "Report",
+      "reportTitle": "Report this photo",
+      "reportThanks": "Thank you, the organiser has been told.",
+      "reportFailed": "The report failed. Try again.",
+      "reportCancel": "Cancel",
+      "reportReasons": {
+        "inappropriate": "Inappropriate content",
+        "private": "Privacy concern",
+        "other": "Other"
+      }
     },
     "shared": {
       "title": "Shared album",
@@ -492,5 +509,82 @@
     "qrAlt": "QR code to add your photos to {title}",
     "fullscreen": "Full screen",
     "exitFullscreen": "Exit full screen"
+  },
+  "moderation": {
+    "title": "Moderation",
+    "back": "Back to the event",
+    "subtitle": "Stay in control of what your guests see in the album and the slideshow.",
+    "lists": {
+      "pending": "To approve",
+      "visible": "Visible",
+      "hidden": "Hidden",
+      "refused": "Refused",
+      "reported": "Reported"
+    },
+    "empty": {
+      "pending": "Nothing to approve right now.",
+      "visible": "No visible photo yet.",
+      "hidden": "No hidden photo.",
+      "refused": "No refused photo.",
+      "reported": "No open report."
+    },
+    "loading": "Loading…",
+    "error": "Could not load the photos. Try again in a moment.",
+    "retry": "Try again",
+    "loadMore": "Show more",
+    "select": "Select this photo",
+    "selectAll": "Select all",
+    "clearSelection": "Clear selection",
+    "selected": "{count, plural, one {# photo selected} other {# photos selected}}",
+    "actions": {
+      "approve": "Approve",
+      "reject": "Refuse",
+      "hide": "Hide",
+      "restore": "Restore",
+      "delete": "Delete",
+      "dismiss": "Dismiss the report"
+    },
+    "done": "{count, plural, =0 {Nothing changed.} one {# photo updated.} other {# photos updated.}}",
+    "failed": "That did not work. Try again.",
+    "deleteAsk": "Delete {count, plural, one {this photo} other {these # photos}} for good? The files will be erased and cannot be recovered.",
+    "deleteYes": "Yes, delete",
+    "deleteNo": "No, keep",
+    "tile": {
+      "photo": "Photo by {guest}, sent on {date}",
+      "video": "Video by {guest}, sent on {date}",
+      "anonymous": "a guest without a name",
+      "reports": "{count, plural, one {# report} other {# reports}}",
+      "videoLabel": "Video"
+    },
+    "review": {
+      "open": "Approve one by one",
+      "title": "Approval",
+      "position": "{index} of {total}",
+      "approve": "Approve",
+      "reject": "Refuse",
+      "skip": "Skip",
+      "previous": "Previous",
+      "close": "Close",
+      "shortcuts": "Shortcuts: A to approve, R to refuse, arrows to skip, Esc to close.",
+      "done": "Everything is approved.",
+      "loading": "Loading…",
+      "fileError": "This photo cannot be shown."
+    },
+    "guests": {
+      "title": "Guests",
+      "hint": "Blocking a guest refuses their next uploads. Photos they already sent stay: hide them from the list if needed.",
+      "photos": "{count, plural, one {# photo} other {# photos}}",
+      "block": "Block",
+      "unblock": "Unblock",
+      "blocked": "Blocked",
+      "anonymous": "Guest without a name",
+      "blockedDone": "{name} can no longer send photos.",
+      "unblockedDone": "{name} can send photos again."
+    },
+    "reasons": {
+      "inappropriate": "Inappropriate content",
+      "private": "Privacy concern",
+      "other": "Other"
+    }
   }
 }

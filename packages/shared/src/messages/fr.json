@@ -421,6 +421,13 @@
       "subtitle": "Affichez les photos sur un écran ou un vidéoprojecteur pendant la fête : les nouvelles apparaissent toutes seules, avec le QR code dans un coin. Seules les photos approuvées s’affichent.",
       "open": "Ouvrir le diaporama",
       "hint": "Ouvrez la page sur l’ordinateur relié à l’écran, connecté à votre compte, puis passez en plein écran."
+    },
+    "moderationCard": {
+      "title": "Modération",
+      "subtitle": "Validez, masquez ou supprimez les photos de votre album, et bloquez un invité si besoin.",
+      "pending": "{count, plural, =0 {Aucune photo à valider.} one {# photo à valider.} other {# photos à valider.}}",
+      "reported": "{count, plural, =0 {Aucun signalement.} one {# photo signalée.} other {# photos signalées.}}",
+      "open": "Ouvrir la modération"
     }
   },
   "gallery": {
@@ -476,7 +483,17 @@
       "loading": "Chargement…",
       "fileError": "Impossible d’afficher ce fichier pour le moment.",
       "retry": "Réessayer",
-      "shareText": "{title}"
+      "shareText": "{title}",
+      "report": "Signaler",
+      "reportTitle": "Signaler cette photo",
+      "reportThanks": "Merci, l’organisateur a été prévenu.",
+      "reportFailed": "Le signalement a échoué. Réessayez.",
+      "reportCancel": "Annuler",
+      "reportReasons": {
+        "inappropriate": "Contenu inapproprié",
+        "private": "Atteinte à la vie privée",
+        "other": "Autre"
+      }
     },
     "shared": {
       "title": "Album partagé",
@@ -492,5 +509,82 @@
     "qrAlt": "QR code pour ajouter vos photos à {title}",
     "fullscreen": "Plein écran",
     "exitFullscreen": "Quitter le plein écran"
+  },
+  "moderation": {
+    "title": "Modération",
+    "back": "Retour à l’événement",
+    "subtitle": "Gardez la main sur ce que vos invités voient dans l’album et le diaporama.",
+    "lists": {
+      "pending": "À valider",
+      "visible": "Visibles",
+      "hidden": "Masquées",
+      "refused": "Refusées",
+      "reported": "Signalées"
+    },
+    "empty": {
+      "pending": "Rien à valider pour le moment.",
+      "visible": "Aucune photo visible pour le moment.",
+      "hidden": "Aucune photo masquée.",
+      "refused": "Aucune photo refusée.",
+      "reported": "Aucun signalement en cours."
+    },
+    "loading": "Chargement…",
+    "error": "Impossible de charger les photos. Réessayez dans un instant.",
+    "retry": "Réessayer",
+    "loadMore": "Voir plus",
+    "select": "Sélectionner cette photo",
+    "selectAll": "Tout sélectionner",
+    "clearSelection": "Tout désélectionner",
+    "selected": "{count, plural, one {# photo sélectionnée} other {# photos sélectionnées}}",
+    "actions": {
+      "approve": "Approuver",
+      "reject": "Refuser",
+      "hide": "Masquer",
+      "restore": "Rétablir",
+      "delete": "Supprimer",
+      "dismiss": "Ignorer le signalement"
+    },
+    "done": "{count, plural, =0 {Rien n’a changé.} one {# photo mise à jour.} other {# photos mises à jour.}}",
+    "failed": "L’action a échoué. Réessayez.",
+    "deleteAsk": "Supprimer définitivement {count, plural, one {cette photo} other {ces # photos}} ? Les fichiers seront effacés, on ne pourra pas les récupérer.",
+    "deleteYes": "Oui, supprimer",
+    "deleteNo": "Non, garder",
+    "tile": {
+      "photo": "Photo de {guest}, envoyée le {date}",
+      "video": "Vidéo de {guest}, envoyée le {date}",
+      "anonymous": "un invité sans prénom",
+      "reports": "{count, plural, one {# signalement} other {# signalements}}",
+      "videoLabel": "Vidéo"
+    },
+    "review": {
+      "open": "Valider une par une",
+      "title": "Validation",
+      "position": "{index} sur {total}",
+      "approve": "Approuver",
+      "reject": "Refuser",
+      "skip": "Passer",
+      "previous": "Précédente",
+      "close": "Fermer",
+      "shortcuts": "Raccourcis : A pour approuver, R pour refuser, flèches pour passer, Échap pour fermer.",
+      "done": "Tout est validé.",
+      "loading": "Chargement…",
+      "fileError": "Impossible d’afficher cette photo."
+    },
+    "guests": {
+      "title": "Invités",
+      "hint": "Bloquer un invité refuse ses prochains envois. Ses photos déjà envoyées restent : masquez-les depuis la liste si besoin.",
+      "photos": "{count, plural, one {# photo} other {# photos}}",
+      "block": "Bloquer",
+      "unblock": "Débloquer",
+      "blocked": "Bloqué",
+      "anonymous": "Invité sans prénom",
+      "blockedDone": "{name} ne peut plus envoyer de photos.",
+      "unblockedDone": "{name} peut de nouveau envoyer des photos."
+    },
+    "reasons": {
+      "inappropriate": "Contenu inapproprié",
+      "private": "Atteinte à la vie privée",
+      "other": "Autre"
+    }
   }
 }

@@ -7,6 +7,7 @@ import {
   multipartResponseSchema,
   myMediaResponseSchema,
   notifyResponseSchema,
+  reportResponseSchema,
   reserveUploadResponseSchema,
   type ApiErrorCode,
   type CompleteUploadRequest,
@@ -21,6 +22,8 @@ import {
   type MyMediaResponse,
   type NotifyRequest,
   type NotifyResponse,
+  type ReportRequest,
+  type ReportResponse,
   type ReserveUploadRequest,
   type ReserveUploadResponse,
 } from "../schemas";
@@ -56,6 +59,8 @@ export interface ApiClient {
   myMedia(body: MyMediaRequest): Promise<MyMediaResponse>;
   /** A guest asks to be told when the album is ready, or takes it back (F-044). */
   notify(body: NotifyRequest): Promise<NotifyResponse>;
+  /** A visitor of the album reports a photo (F-073). */
+  report(body: ReportRequest): Promise<ReportResponse>;
   /** The album: a page of thumbnails, fresh addresses, or the files of the viewer (F-039, F-050 to F-054). */
   gallery(body: GalleryRequest): Promise<GalleryResponse>;
 }
@@ -107,6 +112,7 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     multipart: (body) => post("/api/uploads/multipart", body, multipartResponseSchema),
     myMedia: (body) => post("/api/uploads/mine", body, myMediaResponseSchema),
     notify: (body) => post("/api/guests/notify", body, notifyResponseSchema),
+    report: (body) => post("/api/gallery/report", body, reportResponseSchema),
     gallery: (body) => post("/api/gallery", body, galleryResponseSchema),
   };
 }
