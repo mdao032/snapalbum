@@ -19,7 +19,108 @@
     "pillNoAccount": "Sans compte",
     "pillMedia": "Photos et vidéos",
     "visualCounter": "{count} photos reçues",
-    "visualNew": "Nouvelle photo de Léa"
+    "visualNew": "Nouvelle photo de Léa",
+    "ctaDemo": "Essayer la démo",
+    "howTitle": "Comment ça marche",
+    "howSubtitle": "Trois gestes, aucune installation.",
+    "stepLabel": "Étape {number}",
+    "steps": {
+      "create": {
+        "title": "Vous créez l’album",
+        "text": "Un nom, une date : l’album est prêt en moins d’une minute, avec son QR code et des cartes à imprimer."
+      },
+      "scan": {
+        "title": "Vos invités scannent",
+        "text": "Ils ouvrent la page avec l’appareil photo de leur téléphone, choisissent leurs photos et vidéos, et l’envoi démarre. Sans appli, sans compte."
+      },
+      "collect": {
+        "title": "Vous retrouvez tout",
+        "text": "Les photos arrivent dans un seul album : vous les voyez en direct sur un écran, vous triez, puis vous téléchargez le tout."
+      }
+    },
+    "valuesTitle": "Pensé pour que rien ne se perde",
+    "valuesSubtitle": "Même dans une salle où le réseau est capricieux.",
+    "values": {
+      "reliable": {
+        "title": "Aucune photo oubliée",
+        "text": "Chaque photo attend sur le téléphone jusqu’à ce qu’elle soit bien reçue. Si la connexion tombe, l’envoi reprend au retour du réseau."
+      },
+      "quality": {
+        "title": "La qualité de vos photos",
+        "text": "Avec l’offre Événement, les photos d’origine sont conservées. L’offre gratuite garde des photos optimisées, et le dit clairement."
+      },
+      "live": {
+        "title": "Un diaporama en direct",
+        "text": "Affichez l’album sur un écran pendant la fête : les nouvelles photos apparaissent au fil de l’eau."
+      },
+      "moderate": {
+        "title": "Vous gardez la main",
+        "text": "Validez les photos avant qu’elles apparaissent, masquez ou supprimez, bloquez un invité. L’album n’est visible que de ceux qui ont le lien ou le QR code."
+      }
+    },
+    "demoBand": {
+      "title": "Essayez comme un invité",
+      "text": "Une démonstration complète, sans compte : choisissez des photos d’exemple, regardez-les partir, coupez le réseau pour voir ce qui se passe. Rien n’est envoyé.",
+      "cta": "Lancer la démo"
+    },
+    "pricingTitle": "Un tarif simple, sans abonnement",
+    "pricingSubtitle": "Gratuit pour commencer, l’offre Événement quand vous en avez besoin.",
+    "pricingAll": "Voir tous les tarifs",
+    "pricingProNote": "Une offre Pro pour les photographes et les lieux de réception est prévue ; elle n’est pas encore disponible.",
+    "usesTitle": "Pour chaque occasion",
+    "usesSubtitle": "Des conseils concrets pour réussir l’album de votre événement.",
+    "usesLink": "Lire le guide",
+    "uses": {
+      "wedding": "Le QR code sur chaque table, le diaporama à la réception, toutes les photos de vos invités.",
+      "birthday": "Un lien à partager, des photos et des petites vidéos de tous les invités, un album qui reste.",
+      "corporate": "Séminaire, soirée d’équipe, salon : des photos validées avant d’être montrées."
+    },
+    "testimonialsTitle": "Ils ont utilisé {appName}",
+    "faqTitle": "Questions fréquentes",
+    "faq": {
+      "app": {
+        "q": "Mes invités doivent-ils installer une appli ou créer un compte ?",
+        "a": "Non. Ils scannent le QR code, la page s’ouvre dans leur navigateur et ils envoient leurs photos. Ni appli, ni compte, ni mot de passe."
+      },
+      "network": {
+        "q": "Et si le réseau est mauvais pendant la fête ?",
+        "a": "Chaque photo choisie reste en attente sur le téléphone de l’invité jusqu’à ce qu’elle soit bien reçue. Si la connexion tombe, l’envoi reprend au retour du réseau, et si l’invité ferme la page, il retrouve ses envois en attente en la rouvrant. Le plus sûr reste de garder la page ouverte jusqu’à la fin de l’envoi."
+      },
+      "limits": {
+        "q": "Combien de photos et de vidéos peut-on envoyer ?",
+        "a": "L’offre gratuite accepte {freeMedia} photos et vidéos par événement, dont {freeVideos} vidéos de {freeVideoDuration} au plus. L’offre Événement va jusqu’à {eventMedia} (usage raisonnable), avec des vidéos de {eventVideoDuration} au plus. Le nombre d’invités n’est pas limité."
+      },
+      "quality": {
+        "q": "Les photos sont-elles conservées en pleine qualité ?",
+        "a": "Avec l’offre gratuite, les photos sont conservées en version optimisée ({px} px au plus) : les originaux ne sont pas gardés. Avec l’offre Événement, les originaux sont conservés pour les photos envoyées après le passage à cette offre ; celles envoyées avant restent en version optimisée."
+      },
+      "retention": {
+        "q": "Combien de temps l’album est-il conservé ?",
+        "a": "{freeDays} jours après l’événement avec l’offre gratuite, {eventMonths} mois avec l’offre Événement. Avant la fin, vous recevez des rappels par e-mail avec un lien pour tout télécharger, et vous pouvez prolonger de {extensionMonths} mois pour {extensionPrice}."
+      },
+      "privacy": {
+        "q": "Qui peut voir les photos ?",
+        "a": "Seulement les personnes qui ont le QR code ou le lien de l’événement, et seulement si vous ouvrez la galerie aux invités. Vous pouvez aussi valider chaque photo avant qu’elle apparaisse, masquer ou supprimer une photo, et bloquer un invité."
+      },
+      "download": {
+        "q": "Puis-je télécharger toutes les photos ?",
+        "a": "Oui, en un ou plusieurs fichiers ZIP, depuis votre tableau de bord : les photos d’origine avec l’offre Événement, les photos optimisées avec l’offre gratuite."
+      },
+      "guestDelete": {
+        "q": "Un invité peut-il retirer une photo qu’il a envoyée ?",
+        "a": "Oui. Depuis « Mes photos », chaque invité peut supprimer ses propres photos et vidéos à tout moment."
+      },
+      "refund": {
+        "q": "Puis-je être remboursé ?",
+        "a": "Oui, sous {days} jours si moins de {max} photos ont été envoyées. Le paiement est sécurisé par Stripe : aucune donnée de carte ne passe par {appName}."
+      },
+      "pro": {
+        "q": "Je suis photographe ou lieu de réception : y a-t-il une offre pour moi ?",
+        "a": "Une offre Pro (marque blanche, plusieurs événements à la fois) est prévue. Elle n’est pas encore disponible."
+      }
+    },
+    "finalTitle": "Prêt à tout réunir ?",
+    "finalText": "Créez votre album gratuit en moins d’une minute."
   },
   "notFound": {
     "title": "Cette page est introuvable",
@@ -76,7 +177,12 @@
     "copyright": "© {year} {appName}",
     "madeWith": "Créé avec {appName}",
     "pricingLink": "Tarifs",
-    "footerNav": "Liens du pied de page"
+    "footerNav": "Liens du pied de page",
+    "navMain": "Navigation principale",
+    "navHow": "Comment ça marche",
+    "navDemo": "Démo",
+    "footerProduct": "Le service",
+    "footerUses": "Pour chaque occasion"
   },
   "language": {
     "label": "Langue",
@@ -792,5 +898,151 @@
       "intro": "{inviter} vous invite à gérer cet album avec lui : vous pourrez modérer les photos, les télécharger et suivre les envois. La suppression de l’événement reste réservée à l’organisateur.",
       "cta": "Accepter l’invitation"
     }
+  },
+  "usages": {
+    "common": {
+      "names": {
+        "wedding": "Mariage",
+        "birthday": "Anniversaire",
+        "corporate": "Entreprise"
+      },
+      "ctaPrimary": "Créer mon album",
+      "ctaDemo": "Essayer la démo",
+      "ctaHint": "Gratuit, prêt en moins d’une minute.",
+      "tipsTitle": "Nos conseils",
+      "otherTitle": "Autres occasions",
+      "pricingLink": "Voir tous les tarifs"
+    },
+    "wedding": {
+      "metaTitle": "Album photo de mariage partagé par QR code",
+      "metaDescription": "Récupérez les photos et vidéos de tous vos invités après le mariage : un QR code sur chaque table, un seul album, sans appli ni compte.",
+      "title": "Toutes les photos de votre mariage, pas seulement celles du photographe",
+      "intro": "Le photographe raconte la journée, vos invités racontent la fête : le fou rire de la table des cousins, la danse de mamie, les coulisses du cocktail. Un QR code suffit pour que tout arrive dans un même album.",
+      "pointsTitle": "Pourquoi ça marche pour un mariage",
+      "points": {
+        "a": {
+          "title": "Un QR code sur chaque table",
+          "text": "Imprimez des cartes A6 ou A5, ou un chevalet de table à plier : chaque convive scanne sans rien installer, de l’entrée à la dernière danse."
+        },
+        "b": {
+          "title": "Tous les âges, deux gestes",
+          "text": "Scanner, choisir ses photos. La page est pensée pour les invités les moins à l’aise avec la technologie : gros boutons, textes courts."
+        },
+        "c": {
+          "title": "Le diaporama à la réception",
+          "text": "Projetez l’album en direct sur un écran : les photos arrivent au fil de la soirée, après la validation que vous aurez choisie."
+        }
+      },
+      "planTitle": "Quelle offre pour un mariage ?",
+      "planText": "L’offre gratuite accepte {freeMedia} photos et vidéos : ce quota peut être atteint vite avec beaucoup d’invités. L’offre Événement ({eventPrice}, une seule fois) va jusqu’à {eventMedia} (usage raisonnable), garde l’album {eventMonths} mois et conserve les photos d’origine. Mieux vaut la prendre avant la fête : les originaux ne sont conservés que pour les photos envoyées après le passage à cette offre.",
+      "tips": {
+        "a": "Placez un QR code à l’entrée et sur chaque table, avec une phrase simple : « Envoyez-nous vos photos ».",
+        "b": "Annoncez-le dans le programme ou au micro pendant le dîner : une ligne suffit.",
+        "c": "Branchez un ordinateur à l’écran de la salle et lancez le diaporama en direct : l’écran reste allumé et un QR code reste affiché dans un coin.",
+        "d": "Après la fête, déclarez l’album prêt : les invités qui ont laissé leur adresse reçoivent le lien."
+      }
+    },
+    "birthday": {
+      "metaTitle": "Album photo d’anniversaire partagé : un lien, toutes les photos",
+      "metaDescription": "Réunissez les photos et vidéos de la fête dans un seul album : vos invités envoient depuis leur téléphone, sans appli ni compte.",
+      "title": "Un anniversaire, des dizaines de téléphones, un seul album",
+      "intro": "Le gâteau, les bougies, la surprise : chacun prend ses photos de son côté, et elles restent au fond des téléphones. Avec un lien à partager, vous les retrouvez toutes au même endroit.",
+      "pointsTitle": "Pourquoi ça marche pour un anniversaire",
+      "points": {
+        "a": {
+          "title": "Un lien, rien à imprimer",
+          "text": "Envoyez le lien dans votre groupe de messagerie ou affichez le QR code près du gâteau : tout le monde peut participer, sans compte."
+        },
+        "b": {
+          "title": "Des photos et des petites vidéos",
+          "text": "Vos invités envoient aussi leurs vidéos : jusqu’à {freeVideos} vidéos de {freeVideoDuration} au plus avec l’offre gratuite."
+        },
+        "c": {
+          "title": "Un album qui reste",
+          "text": "Après la fête, tout est dans un album que vous téléchargez en fichiers ZIP, et que vos invités peuvent revoir avec le même lien."
+        }
+      },
+      "planTitle": "Quelle offre pour un anniversaire ?",
+      "planText": "Pour une fête entre amis ou en famille, l’offre gratuite ({freeMedia} photos et vidéos, album conservé {freeDays} jours après l’événement) suffit souvent. Si l’album se remplit, vous passez à l’offre Événement ({eventPrice}) : les envois restés en attente sur les téléphones partent d’eux-mêmes.",
+      "tips": {
+        "a": "Partagez le lien avant la fête, pour que chacun sache où envoyer ses photos.",
+        "b": "Imprimez une carte A6 avec le QR code et posez-la près du gâteau.",
+        "c": "Pour une surprise, gardez la galerie fermée aux invités jusqu’au bon moment : ils peuvent envoyer sans voir les photos des autres.",
+        "d": "Téléchargez l’album avant la fin de la conservation : vous recevez des rappels par e-mail."
+      }
+    },
+    "corporate": {
+      "metaTitle": "Album photo d’événement d’entreprise : séminaire, soirée, salon",
+      "metaDescription": "Collectez les photos de vos participants avec un QR code, validez-les avant affichage et gardez la main sur l’album. Sans appli ni compte.",
+      "title": "Les photos de vos événements d’entreprise, validées avant d’être montrées",
+      "intro": "Séminaire, soirée d’équipe, salon, inauguration : les participants prennent des photos, vous gardez le contrôle de ce qui est affiché et conservé.",
+      "pointsTitle": "Pourquoi ça marche pour une entreprise",
+      "points": {
+        "a": {
+          "title": "Aucun compte à créer",
+          "text": "Les participants scannent et envoient : ni appli ni inscription, donc aucun frein le jour J."
+        },
+        "b": {
+          "title": "Validation avant affichage",
+          "text": "Activez la validation préalable : une photo n’apparaît dans l’album et sur le diaporama qu’après votre accord, une par une, au clavier."
+        },
+        "c": {
+          "title": "Modération et blocage",
+          "text": "Masquez ou supprimez une photo, traitez les signalements, bloquez un invité : tout se fait depuis la page de modération."
+        }
+      },
+      "planTitle": "Quelle offre pour une entreprise ?",
+      "planText": "Pour un événement ponctuel, l’offre Événement ({eventPrice}) conserve les originaux {eventMonths} mois, avec une mention « Créé avec {appName} » discrète. Si vous organisez des événements toute l’année ou pour vos clients, une offre Pro (marque blanche, plusieurs événements) est prévue ; elle n’est pas encore disponible.",
+      "tips": {
+        "a": "Désignez avant le jour J la personne qui valide les photos.",
+        "b": "Affichez le QR code sur l’écran d’accueil et sur les supports : le diaporama en direct en garde un affiché en permanence.",
+        "c": "Prévenez les participants que leurs photos seront visibles des autres invités de l’événement.",
+        "d": "Téléchargez et archivez l’album avant la fin de la conservation : la suppression est ensuite définitive."
+      }
+    }
+  },
+  "demo": {
+    "metaTitle": "Démo : essayez comme un invité",
+    "metaDescription": "Testez la page invité sans compte : choisissez des photos d’exemple, regardez-les partir, coupez le réseau. Rien n’est envoyé.",
+    "title": "Essayez comme un invité",
+    "intro": "Voici ce que verront vos invités. C’est une démonstration : aucune photo n’est envoyée, rien ne quitte votre appareil.",
+    "notice": "Démonstration : aucune photo n’est envoyée.",
+    "eventTitle": "Mariage de Léa et Tom",
+    "eventSubtitle": "Album d’exemple",
+    "welcome": "Bienvenue ! Ajoutez vos photos de la fête.",
+    "takePhoto": "Prendre une photo",
+    "chooseGallery": "Ajouter depuis ma galerie",
+    "pickerTitle": "Choisissez des photos d’exemple",
+    "pickerHint": "Touchez les photos à envoyer.",
+    "send": "{count, plural, =0 {Choisissez au moins une photo} one {Envoyer # photo} other {Envoyer # photos}}",
+    "cancel": "Annuler",
+    "selected": "sélectionnée",
+    "samples": {
+      "couple": "Les mariés",
+      "cake": "Le gâteau",
+      "dance": "La piste de danse",
+      "bouquet": "Le bouquet",
+      "cousins": "Les cousins",
+      "sunset": "Le coucher de soleil"
+    },
+    "status": {
+      "waiting": "En attente",
+      "sending": "Envoi en cours",
+      "sent": "Envoyée",
+      "offline": "En attente du réseau"
+    },
+    "allSent": "{count, plural, one {Merci ! # photo envoyée.} other {Merci ! # photos envoyées.}}",
+    "offlineNotice": "Pas de réseau : vos photos attendent sur le téléphone et partent dès que la connexion revient.",
+    "networkOn": "Réseau actif",
+    "networkOff": "Réseau coupé",
+    "cutNetwork": "Couper le réseau",
+    "restoreNetwork": "Rétablir le réseau",
+    "listLabel": "Vos envois",
+    "organizerTitle": "Côté organisateur",
+    "organizerCounter": "{count, plural, =0 {Aucune photo reçue} one {# photo reçue} other {# photos reçues}}",
+    "organizerEmpty": "Les photos de vos invités arrivent ici, en direct.",
+    "reset": "Recommencer la démo",
+    "cta": "Créer mon album",
+    "ctaHint": "Gratuit, prêt en moins d’une minute."
   }
 }

@@ -19,7 +19,108 @@
     "pillNoAccount": "No account",
     "pillMedia": "Photos and videos",
     "visualCounter": "{count} photos received",
-    "visualNew": "New photo from Léa"
+    "visualNew": "New photo from Léa",
+    "ctaDemo": "Try the demo",
+    "howTitle": "How it works",
+    "howSubtitle": "Three steps, nothing to install.",
+    "stepLabel": "Step {number}",
+    "steps": {
+      "create": {
+        "title": "You create the album",
+        "text": "A name, a date: the album is ready in under a minute, with its QR code and cards to print."
+      },
+      "scan": {
+        "title": "Your guests scan",
+        "text": "They open the page with their phone’s camera, pick their photos and videos, and the upload starts. No app, no account."
+      },
+      "collect": {
+        "title": "You get everything back",
+        "text": "Photos land in a single album: watch them live on a screen, sort them, then download the lot."
+      }
+    },
+    "valuesTitle": "Built so that nothing gets lost",
+    "valuesSubtitle": "Even in a venue where the signal comes and goes.",
+    "values": {
+      "reliable": {
+        "title": "No photo left behind",
+        "text": "Each photo waits on the phone until it has safely arrived. If the connection drops, the upload picks up again when the network is back."
+      },
+      "quality": {
+        "title": "The quality of your photos",
+        "text": "With the Event plan, original photos are kept. The free plan keeps optimised photos, and says so plainly."
+      },
+      "live": {
+        "title": "A live slideshow",
+        "text": "Show the album on a screen during the party: new photos appear as they arrive."
+      },
+      "moderate": {
+        "title": "You stay in control",
+        "text": "Approve photos before they appear, hide or delete them, block a guest. The album is only visible to people who have the link or the QR code."
+      }
+    },
+    "demoBand": {
+      "title": "Try it as a guest",
+      "text": "A full demo, no account needed: pick sample photos, watch them go, cut the network to see what happens. Nothing is sent.",
+      "cta": "Start the demo"
+    },
+    "pricingTitle": "Simple pricing, no subscription",
+    "pricingSubtitle": "Free to start, the Event plan when you need it.",
+    "pricingAll": "See all pricing",
+    "pricingProNote": "A Pro plan for photographers and venues is planned; it is not available yet.",
+    "usesTitle": "For every occasion",
+    "usesSubtitle": "Practical advice for getting the album of your event right.",
+    "usesLink": "Read the guide",
+    "uses": {
+      "wedding": "A QR code on every table, a slideshow at the reception, every photo your guests took.",
+      "birthday": "One link to share, photos and short videos from every guest, an album that lasts.",
+      "corporate": "Seminar, team party, trade show: photos approved before they are shown."
+    },
+    "testimonialsTitle": "They used {appName}",
+    "faqTitle": "Frequently asked questions",
+    "faq": {
+      "app": {
+        "q": "Do my guests need to install an app or create an account?",
+        "a": "No. They scan the QR code, the page opens in their browser and they send their photos. No app, no account, no password."
+      },
+      "network": {
+        "q": "What if the signal is bad during the party?",
+        "a": "Each photo a guest picks waits on their phone until it has safely arrived. If the connection drops, the upload picks up again when the network is back, and if the guest closes the page, they find their pending uploads when they reopen it. The safest way is still to keep the page open until the upload is done."
+      },
+      "limits": {
+        "q": "How many photos and videos can be sent?",
+        "a": "The free plan accepts {freeMedia} photos and videos per event, including up to {freeVideos} videos of {freeVideoDuration} at most. The Event plan goes up to {eventMedia} (fair use), with videos of {eventVideoDuration} at most. The number of guests is not limited."
+      },
+      "quality": {
+        "q": "Are photos kept in full quality?",
+        "a": "On the free plan, photos are kept as optimised versions ({px} px at most): originals are not kept. On the Event plan, originals are kept for photos sent after you switch to it; photos sent before stay optimised."
+      },
+      "retention": {
+        "q": "How long is the album kept?",
+        "a": "{freeDays} days after the event on the free plan, {eventMonths} months on the Event plan. Before the end, you get e-mail reminders with a link to download everything, and you can extend by {extensionMonths} months for {extensionPrice}."
+      },
+      "privacy": {
+        "q": "Who can see the photos?",
+        "a": "Only people who have the event’s QR code or link, and only if you open the gallery to guests. You can also approve each photo before it appears, hide or delete a photo, and block a guest."
+      },
+      "download": {
+        "q": "Can I download all the photos?",
+        "a": "Yes, as one or more ZIP files from your dashboard: original photos on the Event plan, optimised photos on the free plan."
+      },
+      "guestDelete": {
+        "q": "Can a guest remove a photo they sent?",
+        "a": "Yes. From “My photos”, each guest can delete their own photos and videos at any time."
+      },
+      "refund": {
+        "q": "Can I get a refund?",
+        "a": "Yes, within {days} days if fewer than {max} photos were sent. Payment is secured by Stripe: no card data goes through {appName}."
+      },
+      "pro": {
+        "q": "I’m a photographer or a venue: is there a plan for me?",
+        "a": "A Pro plan (white label, several events at once) is planned. It is not available yet."
+      }
+    },
+    "finalTitle": "Ready to bring it all together?",
+    "finalText": "Create your free album in under a minute."
   },
   "notFound": {
     "title": "This page can’t be found",
@@ -76,7 +177,12 @@
     "copyright": "© {year} {appName}",
     "madeWith": "Made with {appName}",
     "pricingLink": "Pricing",
-    "footerNav": "Footer links"
+    "footerNav": "Footer links",
+    "navMain": "Main navigation",
+    "navHow": "How it works",
+    "navDemo": "Demo",
+    "footerProduct": "The service",
+    "footerUses": "For every occasion"
   },
   "language": {
     "label": "Language",
@@ -792,5 +898,151 @@
       "intro": "{inviter} invites you to manage this album together: you can moderate photos, download them and follow uploads. Deleting the event stays reserved to the organiser.",
       "cta": "Accept the invitation"
     }
+  },
+  "usages": {
+    "common": {
+      "names": {
+        "wedding": "Wedding",
+        "birthday": "Birthday",
+        "corporate": "Company event"
+      },
+      "ctaPrimary": "Create my album",
+      "ctaDemo": "Try the demo",
+      "ctaHint": "Free, ready in under a minute.",
+      "tipsTitle": "Our tips",
+      "otherTitle": "Other occasions",
+      "pricingLink": "See all pricing"
+    },
+    "wedding": {
+      "metaTitle": "Shared wedding photo album with a QR code",
+      "metaDescription": "Collect the photos and videos of all your guests after the wedding: a QR code on every table, a single album, no app or account.",
+      "title": "Every photo of your wedding, not only the photographer’s",
+      "intro": "The photographer tells the story of the day, your guests tell the story of the party: the cousins’ table in fits of laughter, grandma on the dance floor, the cocktail hour behind the scenes. A QR code is all it takes for everything to land in one album.",
+      "pointsTitle": "Why it works for a wedding",
+      "points": {
+        "a": {
+          "title": "A QR code on every table",
+          "text": "Print A6 or A5 cards, or a foldable table tent: each guest scans without installing anything, from the entrance to the last dance."
+        },
+        "b": {
+          "title": "All ages, two taps",
+          "text": "Scan, pick your photos. The page is designed for the guests who are least comfortable with technology: big buttons, short texts."
+        },
+        "c": {
+          "title": "The slideshow at the reception",
+          "text": "Project the album live on a screen: photos arrive through the evening, after the approval step you have chosen."
+        }
+      },
+      "planTitle": "Which plan for a wedding?",
+      "planText": "The free plan accepts {freeMedia} photos and videos: with many guests, that quota can be reached quickly. The Event plan ({eventPrice}, one-off) goes up to {eventMedia} (fair use), keeps the album for {eventMonths} months and keeps original photos. It is better to take it before the party: originals are only kept for photos sent after you switch to this plan.",
+      "tips": {
+        "a": "Put a QR code at the entrance and on every table, with a simple line: “Send us your photos”.",
+        "b": "Mention it in the programme or over the microphone during dinner: one line is enough.",
+        "c": "Connect a computer to the room’s screen and start the live slideshow: the screen stays on and a QR code stays visible in a corner.",
+        "d": "After the party, mark the album as ready: guests who left their address receive the link."
+      }
+    },
+    "birthday": {
+      "metaTitle": "Shared birthday photo album: one link, every photo",
+      "metaDescription": "Bring the photos and videos of the party together in one album: your guests upload from their phone, no app or account.",
+      "title": "One birthday, dozens of phones, a single album",
+      "intro": "The cake, the candles, the surprise: everyone takes pictures on their own, and they stay buried in their phones. With one link to share, you get them all in the same place.",
+      "pointsTitle": "Why it works for a birthday",
+      "points": {
+        "a": {
+          "title": "One link, nothing to print",
+          "text": "Send the link to your group chat or show the QR code next to the cake: everyone can join in, no account needed."
+        },
+        "b": {
+          "title": "Photos and short videos",
+          "text": "Your guests send their videos too: up to {freeVideos} videos of {freeVideoDuration} at most on the free plan."
+        },
+        "c": {
+          "title": "An album that lasts",
+          "text": "After the party, everything is in one album you can download as ZIP files, and that your guests can revisit with the same link."
+        }
+      },
+      "planTitle": "Which plan for a birthday?",
+      "planText": "For a party with friends or family, the free plan ({freeMedia} photos and videos, album kept {freeDays} days after the event) is often enough. If the album fills up, you switch to the Event plan ({eventPrice}): uploads left waiting on phones go through by themselves.",
+      "tips": {
+        "a": "Share the link before the party, so everyone knows where to send their photos.",
+        "b": "Print an A6 card with the QR code and put it next to the cake.",
+        "c": "For a surprise, keep the gallery closed to guests until the right moment: they can upload without seeing each other’s photos.",
+        "d": "Download the album before the end of the retention period: you get reminders by e-mail."
+      }
+    },
+    "corporate": {
+      "metaTitle": "Photo album for company events: seminars, parties, trade shows",
+      "metaDescription": "Collect your attendees’ photos with a QR code, approve them before they are shown and stay in control of the album. No app or account.",
+      "title": "Photos of your company events, approved before they are shown",
+      "intro": "Seminar, team party, trade show, opening: attendees take photos, you stay in control of what is displayed and kept.",
+      "pointsTitle": "Why it works for a company",
+      "points": {
+        "a": {
+          "title": "No account to create",
+          "text": "Attendees scan and send: no app and no sign-up, so nothing gets in the way on the day."
+        },
+        "b": {
+          "title": "Approval before display",
+          "text": "Turn on prior approval: a photo only appears in the album and on the slideshow once you agree, one by one, with the keyboard."
+        },
+        "c": {
+          "title": "Moderation and blocking",
+          "text": "Hide or delete a photo, handle reports, block a guest: everything is done from the moderation page."
+        }
+      },
+      "planTitle": "Which plan for a company?",
+      "planText": "For a one-off event, the Event plan ({eventPrice}) keeps originals for {eventMonths} months, with a discreet “Made with {appName}” mention. If you run events all year or for clients, a Pro plan (white label, several events) is planned; it is not available yet.",
+      "tips": {
+        "a": "Decide before the day who approves the photos.",
+        "b": "Show the QR code on the welcome screen and on printed material: the live slideshow keeps one on screen all the time.",
+        "c": "Tell attendees that their photos will be visible to the other guests of the event.",
+        "d": "Download and archive the album before the end of the retention period: deletion is final afterwards."
+      }
+    }
+  },
+  "demo": {
+    "metaTitle": "Demo: try it as a guest",
+    "metaDescription": "Try the guest page with no account: pick sample photos, watch them go, cut the network. Nothing is sent.",
+    "title": "Try it as a guest",
+    "intro": "This is what your guests will see. It is a demonstration: no photo is sent, nothing leaves your device.",
+    "notice": "Demonstration: no photo is sent.",
+    "eventTitle": "Léa and Tom’s wedding",
+    "eventSubtitle": "Sample album",
+    "welcome": "Welcome! Add your photos of the party.",
+    "takePhoto": "Take a photo",
+    "chooseGallery": "Add from my gallery",
+    "pickerTitle": "Pick some sample photos",
+    "pickerHint": "Tap the photos to send.",
+    "send": "{count, plural, =0 {Pick at least one photo} one {Send # photo} other {Send # photos}}",
+    "cancel": "Cancel",
+    "selected": "selected",
+    "samples": {
+      "couple": "The newlyweds",
+      "cake": "The cake",
+      "dance": "The dance floor",
+      "bouquet": "The bouquet",
+      "cousins": "The cousins",
+      "sunset": "The sunset"
+    },
+    "status": {
+      "waiting": "Waiting",
+      "sending": "Sending",
+      "sent": "Sent",
+      "offline": "Waiting for the network"
+    },
+    "allSent": "{count, plural, one {Thank you! # photo sent.} other {Thank you! # photos sent.}}",
+    "offlineNotice": "No network: your photos wait on the phone and go as soon as the connection is back.",
+    "networkOn": "Network on",
+    "networkOff": "Network off",
+    "cutNetwork": "Cut the network",
+    "restoreNetwork": "Restore the network",
+    "listLabel": "Your uploads",
+    "organizerTitle": "Organiser’s side",
+    "organizerCounter": "{count, plural, =0 {No photos received} one {# photo received} other {# photos received}}",
+    "organizerEmpty": "Your guests’ photos arrive here, live.",
+    "reset": "Start the demo over",
+    "cta": "Create my album",
+    "ctaHint": "Free, ready in under a minute."
   }
 }

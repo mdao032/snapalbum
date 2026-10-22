@@ -28,7 +28,7 @@ test.describe("page d'accueil", () => {
 
   test("NF-031: le bouton principal a une zone tactile d'au moins 44 px", async ({ page }) => {
     await page.goto("/");
-    const cta = page.getByRole("main").getByRole("link", { name: "Créer mon album" });
+    const cta = page.getByRole("main").getByRole("link", { name: "Créer mon album" }).first();
     const box = await cta.boundingBox();
     expect(box?.height).toBeGreaterThanOrEqual(44);
     expect(box?.width).toBeGreaterThanOrEqual(44);

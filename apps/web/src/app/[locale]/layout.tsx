@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
   });
   return {
     metadataBase: new URL(clientEnv.NEXT_PUBLIC_SITE_URL),
-    title: t("title", { appName: APP_NAME }),
+    title: { default: t("title", { appName: APP_NAME }), template: `%s · ${APP_NAME}` },
     description: t("description"),
     applicationName: APP_NAME,
   };

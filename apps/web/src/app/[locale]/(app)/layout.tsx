@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { CalendarDays, LogOut, UserRound } from "lucide-react";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -9,6 +10,9 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { requireOrganiser } from "@/server/auth";
 import { signOutAction } from "./actions";
+
+/** Private areas (accounts, albums): never listed by search engines (step 5.1). */
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 /** Pages for signed-in organisers (F-001): every page below is private. */
 export default async function AppLayout({ children, params }: LayoutProps<"/[locale]">) {

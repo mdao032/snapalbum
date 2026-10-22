@@ -1,19 +1,7 @@
 import { Camera, Heart, ImagePlus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { CSSProperties } from "react";
-
-// A decorative 9x9 pattern that evokes a QR code without being scannable.
-const QR_ROWS = [
-  "111111101",
-  "100000101",
-  "101110100",
-  "101110111",
-  "101110100",
-  "100000101",
-  "111111100",
-  "000000001",
-  "101101011",
-];
+import { QrArt } from "./qr-art";
 
 const TILES = [
   "from-violet-300 to-fuchsia-300",
@@ -70,23 +58,7 @@ export function HeroVisual() {
         className="absolute bottom-24 left-0 w-32 animate-float rounded-2xl bg-surface p-3 shadow-lift ring-1 ring-border/70 sm:left-2 sm:w-36"
         style={{ "--tilt": "-6deg" } as CSSProperties}
       >
-        <svg viewBox="0 0 9 9" className="w-full text-foreground" shapeRendering="crispEdges">
-          {QR_ROWS.flatMap((row, y) =>
-            [...row].map((cell, x) =>
-              cell === "1" ? (
-                <rect
-                  key={`${x}-${y}`}
-                  x={x}
-                  y={y}
-                  width="1"
-                  height="1"
-                  rx="0.15"
-                  fill="currentColor"
-                />
-              ) : null,
-            ),
-          )}
-        </svg>
+        <QrArt className="w-full text-foreground" />
         <div className="mt-2 flex justify-center text-primary">
           <Camera className="size-4" />
         </div>
