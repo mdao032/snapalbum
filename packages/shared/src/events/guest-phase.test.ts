@@ -45,4 +45,16 @@ describe("F-043: ce que la page de l'événement propose", () => {
     expect(EVENT_OVER_AFTER_HOURS).toBe(36);
     expect(eventOverAt("2026-09-12").toISOString()).toBe("2026-09-13T12:00:00.000Z");
   });
+
+  it("F-043, F-044: dès que l'organisateur déclare l'album prêt, la page passe à « après », même le soir de la fête", () => {
+    const ready = {
+      ...event,
+      settings: { ...event.settings, album_ready_at: "2026-09-12T22:00:00.000Z" },
+    };
+    expect(guestPhase(ready, new Date("2026-09-12T21:59:00Z"))).toBe("live");
+    expect(guestPhase(ready, new Date("2026-09-12T22:00:00Z"))).toBe("after");
+    // It never reopens uploads that the window closed, nor announces an event not yet open.
+    expect(guestPhase(ready, new Date("2026-10-12T00:00:00Z"))).toBe("closed");
+    expect(guestPhase(ready, new Date("2026-09-01T00:00:00Z"))).toBe("soon");
+  });
 });

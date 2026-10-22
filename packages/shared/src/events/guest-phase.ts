@@ -28,12 +28,17 @@ export type GuestPhase = "soon" | "live" | "after" | "closed";
 export function guestPhase(
   event: {
     eventDate: string;
-    settings: Pick<EventSettings, "upload_opens_at" | "upload_closes_at">;
+    settings: Pick<EventSettings, "upload_opens_at" | "upload_closes_at"> &
+      Partial<Pick<EventSettings, "album_ready_at">>;
   },
   now: Date,
 ): GuestPhase {
   const time = now.getTime();
   if (time < Date.parse(event.settings.upload_opens_at)) return "soon";
   if (time >= Date.parse(event.settings.upload_closes_at)) return "closed";
-  return time >= eventOverAt(event.eventDate).getTime() ? "after" : "live";
+  // The organiser declaring the album ready ends the party for the page, whatever the date says.
+  const readyAt = event.settings.album_ready_at
+    ? Date.parse(event.settings.album_ready_at)
+    : Infinity;
+  return time >= Math.min(eventOverAt(event.eventDate).getTime(), readyAt) ? "after" : "live";
 }

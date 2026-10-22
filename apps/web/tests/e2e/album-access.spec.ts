@@ -33,6 +33,9 @@ test.beforeAll(async () => {
   }
 });
 
+// Several steps (upload, join, dashboard) per test: slow phone profiles need more than 30 s.
+test.setTimeout(90_000);
+
 const DAY = 24 * 60 * 60 * 1000;
 const dayOffset = (days: number) => new Date(Date.now() + days * DAY).toISOString();
 
@@ -100,6 +103,39 @@ test.describe("La page de l'événement selon le moment", () => {
     await albumButton(guest).click();
     await expect(guest.getByTestId("tab-gallery")).toHaveAttribute("aria-selected", "true");
     await expect(guest.getByTestId("gallery-tile")).toHaveCount(1);
+    await guest.context().close();
+  });
+
+  test("F-043, F-044: dès que l'organisateur déclare l'album prêt, les invités voient « Voir l'album » même le soir de la fête", async ({
+    page,
+    browser,
+  }) => {
+    const { code, id } = await createEvent(page);
+    const guest = await newVisitor(browser);
+    await guest.goto(`/e/${code}`);
+    await expect(albumButton(guest)).toHaveCount(0);
+
+    await setSettings(id, { album_ready_at: new Date(Date.now() - 1000).toISOString() });
+    await guest.reload();
+    await expect(albumButton(guest)).toBeVisible();
+    await expect(guest.getByTestId("gallery-input")).toHaveCount(1);
+    await guest.context().close();
+  });
+
+  test("F-043, F-015: galerie fermée, après la fête : l'envoi reste l'action principale, sans bouton d'album", async ({
+    page,
+    browser,
+  }) => {
+    const { code, id } = await createEvent(page);
+    await setEventColumns(id, { event_date: dayOffset(-5).slice(0, 10) });
+    await setSettings(id, { gallery_visible: false });
+
+    const guest = await newVisitor(browser);
+    await guest.goto(`/e/${code}`);
+    await expect(guest.getByTestId("gallery-input")).toHaveCount(1);
+    await expect(albumButton(guest)).toHaveCount(0);
+    await expect(guest.getByTestId("tab-gallery")).toHaveCount(0);
+    await expect(guest.getByText("Il vous reste des photos à partager ?")).toHaveCount(0);
     await guest.context().close();
   });
 

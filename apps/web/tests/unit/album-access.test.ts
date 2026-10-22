@@ -210,6 +210,18 @@ describe("F-043: la page de l'événement selon le moment", () => {
     expect(await phaseAt("2026-10-20T10:00:00Z")).toBe("closed");
   });
 
+  it("F-043, F-044: l'album déclaré prêt fait passer la page à « après » avant la fin de la fête", async () => {
+    const settings = {
+      gallery_visible: true,
+      require_approval: false,
+      upload_opens_at: "2026-09-05T00:00:00.000Z",
+      upload_closes_at: "2026-10-12T00:00:00.000Z",
+      album_ready_at: "2026-09-12T22:00:00.000Z",
+    };
+    expect(await phaseAt("2026-09-12T21:00:00Z", settings)).toBe("live");
+    expect(await phaseAt("2026-09-12T23:00:00Z", settings)).toBe("after");
+  });
+
   it("F-043: des réglages illisibles ferment les envois, comme le fait la base", async () => {
     expect(await phaseAt("2026-09-12T20:00:00Z", { gallery_visible: true })).toBe("closed");
     expect(
