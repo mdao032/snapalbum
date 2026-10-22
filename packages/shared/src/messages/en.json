@@ -415,6 +415,12 @@
       "done": "Album declared ready on {date}.",
       "doneHint": "The link to the album is sent to the guests who left their e-mail.",
       "failed": "That did not work. Try again."
+    },
+    "liveCard": {
+      "title": "Live slideshow",
+      "subtitle": "Show the photos on a screen or projector during the party: new ones appear by themselves, with the QR code in a corner. Only approved photos are shown.",
+      "open": "Open the slideshow",
+      "hint": "Open the page on the computer connected to the screen, signed in to your account, then go full screen."
     }
   },
   "gallery": {
@@ -478,5 +484,13 @@
       "by": "Memories of {title}"
     },
     "closed": "The organiser has not opened the gallery to guests."
+  },
+  "live": {
+    "addPhotos": "Add your photos",
+    "scan": "Scan the QR code",
+    "empty": "The first photos will appear here as soon as they are sent.",
+    "qrAlt": "QR code to add your photos to {title}",
+    "fullscreen": "Full screen",
+    "exitFullscreen": "Exit full screen"
   }
 }

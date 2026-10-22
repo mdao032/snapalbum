@@ -415,6 +415,12 @@
       "done": "Album déclaré prêt le {date}.",
       "doneHint": "Le lien de l’album est envoyé aux invités qui ont laissé leur e-mail.",
       "failed": "L’opération a échoué. Réessayez."
+    },
+    "liveCard": {
+      "title": "Diaporama en direct",
+      "subtitle": "Affichez les photos sur un écran ou un vidéoprojecteur pendant la fête : les nouvelles apparaissent toutes seules, avec le QR code dans un coin. Seules les photos approuvées s’affichent.",
+      "open": "Ouvrir le diaporama",
+      "hint": "Ouvrez la page sur l’ordinateur relié à l’écran, connecté à votre compte, puis passez en plein écran."
     }
   },
   "gallery": {
@@ -478,5 +484,13 @@
       "by": "Souvenirs de {title}"
     },
     "closed": "L’organisateur n’a pas ouvert la galerie aux invités."
+  },
+  "live": {
+    "addPhotos": "Ajoutez vos photos",
+    "scan": "Scannez le QR code",
+    "empty": "Les premières photos apparaîtront ici dès qu’elles seront envoyées.",
+    "qrAlt": "QR code pour ajouter vos photos à {title}",
+    "fullscreen": "Plein écran",
+    "exitFullscreen": "Quitter le plein écran"
   }
 }
