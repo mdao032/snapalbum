@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "./src/zod-runtime.ts"
+  ],
   "exports": {
     ".": "./src/index.ts",
     "./brand": "./src/brand.ts",

@@ -1,3 +1,4 @@
+import "../zod-runtime";
 import { z } from "zod";
 import { ACCENT_PRESETS, EVENT_TITLE_MAX_LENGTH, WELCOME_MESSAGE_MAX_LENGTH } from "../constants";
 import { accentColorSchema, eventTypeSchema, localeSchema } from "./common";

@@ -1,3 +1,4 @@
+import "../zod-runtime";
 import { z } from "zod";
 import { computeExpiresAt } from "../events/expiry";
 import { EXTENSION, getPlan, type PlanId } from "../plans";

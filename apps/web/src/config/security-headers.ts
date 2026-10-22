@@ -1,7 +1,6 @@
 /**
- * Baseline security headers (S-004). The Content-Security-Policy comes with the security review
- * of step 5.4: it must allow Cloudflare Turnstile on the sign-in page and is easier to get right
- * once every page exists. Until then these headers are safe on every page.
+ * Baseline security headers (S-004). The Content-Security-Policy is not here: its sources depend
+ * on the deployment, so the proxy builds it for each request (`config/csp.ts`).
  */
 export interface HeaderRule {
   source: string;
@@ -14,7 +13,7 @@ const GUEST_PATH = "(?:en/)?e/";
 const COMMON = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  // Nobody should embed this site in a frame (clickjacking); the CSP `frame-ancestors` will replace it.
+  // Nobody should embed this site in a frame (clickjacking); the CSP `frame-ancestors` says the same for newer browsers.
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Strict-Transport-Security", value: "max-age=31536000" },
 ];

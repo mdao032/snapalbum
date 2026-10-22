@@ -1,3 +1,4 @@
+import "../zod-runtime";
 import { z } from "zod";
 
 /** Printed card formats (F-014). `tent` is a folded table tent made from one A4 sheet. */

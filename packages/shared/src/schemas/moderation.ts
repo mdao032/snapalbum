@@ -1,3 +1,4 @@
+import "../zod-runtime";
 import { z } from "zod";
 import { galleryAccessSchema } from "./gallery";
 import { uuidSchema } from "./common";

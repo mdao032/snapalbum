@@ -1,3 +1,4 @@
+import "../zod-runtime";
 import { z } from "zod";
 import { DISPLAY_NAME_MAX_LENGTH } from "../constants";
 import { localeSchema } from "../schemas/common";

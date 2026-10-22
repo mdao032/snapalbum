@@ -1,3 +1,4 @@
+import "../zod-runtime";
 import { z } from "zod";
 import { emailSchema } from "../auth/schemas";
 import { GUEST_NAME_MAX_LENGTH } from "../constants";
