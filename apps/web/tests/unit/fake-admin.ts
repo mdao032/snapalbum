@@ -17,6 +17,7 @@ export function fakeAdmin(
     const filters: ((row: Row) => boolean)[] = [];
     const orders: { column: string; ascending: boolean }[] = [];
     let limit = Infinity;
+    let offset = 0;
     let head = false;
     let counted = false;
     let mode: "select" | "update" | "insert" = "select";
@@ -45,7 +46,7 @@ export function fakeAdmin(
         });
       }
       return {
-        data: head ? null : result.slice(0, limit),
+        data: head ? null : result.slice(offset, offset + limit),
         count: counted ? count : null,
         error: null,
       };
@@ -107,6 +108,12 @@ export function fakeAdmin(
       },
       limit(value: number) {
         limit = value;
+        return chain;
+      },
+      // Inclusive bounds, like the Range of PostgREST.
+      range(from: number, to: number) {
+        offset = from;
+        limit = to - from + 1;
         return chain;
       },
       update(values: Row) {

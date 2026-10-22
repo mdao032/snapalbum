@@ -157,7 +157,8 @@
     "captcha_failed": "La vérification de sécurité a échoué. Rechargez la page puis réessayez.",
     "gallery_closed": "L’organisateur n’a pas ouvert la galerie aux invités.",
     "payment_unavailable": "Le paiement n’est pas disponible pour le moment. Réessayez un peu plus tard.",
-    "already_upgraded": "Cet événement est déjà passé à l’offre Événement."
+    "already_upgraded": "Cet événement est déjà passé à l’offre Événement.",
+    "account_pending_deletion": "Votre compte est en cours de suppression : annulez la suppression dans « Mon compte » pour créer un événement."
   },
   "upload": {
     "status": {
@@ -259,6 +260,31 @@
         "paid": "Payé",
         "refunded": "Remboursé"
       }
+    },
+    "data": {
+      "title": "Vos données",
+      "subtitle": "Téléchargez une copie des informations de votre compte.",
+      "export": "Télécharger mes données",
+      "hint": "Un fichier JSON : votre profil, vos événements et leurs réglages, la liste de leurs photos et vidéos (sans les fichiers), les prénoms des invités et vos achats. Les photos et vidéos elles-mêmes se téléchargent depuis chaque événement, en fichiers ZIP."
+    },
+    "delete": {
+      "title": "Supprimer mon compte",
+      "intro": "Votre compte, vos événements, leurs photos et vidéos et vos informations seront effacés.",
+      "point1": "La suppression prend effet dans {days} jours. Pendant ce délai, vos albums ne sont plus visibles des invités et vous pouvez tout annuler.",
+      "point2": "Passé ce délai, elle est définitive : photos, vidéos, invités et réglages sont effacés, sans retour possible.",
+      "point3": "Les justificatifs de paiement sont conservés sans lien avec vous, comme la loi l’impose.",
+      "download": "Téléchargez vos albums avant de continuer : depuis chaque événement, « Télécharger l’album ».",
+      "confirm": "Je comprends que la suppression sera définitive dans {days} jours.",
+      "submit": "Supprimer mon compte",
+      "pendingTitle": "Suppression du compte prévue le {date}",
+      "pendingText": "Vos événements sont déjà fermés aux invités. Vous pouvez tout annuler jusqu’à cette date.",
+      "cancel": "Annuler la suppression",
+      "banner": "Suppression de votre compte prévue le {date}.",
+      "bannerLink": "Annuler",
+      "requested": "C’est noté : votre compte sera supprimé le {date}. Un e-mail de confirmation vous a été envoyé.",
+      "cancelled": "La suppression est annulée : votre compte et vos événements sont rétablis.",
+      "failed": "L’opération a échoué. Réessayez dans un instant.",
+      "tooLate": "Le délai est écoulé : la suppression ne peut plus être annulée."
     }
   },
   "nav": {
@@ -615,6 +641,11 @@
     "expired": {
       "title": "Cet album a expiré",
       "text": "Il est fermé aux invités et ses fichiers seront supprimés définitivement le {date}. Payez avant cette date pour le récupérer."
+    },
+    "accountPending": {
+      "title": "Le compte de cet événement est en cours de suppression",
+      "text": "Cet événement sera supprimé avec le compte le {date}. Pour tout annuler, rendez-vous dans « Mon compte ».",
+      "link": "Aller à Mon compte"
     }
   },
   "gallery": {
@@ -906,6 +937,14 @@
       "title": "Gérer l’album « {title} » avec {inviter}",
       "intro": "{inviter} vous invite à gérer cet album avec lui : vous pourrez modérer les photos, les télécharger et suivre les envois. La suppression de l’événement reste réservée à l’organisateur.",
       "cta": "Accepter l’invitation"
+    },
+    "accountDeletion": {
+      "subject": "Suppression de votre compte programmée",
+      "preview": "Vous pouvez encore annuler.",
+      "title": "La suppression de votre compte est programmée",
+      "intro": "Vous avez demandé la suppression de votre compte {appName}. Elle sera définitive le {date} : vos événements, leurs photos et vidéos et vos informations seront alors effacés. Seuls les justificatifs de paiement sont conservés, sans lien avec vous, comme la loi l’impose.",
+      "cancel": "Un clic suffit pour annuler jusque-là. Si vous n’êtes pas à l’origine de cette demande, annulez-la tout de suite.",
+      "cta": "Annuler la suppression du compte"
     }
   },
   "usages": {

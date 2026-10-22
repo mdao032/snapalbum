@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CalendarDays, LogOut, UserRound } from "lucide-react";
+import { purgeAfter } from "@snapalbum/shared";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -8,7 +9,8 @@ import { Button } from "@/components/ui/button";
 import { clientMessagesFor } from "@/i18n/client-messages";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { requireOrganiser } from "@/server/auth";
+import { formatInstantDate } from "@/lib/events";
+import { getProfile, requireOrganiser } from "@/server/auth";
 import { signOutAction } from "./actions";
 
 /** Private areas (accounts, albums): never listed by search engines (step 5.1). */
@@ -19,9 +21,11 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  await requireOrganiser(locale);
+  const { supabase, user } = await requireOrganiser(locale);
+  const profile = await getProfile(supabase, user.id);
   const t = await getTranslations("nav");
   const tAccount = await getTranslations("account");
+  const tDelete = await getTranslations("account.delete");
 
   return (
     <NextIntlClientProvider
@@ -58,6 +62,20 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
           </nav>
         }
       >
+        {profile?.deleted_at ? (
+          <div
+            role="status"
+            data-testid="account-deletion-banner"
+            className="bg-danger-soft px-4 py-3 text-center text-sm font-medium text-danger"
+          >
+            {tDelete("banner", {
+              date: formatInstantDate(purgeAfter(profile.deleted_at), locale),
+            })}{" "}
+            <Link href="/account" className="underline">
+              {tDelete("bannerLink")}
+            </Link>
+          </div>
+        ) : null}
         {children}
       </PageShell>
     </NextIntlClientProvider>

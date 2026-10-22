@@ -14,7 +14,8 @@ export type CreateEventState =
   | { status: "idle" }
   | {
       status: "error";
-      error: "validation" | "free_event_limit" | "rate_limited" | "failed";
+      error:
+        "validation" | "free_event_limit" | "account_pending_deletion" | "rate_limited" | "failed";
       fieldErrors?: Record<string, FieldErrorCode>;
     };
 

@@ -136,14 +136,14 @@ isOneToOne: false
                   ]
                 },"purchases": {
                   Row: {
-                    "amount_cents": number,"created_at": string,"currency": string,"event_id": string | null,"event_title": string,"id": string,"product": string,"refunded_at": string | null,"source": string,"status": string,"store_transaction_id": string | null,"stripe_checkout_session_id": string | null,"stripe_payment_intent_id": string | null,"updated_at": string,"user_id": string
+                    "amount_cents": number,"created_at": string,"currency": string,"event_id": string | null,"event_title": string,"id": string,"product": string,"refunded_at": string | null,"source": string,"status": string,"store_transaction_id": string | null,"stripe_checkout_session_id": string | null,"stripe_payment_intent_id": string | null,"updated_at": string,"user_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "amount_cents": number,"created_at"?: string,"currency": string,"event_id"?: string | null,"event_title": string,"id"?: string,"product": string,"refunded_at"?: string | null,"source"?: string,"status"?: string,"store_transaction_id"?: string | null,"stripe_checkout_session_id"?: string | null,"stripe_payment_intent_id"?: string | null,"updated_at"?: string,"user_id": string
+                    "amount_cents": number,"created_at"?: string,"currency": string,"event_id"?: string | null,"event_title": string,"id"?: string,"product": string,"refunded_at"?: string | null,"source"?: string,"status"?: string,"store_transaction_id"?: string | null,"stripe_checkout_session_id"?: string | null,"stripe_payment_intent_id"?: string | null,"updated_at"?: string,"user_id"?: string | null
                   }
                   Update: {
-                    "amount_cents"?: number,"created_at"?: string,"currency"?: string,"event_id"?: string | null,"event_title"?: string,"id"?: string,"product"?: string,"refunded_at"?: string | null,"source"?: string,"status"?: string,"store_transaction_id"?: string | null,"stripe_checkout_session_id"?: string | null,"stripe_payment_intent_id"?: string | null,"updated_at"?: string,"user_id"?: string
+                    "amount_cents"?: number,"created_at"?: string,"currency"?: string,"event_id"?: string | null,"event_title"?: string,"id"?: string,"product"?: string,"refunded_at"?: string | null,"source"?: string,"status"?: string,"store_transaction_id"?: string | null,"stripe_checkout_session_id"?: string | null,"stripe_payment_intent_id"?: string | null,"updated_at"?: string,"user_id"?: string | null
                   }
                   Relationships: [
                     {
@@ -240,6 +240,9 @@ isOneToOne: true
 "apply_refund":
 { Args: { "p_free_expires_at": string,"p_months": number,"p_payment_intent": string,"p_stripe_event_id": string,"p_stripe_event_type": string }; Returns: Json
                            },
+"cancel_account_deletion":
+{ Args: { "p_grace_days": number,"p_now": string,"p_user_id": string }; Returns: Json
+                           },
 "claim_email":
 { Args: { "p_event_id": string,"p_kind": string,"p_recipient": string,"p_stale_minutes": number }; Returns: boolean
                            },
@@ -253,6 +256,9 @@ isOneToOne: true
                            },
 "expire_due_events":
 { Args: { "p_now": string }; Returns: Json
+                           },
+"finish_account_purge":
+{ Args: { "p_user_id": string }; Returns: Json
                            },
 "finish_email":
 { Args: { "p_event_id": string,"p_kind": string,"p_provider": string,"p_recipient": string }; Returns: undefined
@@ -276,11 +282,17 @@ isOneToOne: true
               "guest_id": string,"media_count": number
             }[]
                            },
+"prepare_account_purge":
+{ Args: { "p_user_id": string }; Returns: Json
+                           },
 "purge_event":
 { Args: { "p_event_id": string }; Returns: Json
                            },
 "release_email":
 { Args: { "p_event_id": string,"p_kind": string,"p_recipient": string }; Returns: undefined
+                           },
+"request_account_deletion":
+{ Args: { "p_now": string,"p_user_id": string }; Returns: Json
                            },
 "reserve_media_slot":
 { Args: { "p_bytes_display": number,"p_bytes_original": number,"p_bytes_thumb": number,"p_duration_s": number,"p_event_id": string,"p_height": number,"p_key_display": string,"p_key_original": string,"p_key_thumb": string,"p_kind": string,"p_max_media": number,"p_max_videos": number,"p_media_id": string,"p_mime_type": string,"p_sha256": string,"p_taken_at": string,"p_user_id": string,"p_width": number }; Returns: Json

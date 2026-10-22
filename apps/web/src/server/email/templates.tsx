@@ -266,6 +266,26 @@ export function DeletionEmail({
   );
 }
 
+/** The confirmation of an account deletion the organiser asked for (F-004). */
+export function AccountDeletionEmail({
+  t,
+  date,
+  cancelUrl,
+}: {
+  t: Translate;
+  date: string;
+  cancelUrl: string;
+}) {
+  return (
+    <Layout t={t} preview={t("accountDeletion.preview")} footer="footerOrganiser">
+      <Text style={styles.title}>{t("accountDeletion.title")}</Text>
+      <Text style={styles.text}>{t("accountDeletion.intro", { date, appName: APP_NAME })}</Text>
+      <Text style={styles.text}>{t("accountDeletion.cancel")}</Text>
+      <Cta href={cancelUrl}>{t("accountDeletion.cta")}</Cta>
+    </Layout>
+  );
+}
+
 /** Ready for the co-organisers of F-005; nothing sends it until that feature exists. */
 export function CohostInvitationEmail({
   t,

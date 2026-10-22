@@ -1,7 +1,7 @@
 import { apiError, apiJson, guarded } from "@/server/api-response";
 import { CRON_TASKS, isCronRequest, type CronTask } from "@/server/cron";
 import { getMailer } from "@/server/email/mailer";
-import { cleanupUploads, expireEvents, purgeDueEvents } from "@/server/lifecycle";
+import { cleanupUploads, expireEvents, purgeDueAccounts, purgeDueEvents } from "@/server/lifecycle";
 import { runDailyRecap, sendExpiryReminders } from "@/server/notifications";
 import { getStorage } from "@/server/storage";
 import { createSupabaseAdminClient } from "@/server/supabase/admin";
@@ -27,7 +27,9 @@ export function GET(request: Request, context: { params: Promise<{ task: string 
         const storage = getStorage();
         const expired = await expireEvents({ admin, storage });
         const purge = await purgeDueEvents({ admin, storage });
-        return apiJson({ task, expired: expired.expired.length, ...purge });
+        // Accounts whose organiser asked for the deletion 7 days ago (F-004).
+        const accounts = await purgeDueAccounts({ admin, storage });
+        return apiJson({ task, expired: expired.expired.length, ...purge, accounts });
       }
       case "cleanup-uploads":
         return apiJson({ task, ...(await cleanupUploads({ admin, storage: getStorage() })) });

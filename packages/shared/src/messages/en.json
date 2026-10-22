@@ -157,7 +157,8 @@
     "captcha_failed": "The security check failed. Reload the page and try again.",
     "gallery_closed": "The organiser has not opened the gallery to guests.",
     "payment_unavailable": "Payment is not available right now. Please try again a little later.",
-    "already_upgraded": "This event is already on the Event plan."
+    "already_upgraded": "This event is already on the Event plan.",
+    "account_pending_deletion": "Your account is being deleted: cancel the deletion in “My account” to create an event."
   },
   "upload": {
     "status": {
@@ -259,6 +260,31 @@
         "paid": "Paid",
         "refunded": "Refunded"
       }
+    },
+    "data": {
+      "title": "Your data",
+      "subtitle": "Download a copy of your account information.",
+      "export": "Download my data",
+      "hint": "A JSON file: your profile, your events and their settings, the list of their photos and videos (without the files), guests’ first names and your purchases. The photos and videos themselves are downloaded from each event, as ZIP files."
+    },
+    "delete": {
+      "title": "Delete my account",
+      "intro": "Your account, your events, their photos and videos and your information will be erased.",
+      "point1": "The deletion takes effect in {days} days. During that time, your albums are no longer visible to guests and you can cancel everything.",
+      "point2": "After that it is final: photos, videos, guests and settings are erased, with no way back.",
+      "point3": "Proof of payment is kept with no link to you, as the law requires.",
+      "download": "Download your albums before you continue: from each event, “Download the album”.",
+      "confirm": "I understand that the deletion will be final in {days} days.",
+      "submit": "Delete my account",
+      "pendingTitle": "Account deletion scheduled for {date}",
+      "pendingText": "Your events are already closed to guests. You can cancel everything until that date.",
+      "cancel": "Cancel the deletion",
+      "banner": "Your account deletion is scheduled for {date}.",
+      "bannerLink": "Cancel",
+      "requested": "Noted: your account will be deleted on {date}. A confirmation e-mail has been sent to you.",
+      "cancelled": "The deletion is cancelled: your account and your events are back.",
+      "failed": "The operation failed. Try again in a moment.",
+      "tooLate": "The time is up: the deletion can no longer be cancelled."
     }
   },
   "nav": {
@@ -615,6 +641,11 @@
     "expired": {
       "title": "This album has expired",
       "text": "It is closed to guests and its files will be permanently deleted on {date}. Pay before then to bring it back."
+    },
+    "accountPending": {
+      "title": "This event’s account is being deleted",
+      "text": "This event will be deleted with the account on {date}. To cancel everything, go to “My account”.",
+      "link": "Go to My account"
     }
   },
   "gallery": {
@@ -906,6 +937,14 @@
       "title": "Manage the album “{title}” with {inviter}",
       "intro": "{inviter} invites you to manage this album together: you can moderate photos, download them and follow uploads. Deleting the event stays reserved to the organiser.",
       "cta": "Accept the invitation"
+    },
+    "accountDeletion": {
+      "subject": "Your account deletion is scheduled",
+      "preview": "You can still cancel.",
+      "title": "Your account deletion is scheduled",
+      "intro": "You asked to delete your {appName} account. It will be final on {date}: your events, their photos and videos and your information will then be erased. Only proof of payment is kept, with no link to you, as the law requires.",
+      "cancel": "One click is enough to cancel until then. If you did not make this request, cancel it right away.",
+      "cta": "Cancel the account deletion"
     }
   },
   "usages": {

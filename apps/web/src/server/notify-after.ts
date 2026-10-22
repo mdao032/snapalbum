@@ -4,6 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { after } from "next/server";
 import { getMailer } from "./email/mailer";
 import {
+  notifyAccountDeletionRequested,
   notifyDeletionRequested,
   notifyPaymentConfirmed,
   notifyQuotaReachedByCode,
@@ -66,4 +67,13 @@ export function scheduleDeletionNotice(admin: Client, eventId: string) {
 /** F-044: the album link to the guests who asked, as soon as the organiser says it is ready. */
 export function scheduleAlbumReady(admin: Client, eventId: string) {
   later("album e-mails", (deps) => sendAlbumReady(deps, eventId), admin);
+}
+
+/** F-004: the confirmation of an account deletion, with the date and the way to cancel. */
+export function scheduleAccountDeletionNotice(admin: Client, userId: string, deletedAt: Date) {
+  later(
+    "account deletion e-mail",
+    (deps) => notifyAccountDeletionRequested(deps, userId, deletedAt),
+    admin,
+  );
 }

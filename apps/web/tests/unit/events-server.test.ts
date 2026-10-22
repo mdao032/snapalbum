@@ -14,15 +14,25 @@ const NOW = new Date("2026-08-01T10:00:00Z");
 type InsertResult = { data: unknown; error: { code: string; message: string } | null };
 
 /** Minimal fake of the Supabase query builder: enough to drive `createEvent`. */
-function fakeAdmin(options: { activeFreeEvents: number; inserts?: InsertResult[] }) {
+function fakeAdmin(options: {
+  activeFreeEvents: number;
+  inserts?: InsertResult[];
+  /** When the account asked to be deleted (F-004); null for an ordinary account. */
+  accountDeletedAt?: string | null;
+}) {
   const inserted: Record<string, unknown>[] = [];
   const countQuery = {
     eq: vi.fn(() => countQuery),
     or: vi.fn(() => Promise.resolve({ count: options.activeFreeEvents, error: null })),
   };
   const results = [...(options.inserts ?? [])];
-  const from = vi.fn(() => ({
-    select: vi.fn(() => countQuery),
+  const profileQuery = {
+    eq: vi.fn(() => profileQuery),
+    maybeSingle: () =>
+      Promise.resolve({ data: { deleted_at: options.accountDeletedAt ?? null }, error: null }),
+  };
+  const from = vi.fn((table: string) => ({
+    select: vi.fn(() => (table === "profiles" ? profileQuery : countQuery)),
     insert: vi.fn((row: Record<string, unknown>) => {
       inserted.push(row);
       return {
@@ -35,6 +45,18 @@ function fakeAdmin(options: { activeFreeEvents: number; inserts?: InsertResult[]
   }));
   return { client: { from } as unknown as SupabaseClient, inserted, countQuery, from };
 }
+
+describe("F-004: un compte en cours de suppression ne crée rien", () => {
+  it("F-004: la création est refusée, aucune ligne n'est écrite", async () => {
+    const { client, inserted } = fakeAdmin({
+      activeFreeEvents: 0,
+      accountDeletedAt: "2026-10-22T10:00:00Z",
+    });
+    const result = await createEvent(client, OWNER, input, NOW);
+    expect(result).toEqual({ ok: false, reason: "account_pending_deletion" });
+    expect(inserted).toEqual([]);
+  });
+});
 
 describe("F-010: création d'événement côté serveur", () => {
   it("F-010: crée un événement gratuit avec réglages par défaut et expiration (section 3)", async () => {

@@ -20,6 +20,7 @@ import { messages } from "@snapalbum/shared/messages";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { clientEnv } from "@/config/env";
 import {
+  composeAccountDeletion,
   composeAlbumReady,
   composeDeletion,
   composeExpiryReminder,
@@ -174,7 +175,7 @@ export async function notifyPaymentConfirmed(deps: NotifyDeps, purchaseId: strin
     .eq("id", purchaseId)
     .maybeSingle();
   if (error) throw error;
-  if (!purchase?.event_id) return "skipped";
+  if (!purchase?.event_id || !purchase.user_id) return "skipped";
   const event = await loadEvent(deps.admin, purchase.event_id);
   const contact = await organiserContact(deps.admin, purchase.user_id, event?.locale ?? "fr");
   if (!event || !contact) return "skipped";
@@ -218,6 +219,31 @@ export async function notifyDeletionRequested(deps: NotifyDeps, eventId: string)
         }),
       ),
   );
+}
+
+/**
+ * The confirmation of an account deletion (F-004), with the date and the way to cancel. Sent
+ * straight after the request, without a line in `email_log` (that log hangs from an event, and an
+ * account may have none): the database refuses a second request, so there is only ever one.
+ */
+export async function notifyAccountDeletionRequested(
+  deps: NotifyDeps,
+  userId: string,
+  deletedAt: Date,
+) {
+  const contact = await organiserContact(deps.admin, userId, "fr");
+  if (!contact) return "skipped";
+  await deps.mailer.send(
+    email(
+      contact.email,
+      await composeAccountDeletion({
+        locale: contact.locale,
+        date: longDate(purgeAfter(deletedAt.toISOString()), contact.locale),
+        cancelUrl: pageUrl(contact.locale, "/account"),
+      }),
+    ),
+  );
+  return "sent";
 }
 
 /** Every page of a query, 500 rows at a time (a request returns at most 1 000 rows). */

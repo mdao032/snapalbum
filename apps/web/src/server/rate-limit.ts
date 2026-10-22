@@ -66,6 +66,13 @@ export const CHECKOUT_RATE_LIMIT: RateLimitRule = {
   windowSeconds: 60 * 60,
 };
 
+/** The copy of an account's data (G-004): 5 per hour per organiser, it reads a lot of rows. */
+export const ACCOUNT_EXPORT_RATE_LIMIT: RateLimitRule = {
+  name: "account-export",
+  limit: 5,
+  windowSeconds: 60 * 60,
+};
+
 /** Reporting photos (F-073): 20 per hour per person. */
 export const REPORT_RATE_LIMIT: RateLimitRule = {
   name: "gallery-report",

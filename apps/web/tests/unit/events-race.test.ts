@@ -18,8 +18,13 @@ function fakeAdmin(counts: number[]) {
     or: vi.fn(() => Promise.resolve({ count: remaining.shift() ?? 0, error: null })),
   };
   const deleted: string[] = [];
-  const from = vi.fn(() => ({
-    select: vi.fn(() => countQuery),
+  // The account is an ordinary one: no deletion asked (F-004).
+  const profileQuery = {
+    eq: vi.fn(() => profileQuery),
+    maybeSingle: () => Promise.resolve({ data: { deleted_at: null }, error: null }),
+  };
+  const from = vi.fn((table: string) => ({
+    select: vi.fn(() => (table === "profiles" ? profileQuery : countQuery)),
     insert: vi.fn((row: Record<string, unknown>) => ({
       select: () => ({
         single: () => Promise.resolve({ data: { id: "new-event", ...row }, error: null }),

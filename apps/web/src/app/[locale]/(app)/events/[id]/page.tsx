@@ -75,6 +75,7 @@ export default async function EventPage({
   const t = await getTranslations("events");
   const tDanger = await getTranslations("dashboard.danger");
   const tExpired = await getTranslations("dashboard.expired");
+  const tAccountPending = await getTranslations("dashboard.accountPending");
   const now = new Date();
   const status = eventDisplayStatus(event, now);
   const pendingDeletion = event.status === "pending_deletion";
@@ -121,7 +122,19 @@ export default async function EventPage({
 
         {pendingDeletion && event.deleted_at ? (
           <Card className="flex flex-col gap-4 bg-danger-soft p-6">
-            {event.deletion_reason === "expired" ? (
+            {event.deletion_reason === "account" ? (
+              <div className="flex flex-col gap-1" data-testid="account-pending-card">
+                <h2 className="text-xl font-semibold text-danger">{tAccountPending("title")}</h2>
+                <p>
+                  {tAccountPending("text", {
+                    date: formatInstantDate(purgeDeadline(event.deleted_at), locale),
+                  })}
+                </p>
+                <Link href="/account" className="mt-2 font-semibold text-primary hover:underline">
+                  {tAccountPending("link")}
+                </Link>
+              </div>
+            ) : event.deletion_reason === "expired" ? (
               <div className="flex flex-col gap-1" data-testid="expired-card">
                 <h2 className="text-xl font-semibold text-danger">{tExpired("title")}</h2>
                 <p>

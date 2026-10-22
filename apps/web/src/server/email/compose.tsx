@@ -5,6 +5,7 @@ import { render } from "@react-email/render";
 import { createTranslator } from "next-intl";
 import type { ReactElement } from "react";
 import {
+  AccountDeletionEmail,
   AlbumReadyEmail,
   CohostInvitationEmail,
   DeletionEmail,
@@ -135,6 +136,14 @@ export function composeAlbumReady(input: { locale: Locale; title: string; albumU
   return build(
     t("albumReady.subject", { title: input.title }),
     <AlbumReadyEmail t={t} title={input.title} albumUrl={input.albumUrl} />,
+  );
+}
+
+export function composeAccountDeletion(input: { locale: Locale; date: string; cancelUrl: string }) {
+  const t = emailTranslator(input.locale);
+  return build(
+    t("accountDeletion.subject"),
+    <AccountDeletionEmail t={t} date={input.date} cancelUrl={input.cancelUrl} />,
   );
 }
 

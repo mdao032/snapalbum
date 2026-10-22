@@ -26,6 +26,18 @@ describe("R5: suppression d'un événement", () => {
     expect(canCancelDeletion(event, new Date("2026-10-28T10:00:00Z"))).toBe(false);
   });
 
+  it("F-004: un événement fermé par la suppression du compte ne s'annule pas seul", () => {
+    const event = {
+      status: "pending_deletion",
+      deleted_at: "2026-10-21T10:00:00Z",
+      deletion_reason: "account",
+    };
+    expect(canCancelDeletion(event, new Date("2026-10-22T10:00:00Z"))).toBe(false);
+    expect(
+      canCancelDeletion({ ...event, deletion_reason: "user" }, new Date("2026-10-22T10:00:00Z")),
+    ).toBe(true);
+  });
+
   it("R5: on n'annule pas ce qui n'est pas en suppression", () => {
     expect(canCancelDeletion({ status: "active", deleted_at: null }, new Date())).toBe(false);
     expect(canCancelDeletion({ status: "pending_deletion", deleted_at: null }, new Date())).toBe(

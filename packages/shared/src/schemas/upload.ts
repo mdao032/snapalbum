@@ -190,6 +190,7 @@ export const API_ERROR_CODES = [
   "invalid_file",
   "payment_unavailable",
   "already_upgraded",
+  "account_pending_deletion",
   "internal_error",
 ] as const;
 export const apiErrorCodeSchema = z.enum(API_ERROR_CODES);

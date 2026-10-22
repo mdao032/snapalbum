@@ -7,8 +7,14 @@ vi.mock("@/config/env.server", () => ({ getServerEnv: () => serverEnv }));
 
 const expireEvents = vi.fn(async () => ({ expired: ["e1", "e2"] }));
 const purgeDueEvents = vi.fn(async () => ({ purged: ["e0"], failed: [] }));
+const purgeDueAccounts = vi.fn(async () => ({ purged: ["u1"], failed: [] }));
 const cleanupUploads = vi.fn(async () => ({ mediaRemoved: 3, multipartAborted: 1 }));
-vi.mock("@/server/lifecycle", () => ({ expireEvents, purgeDueEvents, cleanupUploads }));
+vi.mock("@/server/lifecycle", () => ({
+  expireEvents,
+  purgeDueEvents,
+  purgeDueAccounts,
+  cleanupUploads,
+}));
 
 const sendExpiryReminders = vi.fn(async () => ({ considered: 4, sent: 2, failed: 0 }));
 const runDailyRecap = vi.fn(async () => ({
@@ -70,9 +76,14 @@ describe("SPEC 9.2, 14: chaque tâche appelle son travail", () => {
       expired: 2,
       purged: ["e0"],
       failed: [],
+      accounts: { purged: ["u1"], failed: [] },
     });
     expect(expireEvents.mock.invocationCallOrder[0]).toBeLessThan(
       purgeDueEvents.mock.invocationCallOrder[0]!,
+    );
+    // F-004: the accounts whose deletion was asked 7 days ago go after the events.
+    expect(purgeDueEvents.mock.invocationCallOrder[0]).toBeLessThan(
+      purgeDueAccounts.mock.invocationCallOrder[0]!,
     );
   });
 

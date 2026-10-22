@@ -25,7 +25,8 @@ type Client = SupabaseClient<Database>;
 export type EventRow = Database["public"]["Tables"]["events"]["Row"];
 
 export type CreateEventResult =
-  { ok: true; event: EventRow } | { ok: false; reason: "free_event_limit" };
+  | { ok: true; event: EventRow }
+  | { ok: false; reason: "free_event_limit" | "account_pending_deletion" };
 
 /** PostgreSQL `unique_violation`. */
 const UNIQUE_VIOLATION = "23505";
@@ -56,6 +57,15 @@ export async function createEvent(
   now: Date = new Date(),
 ): Promise<CreateEventResult> {
   const input = createEventSchema.parse(rawInput);
+
+  // An account that is being deleted creates nothing new (F-004): it would be purged with the rest.
+  const { data: profile, error: profileError } = await admin
+    .from("profiles")
+    .select("deleted_at")
+    .eq("user_id", ownerId)
+    .maybeSingle();
+  if (profileError) throw profileError;
+  if (profile?.deleted_at) return { ok: false, reason: "account_pending_deletion" };
 
   const decision = checkEventCreationQuota({
     activeFreeEvents: await countActiveFreeEvents(admin, ownerId, now),

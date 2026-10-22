@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { purgeAfter } from "@snapalbum/shared";
+import { AccountDataCard } from "@/components/auth/account-data-card";
 import { AccountForm } from "@/components/auth/account-form";
+import { DeleteAccountCard } from "@/components/auth/delete-account-card";
 import { PurchaseHistory } from "@/components/auth/purchase-history";
 import { routing } from "@/i18n/routing";
 import { getProfile, requireOrganiser } from "@/server/auth";
@@ -42,6 +45,10 @@ export default async function AccountPage({ params }: PageProps<"/[locale]/accou
           locale={profile && hasLocale(routing.locales, profile.locale) ? profile.locale : locale}
         />
         <PurchaseHistory purchases={purchases} />
+        <AccountDataCard />
+        <DeleteAccountCard
+          purgeAt={profile?.deleted_at ? purgeAfter(profile.deleted_at).toISOString() : null}
+        />
       </div>
     </div>
   );
