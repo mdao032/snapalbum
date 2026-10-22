@@ -54,7 +54,9 @@
     "access_code_required": "Cet événement demande un code d’accès.",
     "access_code_invalid": "Ce code n’est pas le bon.",
     "captcha_failed": "La vérification de sécurité a échoué. Rechargez la page puis réessayez.",
-    "gallery_closed": "L’organisateur n’a pas ouvert la galerie aux invités."
+    "gallery_closed": "L’organisateur n’a pas ouvert la galerie aux invités.",
+    "payment_unavailable": "Le paiement n’est pas disponible pour le moment. Réessayez un peu plus tard.",
+    "already_upgraded": "Cet événement est déjà passé à l’offre Événement."
   },
   "upload": {
     "status": {
@@ -130,7 +132,20 @@
     "saving": "Enregistrement…",
     "saved": "Vos modifications sont enregistrées.",
     "saveError": "Vos modifications n’ont pas pu être enregistrées. Réessayez.",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "purchases": {
+      "title": "Mes paiements",
+      "subtitle": "Stripe vous envoie la facture de chaque paiement par e-mail.",
+      "empty": "Vous n’avez encore rien acheté.",
+      "products": {
+        "event": "Offre Événement",
+        "extension": "Prolongation de la conservation"
+      },
+      "status": {
+        "paid": "Payé",
+        "refunded": "Remboursé"
+      }
+    }
   },
   "nav": {
     "signIn": "Se connecter",
@@ -469,7 +484,18 @@
       "keptUntil": "Album conservé jusqu’au {date}.",
       "limits": "{count} photos et vidéos au plus.",
       "optimizedOnly": "{count, plural, one {# photo envoyée avant le passage à l’offre Événement n’a que sa version optimisée.} other {# photos envoyées avant le passage à l’offre Événement n’ont que leur version optimisée.}}",
-      "seeOffers": "Voir les offres"
+      "seeOffers": "Voir les offres",
+      "upgrade": "Passer à l’offre Événement ({price})",
+      "upgradeHint": "Paiement sécurisé par Stripe. Les quotas sont relevés tout de suite, avant, pendant ou après la fête.",
+      "extend": "Prolonger de {months} mois ({price})",
+      "redirecting": "Ouverture du paiement…"
+    },
+    "payment": {
+      "confirming": "Nous confirmons votre paiement…",
+      "done": "Merci ! Votre paiement est confirmé et votre album est à jour.",
+      "late": "Votre paiement est en cours de validation. Votre album sera mis à jour dans quelques instants.",
+      "failed": "Nous n’avons pas pu confirmer votre paiement. S’il a été débité, votre album sera mis à jour automatiquement sous peu ; sinon, vous pouvez réessayer.",
+      "cancelled": "Paiement annulé : rien n’a été débité."
     }
   },
   "gallery": {

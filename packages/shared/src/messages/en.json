@@ -54,7 +54,9 @@
     "access_code_required": "This event asks for an access code.",
     "access_code_invalid": "That code isn’t right.",
     "captcha_failed": "The security check failed. Reload the page and try again.",
-    "gallery_closed": "The organiser has not opened the gallery to guests."
+    "gallery_closed": "The organiser has not opened the gallery to guests.",
+    "payment_unavailable": "Payment is not available right now. Please try again a little later.",
+    "already_upgraded": "This event is already on the Event plan."
   },
   "upload": {
     "status": {
@@ -130,7 +132,20 @@
     "saving": "Saving…",
     "saved": "Your changes are saved.",
     "saveError": "Your changes couldn’t be saved. Try again.",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "purchases": {
+      "title": "My payments",
+      "subtitle": "Stripe e-mails you the invoice for each payment.",
+      "empty": "You have not bought anything yet.",
+      "products": {
+        "event": "Event plan",
+        "extension": "Retention extension"
+      },
+      "status": {
+        "paid": "Paid",
+        "refunded": "Refunded"
+      }
+    }
   },
   "nav": {
     "signIn": "Sign in",
@@ -469,7 +484,18 @@
       "keptUntil": "Album kept until {date}.",
       "limits": "{count} photos and videos at most.",
       "optimizedOnly": "{count, plural, one {# photo sent before switching to the Event plan only has its optimised version.} other {# photos sent before switching to the Event plan only have their optimised version.}}",
-      "seeOffers": "See the plans"
+      "seeOffers": "See the plans",
+      "upgrade": "Switch to the Event plan ({price})",
+      "upgradeHint": "Secure payment by Stripe. The limits go up at once, before, during or after the party.",
+      "extend": "Extend by {months} months ({price})",
+      "redirecting": "Opening the payment page…"
+    },
+    "payment": {
+      "confirming": "We are confirming your payment…",
+      "done": "Thank you! Your payment is confirmed and your album is up to date.",
+      "late": "Your payment is being validated. Your album will be updated in a few moments.",
+      "failed": "We could not confirm your payment. If it was charged, your album will be updated automatically shortly; otherwise you can try again.",
+      "cancelled": "Payment cancelled: nothing was charged."
     }
   },
   "gallery": {

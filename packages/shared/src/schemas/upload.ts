@@ -182,6 +182,8 @@ export const API_ERROR_CODES = [
   "captcha_failed",
   "upload_incomplete",
   "invalid_file",
+  "payment_unavailable",
+  "already_upgraded",
   "internal_error",
 ] as const;
 export const apiErrorCodeSchema = z.enum(API_ERROR_CODES);

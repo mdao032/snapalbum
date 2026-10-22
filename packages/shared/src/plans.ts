@@ -94,6 +94,12 @@ export const PRO_PRICING = { monthlyCents: 5900, yearlyCents: 59_000 } as const;
 /** Paid extension of the retention period (rule R4). */
 export const EXTENSION = { priceCents: 1900, months: 12 } as const;
 
+/**
+ * Stable names of the Stripe prices (`lookup_key`): the code finds a price by its name, so nothing
+ * is copied from the Stripe dashboard and a new price can take over an old one (`pnpm stripe:setup`).
+ */
+export const STRIPE_LOOKUP_KEYS = { event: "event_plan", extension: "event_extension" } as const;
+
 /** Refund window and threshold (rule R6). */
 export const REFUND = { windowDays: 14, maxMediaForRefund: 20 } as const;
 

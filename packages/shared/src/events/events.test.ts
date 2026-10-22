@@ -100,6 +100,15 @@ describe("section 3: durée de conservation", () => {
     expect(expiresAt?.toISOString()).toBe("2027-09-20T10:00:00.000Z");
   });
 
+  it("offre Événement : acheté bien avant la fête, 12 mois comptés depuis la fête", () => {
+    const expiresAt = computeExpiresAt({
+      plan: "event",
+      eventDate: "2027-06-01",
+      purchasedAt: new Date("2026-09-20T10:00:00Z"),
+    });
+    expect(expiresAt?.toISOString()).toBe("2028-06-01T00:00:00.000Z");
+  });
+
   it("offre Événement : exige la date d'achat", () => {
     expect(() => computeExpiresAt({ plan: "event", eventDate: "2026-09-12" })).toThrow(/purchase/);
   });

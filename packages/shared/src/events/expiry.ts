@@ -20,7 +20,8 @@ function addMonths(date: Date, months: number): Date {
 /**
  * When an event's media are deleted (SPEC section 3, retention).
  * - free: 30 days after the event date, counting the event day itself;
- * - event: 12 months after the purchase;
+ * - event: 12 months after the later of the purchase and the event date, so an album bought long
+ *   before the party is still kept after it (the database applies the same rule, `apply_purchase`);
  * - pro: `null`, because expiry follows the subscription (phase 8).
  */
 export function computeExpiresAt(input: ExpiryInput): Date | null {
@@ -33,7 +34,10 @@ export function computeExpiresAt(input: ExpiryInput): Date | null {
       if (!input.purchasedAt) {
         throw new Error("A purchase date is required to compute the expiry of a paid event");
       }
-      return addMonths(input.purchasedAt, retention.months);
+      return addMonths(
+        new Date(Math.max(input.purchasedAt.getTime(), parseEventDate(input.eventDate).getTime())),
+        retention.months,
+      );
     case "while_subscribed":
       return null;
   }
