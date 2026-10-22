@@ -98,6 +98,21 @@ test.describe("Paiement : boutons et retour de la page Stripe", () => {
     await expect(page).toHaveURL(new RegExp(`/events/${id}$`));
   });
 
+  test("NF-031: sur un écran de 360 px, les boutons d'achat restent dans la carte de l'offre", async ({
+    page,
+  }) => {
+    const { id } = await createEvent(page);
+    await page.setViewportSize({ width: 360, height: 800 });
+    await page.goto(`/events/${id}`);
+
+    const card = await page.getByTestId("plan-card").boundingBox();
+    for (const testId of ["upgrade-button", "extend-button"]) {
+      const button = await page.getByTestId(testId).boundingBox();
+      expect(button && card && button.x + button.width <= card.x + card.width).toBe(true);
+    }
+    await expectNoHorizontalScroll(page);
+  });
+
   test("le retour « annulé » le dit : rien n'a été débité", async ({ page }) => {
     const { id } = await createEvent(page);
     await page.goto(`/events/${id}?payment=cancelled`);

@@ -148,11 +148,14 @@ function DownloadList({
       <h3 className="font-medium">{title}</h3>
       <ul className="flex flex-wrap gap-3">
         {items.map((item) => (
-          <li key={item.href}>
+          <li key={item.href} className="max-w-full">
             <a
               href={item.href}
               download
-              className={cn(buttonVariants({ variant: "secondary" }), "w-full sm:w-auto")}
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "max-w-full whitespace-normal py-2 text-center sm:w-auto",
+              )}
             >
               <Download aria-hidden />
               {item.label}

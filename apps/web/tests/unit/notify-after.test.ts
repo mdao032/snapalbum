@@ -8,9 +8,9 @@ const mailer = { name: "console" as const };
 vi.mock("@/server/email/mailer", () => ({ getMailer: () => mailer }));
 
 const notifyWelcome = vi.fn(async () => "sent");
-const notifyQuotaReachedByCode = vi.fn(async () => "sent");
-const notifyPaymentConfirmed = vi.fn(async () => "sent");
-const notifyDeletionRequested = vi.fn(async () => "sent");
+const notifyQuotaReachedByCode = vi.fn(async (_context: unknown, _id: string) => "sent");
+const notifyPaymentConfirmed = vi.fn(async (_context: unknown, _id: string) => "sent");
+const notifyDeletionRequested = vi.fn(async (_context: unknown, _id: string) => "sent");
 const sendAlbumReady = vi.fn(async () => 0);
 vi.mock("@/server/notifications", () => ({
   notifyWelcome,

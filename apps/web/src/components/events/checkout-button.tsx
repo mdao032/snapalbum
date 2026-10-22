@@ -29,7 +29,15 @@ export function CheckoutButton({
 
   return (
     <form action={formAction} className="flex flex-col items-start gap-2">
-      <Button type="submit" size="lg" variant={variant} disabled={pending} data-testid={testId}>
+      {/* The label with its price is long: on a narrow screen it wraps instead of leaving the card. */}
+      <Button
+        type="submit"
+        size="lg"
+        variant={variant}
+        disabled={pending}
+        data-testid={testId}
+        className="max-w-full whitespace-normal py-2 text-center"
+      >
         {pending ? <Spinner className="text-current" /> : null}
         {pending ? t("redirecting") : label}
       </Button>
