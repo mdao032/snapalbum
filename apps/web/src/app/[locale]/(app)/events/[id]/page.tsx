@@ -19,6 +19,7 @@ import { AlbumReady } from "@/components/events/album-ready";
 import { LiveCard } from "@/components/events/live-card";
 import { ModerationCard } from "@/components/events/moderation-card";
 import { DeleteEvent } from "@/components/events/delete-event";
+import { DownloadAlbum } from "@/components/events/download-album";
 import { EventCover } from "@/components/events/event-cover";
 import { EventStatsPanel } from "@/components/events/event-stats";
 import { PersonalizeForm } from "@/components/events/personalize-form";
@@ -42,6 +43,7 @@ import {
   markAlbumReadyAction,
   revokeShareLinkAction,
 } from "./actions";
+import { planAlbumAction, signAlbumFilesAction } from "./download/actions";
 
 export const metadata: Metadata = { robots: { index: false } };
 
@@ -136,6 +138,11 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
                 reported={attention.reported}
               />
             ) : null}
+
+            <DownloadAlbum
+              onPlan={planAlbumAction.bind(null, event.id)}
+              onSign={signAlbumFilesAction.bind(null, event.id)}
+            />
 
             <LiveCard code={event.public_code} />
 

@@ -197,16 +197,14 @@ export async function listModeration(
 
   let guests: ModerationGuest[] = [];
   if (!options.cursor) {
-    const { data: tally, error: tallyError } = await admin
-      .from("media")
-      .select("guest_id")
-      .eq("event_id", eventId)
-      .in("status", ["ready", "hidden"])
-      .limit(5000);
+    // Counted by the database: a plain select stops at 1 000 rows.
+    const { data: tally, error: tallyError } = await admin.rpc("moderation_guest_counts", {
+      p_event_id: eventId,
+    });
     if (tallyError) throw tallyError;
-    const perGuest = new Map<string, number>();
-    for (const row of tally ?? [])
-      perGuest.set(row.guest_id, (perGuest.get(row.guest_id) ?? 0) + 1);
+    const perGuest = new Map<string, number>(
+      (tally ?? []).map((row) => [row.guest_id, Number(row.media_count)]),
+    );
     guests = (guestRows ?? [])
       .map((guest) => ({
         id: guest.id,

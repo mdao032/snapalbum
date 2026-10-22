@@ -1,6 +1,7 @@
 import "server-only";
 import {
   READ_URL_TTL_SECONDS,
+  slugify,
   type ApiErrorCode,
   type GalleryAccess,
   type GalleryGuest,
@@ -247,13 +248,7 @@ async function shownRows(admin: Client, eventId: string, ids: readonly string[])
 
 /** `jolie-fete-3f2b8c1e.jpg`: the file name offered when a guest saves a photo. */
 export function downloadName(title: string, mediaId: string, key: string): string {
-  const slug = title
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 40);
+  const slug = slugify(title, 40);
   const extension = /\.([a-z0-9]{2,5})$/i.exec(key)?.[1]?.toLowerCase() ?? "bin";
   return `${slug || "album"}-${mediaId.slice(0, 8)}.${extension}`;
 }

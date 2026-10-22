@@ -23,6 +23,7 @@
     "@supabase/supabase-js": "2.118.0",
     "@tanstack/react-virtual": "3.14.21",
     "class-variance-authority": "0.7.1",
+    "client-zip": "2.5.1",
     "clsx": "2.1.1",
     "geist": "1.8.1",
     "idb": "8.0.4",
