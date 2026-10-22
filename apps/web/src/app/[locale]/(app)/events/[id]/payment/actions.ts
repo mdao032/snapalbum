@@ -10,6 +10,7 @@ import { redirect as redirectTo } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { clientEnv } from "@/config/env";
 import { redirect } from "@/i18n/navigation";
+import { schedulePaymentConfirmed } from "@/server/notify-after";
 import { getOrganiser } from "@/server/auth";
 import {
   confirmCheckoutSession,
@@ -86,12 +87,14 @@ export async function confirmPaymentAction(
   ) {
     return { status: "error" };
   }
+  const admin = createSupabaseAdminClient();
   try {
     return await confirmCheckoutSession(
-      { admin: createSupabaseAdminClient(), stripe: getStripe() },
+      { admin, stripe: getStripe() },
       { id: user.id },
       eventId,
       sessionId,
+      (purchaseId) => schedulePaymentConfirmed(admin, purchaseId),
     );
   } catch (error) {
     console.error("[payments] confirmation failed", error);

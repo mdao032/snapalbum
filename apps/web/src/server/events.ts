@@ -240,7 +240,7 @@ export type DeletionResult = { ok: true } | { ok: false; reason: "not_found" | "
 async function findOwnedEvent(admin: Client, ownerId: string, eventId: string) {
   const { data, error } = await admin
     .from("events")
-    .select("id, status, deleted_at")
+    .select("id, status, deleted_at, deletion_reason")
     .eq("id", eventId)
     .eq("owner_id", ownerId)
     .maybeSingle();
@@ -265,7 +265,11 @@ export async function requestEventDeletion(
 
   const { data, error } = await admin
     .from("events")
-    .update({ status: "pending_deletion", deleted_at: now.toISOString() })
+    .update({
+      status: "pending_deletion",
+      deleted_at: now.toISOString(),
+      deletion_reason: "user",
+    })
     .eq("id", eventId)
     .eq("owner_id", ownerId)
     .eq("status", "active")
@@ -287,7 +291,7 @@ export async function cancelEventDeletion(
 
   const { data, error } = await admin
     .from("events")
-    .update({ status: "active", deleted_at: null })
+    .update({ status: "active", deleted_at: null, deletion_reason: null })
     .eq("id", eventId)
     .eq("owner_id", ownerId)
     .eq("status", "pending_deletion")

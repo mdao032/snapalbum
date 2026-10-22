@@ -14,7 +14,7 @@ import type { Database } from "@snapalbum/shared/db-types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 import { getServerEnv } from "@/config/env.server";
-import { routing } from "@/i18n/routing";
+import { localePrefix } from "./urls";
 
 type Client = SupabaseClient<Database>;
 
@@ -79,11 +79,6 @@ async function findPriceId(stripe: StripeApi, product: CheckoutProduct): Promise
   return price.id;
 }
 
-/** `/en` for English, nothing for the default language, like the rest of the site. */
-function localePrefix(locale: string): string {
-  return locale === routing.defaultLocale ? "" : `/${locale}`;
-}
-
 const REFUSALS = {
   not_active: "event_suspended",
   already_upgraded: "already_upgraded",
@@ -103,7 +98,7 @@ export async function startCheckout(
 ): Promise<CheckoutResult> {
   const { data: event, error } = await deps.admin
     .from("events")
-    .select("id, owner_id, title, plan, status")
+    .select("id, owner_id, title, plan, status, deletion_reason")
     .eq("id", input.eventId)
     .maybeSingle();
   if (error) throw error;
@@ -114,6 +109,7 @@ export async function startCheckout(
     product: input.product,
     plan: event.plan as PlanId,
     status: event.status,
+    deletionReason: event.deletion_reason,
   });
   if (!decision.ok) return { ok: false, code: REFUSALS[decision.reason] };
 
@@ -292,6 +288,7 @@ export async function confirmCheckoutSession(
   user: { id: string },
   eventId: string,
   sessionId: string,
+  onApplied?: (purchaseId: string) => void,
 ): Promise<ConfirmResult> {
   const { data: known, error } = await deps.admin
     .from("purchases")
@@ -323,6 +320,7 @@ export async function confirmCheckoutSession(
   }
   const result = await applyPaidSession(deps.admin, session);
   if (!result.ok) return { status: "error" };
+  if (result.result === "applied" && result.purchaseId) onApplied?.(result.purchaseId);
   return { status: result.result === "not_paid" ? "pending" : "applied" };
 }
 

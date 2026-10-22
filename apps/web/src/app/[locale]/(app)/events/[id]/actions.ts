@@ -11,6 +11,7 @@ import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 import { getOrganiser } from "@/server/auth";
+import { scheduleAlbumReady, scheduleDeletionNotice } from "@/server/notify-after";
 import { createShareLink, revokeShareLink } from "@/server/gallery";
 import { shareLinkViews, type ShareLinkView } from "@/server/share-links";
 import {
@@ -117,7 +118,11 @@ async function ownerOf(eventId: string) {
 /** Asks for the deletion of the event: purged in 7 days unless cancelled (R5). */
 export async function requestDeletionAction(eventId: string): Promise<void> {
   const ownerId = await ownerOf(eventId);
-  if (ownerId) await requestEventDeletion(createSupabaseAdminClient(), ownerId, eventId);
+  if (ownerId) {
+    const admin = createSupabaseAdminClient();
+    const result = await requestEventDeletion(admin, ownerId, eventId);
+    if (result.ok) scheduleDeletionNotice(admin, eventId);
+  }
   redirect({ href: `/events/${eventId}`, locale: await getLocale() });
 }
 
@@ -174,8 +179,12 @@ export async function markAlbumReadyAction(eventId: string): Promise<AlbumReadyS
   const ownerId = await ownerOf(eventId);
   if (!ownerId) return { ok: false };
   try {
-    const result = await markAlbumReady(createSupabaseAdminClient(), ownerId, eventId);
+    const admin = createSupabaseAdminClient();
+    const result = await markAlbumReady(admin, ownerId, eventId);
     if (!result.ok) return { ok: false };
+    // The guests who asked get the album link now, not tomorrow (F-044). Once: the e-mail log
+    // keeps a second declaration, or the daily task, from sending it again.
+    if (!result.alreadyReady) scheduleAlbumReady(admin, eventId);
     revalidatePath("/[locale]/events/[id]", "page");
     return { ok: true, readyAt: result.readyAt };
   } catch (error) {

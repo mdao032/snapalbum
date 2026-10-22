@@ -25,6 +25,10 @@ const serverSchema = z.object({
   TURNSTILE_SECRET_KEY: z.string().min(1).optional(),
   // Resend (phase 1)
   RESEND_API_KEY: z.string().min(1).optional(),
+  /** Sender of the automatic e-mails, on the domain validated in Resend: `Name <address>`. */
+  EMAIL_FROM: z.string().min(3).optional(),
+  /** `log`: write e-mails to the server log instead of sending them (tests, a staging site). */
+  EMAIL_MODE: z.enum(["log"]).optional(),
   // Stripe, test mode only (phase 4)
   STRIPE_SECRET_KEY: z
     .string()

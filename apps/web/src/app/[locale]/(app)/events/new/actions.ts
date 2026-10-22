@@ -5,6 +5,7 @@ import { getLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 import { getOrganiser } from "@/server/auth";
 import { createEvent } from "@/server/events";
+import { scheduleWelcome } from "@/server/notify-after";
 import { checkRateLimit, EVENT_CREATION_RATE_LIMIT } from "@/server/rate-limit";
 import { createSupabaseAdminClient } from "@/server/supabase/admin";
 import { createSupabaseServerClient } from "@/server/supabase/server";
@@ -47,9 +48,12 @@ export async function createEventAction(
 
   let eventId: string;
   try {
-    const result = await createEvent(createSupabaseAdminClient(), user.id, parsed.data);
+    const admin = createSupabaseAdminClient();
+    const result = await createEvent(admin, user.id, parsed.data);
     if (!result.ok) return { status: "error", error: result.reason };
     eventId = result.event.id;
+    // The welcome message, with the QR code, goes with the first event only.
+    scheduleWelcome(admin, user.id, eventId);
   } catch (error) {
     console.error("[events] creation failed", error);
     return { status: "error", error: "failed" };

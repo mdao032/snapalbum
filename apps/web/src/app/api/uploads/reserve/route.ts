@@ -1,5 +1,6 @@
 import { reserveUploadRequestSchema } from "@snapalbum/shared";
 import { apiError, apiJson, guarded, parseBody } from "@/server/api-response";
+import { scheduleQuotaReached } from "@/server/notify-after";
 import {
   checkRateLimit,
   EVENT_RESERVE_RATE_LIMIT,
@@ -29,11 +30,12 @@ export function POST(request: Request) {
       }
     }
 
-    const result = await reserveUpload(
-      { admin: createSupabaseAdminClient(), storage: getStorage() },
-      user,
-      body.data,
-    );
+    const admin = createSupabaseAdminClient();
+    const result = await reserveUpload({ admin, storage: getStorage() }, user, body.data);
+    // The guest is told "the organiser has been warned" (R1): this is the warning, sent once.
+    if (!result.ok && result.code === "album_full") {
+      scheduleQuotaReached(admin, body.data.eventCode);
+    }
     return result.ok ? apiJson(result.body) : apiError(result.status, result.code);
   });
 }

@@ -74,6 +74,7 @@ export default async function EventPage({
   if (!event) notFound();
   const t = await getTranslations("events");
   const tDanger = await getTranslations("dashboard.danger");
+  const tExpired = await getTranslations("dashboard.expired");
   const now = new Date();
   const status = eventDisplayStatus(event, now);
   const pendingDeletion = event.status === "pending_deletion";
@@ -120,14 +121,25 @@ export default async function EventPage({
 
         {pendingDeletion && event.deleted_at ? (
           <Card className="flex flex-col gap-4 bg-danger-soft p-6">
-            <div className="flex flex-col gap-1">
-              <h2 className="text-xl font-semibold text-danger">
-                {tDanger("pendingTitle", {
-                  date: formatInstantDate(purgeDeadline(event.deleted_at), locale),
-                })}
-              </h2>
-              <p>{tDanger("pendingDescription")}</p>
-            </div>
+            {event.deletion_reason === "expired" ? (
+              <div className="flex flex-col gap-1" data-testid="expired-card">
+                <h2 className="text-xl font-semibold text-danger">{tExpired("title")}</h2>
+                <p>
+                  {tExpired("text", {
+                    date: formatInstantDate(purgeDeadline(event.deleted_at), locale),
+                  })}
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-1">
+                <h2 className="text-xl font-semibold text-danger">
+                  {tDanger("pendingTitle", {
+                    date: formatInstantDate(purgeDeadline(event.deleted_at), locale),
+                  })}
+                </h2>
+                <p>{tDanger("pendingDescription")}</p>
+              </div>
+            )}
             {canCancelDeletion(event, now) ? (
               <form action={cancelDeletionAction.bind(null, event.id)}>
                 <Button type="submit" size="lg">
@@ -154,12 +166,22 @@ export default async function EventPage({
           expiresAt={event.expires_at}
           optimizedOnlyCount={optimizedOnlyCount}
           upgrade={
-            canBuy({ product: "event", plan: event.plan as PlanId, status: event.status }).ok
+            canBuy({
+              product: "event",
+              plan: event.plan as PlanId,
+              status: event.status,
+              deletionReason: event.deletion_reason,
+            }).ok
               ? checkoutAction.bind(null, event.id, "event")
               : null
           }
           extend={
-            canBuy({ product: "extension", plan: event.plan as PlanId, status: event.status }).ok
+            canBuy({
+              product: "extension",
+              plan: event.plan as PlanId,
+              status: event.status,
+              deletionReason: event.deletion_reason,
+            }).ok
               ? checkoutAction.bind(null, event.id, "extension")
               : null
           }

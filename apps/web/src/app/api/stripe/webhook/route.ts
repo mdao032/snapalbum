@@ -1,5 +1,6 @@
 import { apiError, apiJson, guarded } from "@/server/api-response";
 import { getServerEnv } from "@/config/env.server";
+import { schedulePaymentConfirmed } from "@/server/notify-after";
 import { handleStripeEvent } from "@/server/payments";
 import { createSupabaseAdminClient } from "@/server/supabase/admin";
 import Stripe from "stripe";
@@ -26,7 +27,11 @@ export function POST(request: Request) {
       return apiError(400, "validation_failed");
     }
 
-    const outcome = await handleStripeEvent(createSupabaseAdminClient(), event);
+    const admin = createSupabaseAdminClient();
+    const outcome = await handleStripeEvent(admin, event, async (purchaseId) => {
+      // After the answer: Stripe is not kept waiting, and a mail problem never fails the webhook.
+      schedulePaymentConfirmed(admin, purchaseId);
+    });
     return apiJson({ received: true, outcome });
   });
 }
