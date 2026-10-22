@@ -234,7 +234,28 @@ isOneToOne: true
             [_ in never]: never
           }
           Functions: {
-            "apply_purchase":
+            "admin_contacts":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"admin_extend_event":
+{ Args: { "p_actor": string,"p_event_id": string,"p_months": number,"p_now": string }; Returns: Json
+                           },
+"admin_list_events":
+{ Args: { "p_limit": number,"p_offset": number,"p_query": string }; Returns: Json
+                           },
+"admin_list_organisers":
+{ Args: { "p_limit": number,"p_offset": number,"p_query": string }; Returns: Json
+                           },
+"admin_list_purchases":
+{ Args: { "p_limit": number,"p_offset": number }; Returns: Json
+                           },
+"admin_overview":
+{ Args: { "p_now": string }; Returns: Json
+                           },
+"admin_set_event_suspended":
+{ Args: { "p_actor": string,"p_event_id": string,"p_suspended": boolean }; Returns: Json
+                           },
+"apply_purchase":
 { Args: { "p_amount_cents": number,"p_currency": string,"p_event_id": string,"p_months": number,"p_payment_intent": string,"p_product": string,"p_session_id": string,"p_stripe_event_id": string,"p_stripe_event_type": string,"p_user_id": string }; Returns: Json
                            },
 "apply_refund":

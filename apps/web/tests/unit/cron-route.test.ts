@@ -23,6 +23,9 @@ const runDailyRecap = vi.fn(async () => ({
 }));
 vi.mock("@/server/notifications", () => ({ sendExpiryReminders, runDailyRecap }));
 
+const checkStorageAlert = vi.fn(async () => "skipped");
+vi.mock("@/server/admin", () => ({ checkStorageAlert }));
+
 vi.mock("@/server/email/mailer", () => ({ getMailer: () => ({ mailer: true }) }));
 vi.mock("@/server/storage", () => ({ getStorage: () => ({ storage: true }) }));
 vi.mock("@/server/supabase/admin", () => ({ createSupabaseAdminClient: () => ({ admin: true }) }));
@@ -92,7 +95,12 @@ describe("SPEC 9.2, 14: chaque tâche appelle son travail", () => {
     expect(await (await call("reminders", auth)).json()).toMatchObject({ sent: 2 });
     expect(await (await call("daily-recap", auth)).json()).toMatchObject({
       albumReady: { sent: 5 },
+      storageAlert: "skipped",
     });
+    // SPEC 9.3: no threshold configured, no alert is asked for.
+    expect(checkStorageAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ thresholdBytes: null }),
+    );
     expect(cleanupUploads).toHaveBeenCalledTimes(1);
     expect(sendExpiryReminders).toHaveBeenCalledTimes(1);
     expect(runDailyRecap).toHaveBeenCalledTimes(1);

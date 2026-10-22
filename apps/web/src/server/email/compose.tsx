@@ -2,10 +2,12 @@ import type { Locale } from "@snapalbum/shared";
 import { APP_NAME } from "@snapalbum/shared/brand";
 import { messages } from "@snapalbum/shared/messages";
 import { render } from "@react-email/render";
+import { formatBytes } from "@/lib/events";
 import { createTranslator } from "next-intl";
 import type { ReactElement } from "react";
 import {
   AccountDeletionEmail,
+  StorageAlertEmail,
   AlbumReadyEmail,
   CohostInvitationEmail,
   DeletionEmail,
@@ -144,6 +146,24 @@ export function composeAccountDeletion(input: { locale: Locale; date: string; ca
   return build(
     t("accountDeletion.subject"),
     <AccountDeletionEmail t={t} date={input.date} cancelUrl={input.cancelUrl} />,
+  );
+}
+
+export function composeStorageAlert(input: {
+  locale: Locale;
+  bytes: number;
+  thresholdBytes: number;
+  adminUrl: string;
+}) {
+  const t = emailTranslator(input.locale);
+  return build(
+    t("storageAlert.subject"),
+    <StorageAlertEmail
+      t={t}
+      used={formatBytes(input.bytes, input.locale)}
+      threshold={formatBytes(input.thresholdBytes, input.locale)}
+      adminUrl={input.adminUrl}
+    />,
   );
 }
 

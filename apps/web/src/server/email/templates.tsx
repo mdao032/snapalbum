@@ -286,6 +286,27 @@ export function AccountDeletionEmail({
   );
 }
 
+/** SPEC 9.3: the stored volume went over the alert threshold. For the administrators. */
+export function StorageAlertEmail({
+  t,
+  used,
+  threshold,
+  adminUrl,
+}: {
+  t: Translate;
+  used: string;
+  threshold: string;
+  adminUrl: string;
+}) {
+  return (
+    <Layout t={t} preview={t("storageAlert.preview")} footer="footerOrganiser">
+      <Text style={styles.title}>{t("storageAlert.title")}</Text>
+      <Text style={styles.text}>{t("storageAlert.intro", { used, threshold })}</Text>
+      <Cta href={adminUrl}>{t("storageAlert.cta")}</Cta>
+    </Layout>
+  );
+}
+
 /** Ready for the co-organisers of F-005; nothing sends it until that feature exists. */
 export function CohostInvitationEmail({
   t,

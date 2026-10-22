@@ -35,6 +35,8 @@ const serverSchema = z.object({
     .startsWith("sk_test_", "Only Stripe test keys are allowed")
     .optional(),
   STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_").optional(),
+  /** Stored volume, in gigabytes, above which the administrators are warned (SPEC 9.3). */
+  STORAGE_ALERT_GB: z.coerce.number().positive().optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;

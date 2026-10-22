@@ -945,6 +945,13 @@
       "intro": "You asked to delete your {appName} account. It will be final on {date}: your events, their photos and videos and your information will then be erased. Only proof of payment is kept, with no link to you, as the law requires.",
       "cancel": "One click is enough to cancel until then. If you did not make this request, cancel it right away.",
       "cta": "Cancel the account deletion"
+    },
+    "storageAlert": {
+      "subject": "Storage is over the threshold",
+      "preview": "The stored volume has passed the alert threshold.",
+      "title": "Storage is over the alert threshold",
+      "intro": "The stored volume is {used}, for a threshold of {threshold}. You will not get another alert for a week.",
+      "cta": "Open the admin area"
     }
   },
   "usages": {
@@ -1424,5 +1431,138 @@
     "more": "Learn more",
     "refuse": "Refuse",
     "accept": "Accept"
+  },
+  "admin": {
+    "title": "Admin area",
+    "backToApp": "Back to my events",
+    "nav": {
+      "label": "Admin area navigation",
+      "overview": "Overview",
+      "events": "Events",
+      "organisers": "Organisers",
+      "payments": "Payments",
+      "reports": "Reports"
+    },
+    "search": {
+      "label": "Search",
+      "placeholder": "Title, code or e-mail address",
+      "submit": "Search",
+      "reset": "Clear"
+    },
+    "pagination": {
+      "label": "Pages",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {page} of {pages}"
+    },
+    "overview": {
+      "title": "Platform overview",
+      "events": "Events created",
+      "events30": "{count} in the last 30 days",
+      "active": "Active events",
+      "suspended": "Suspended events",
+      "pendingDeletion": "Events being deleted",
+      "paid": "Paid events",
+      "conversion": "Free to paid conversion",
+      "conversionHint": "Share of events on a paid plan.",
+      "organisers": "Organisers",
+      "media": "Photos and videos sent",
+      "media30": "{count} in the last 30 days",
+      "storage": "Space used",
+      "cost": "Estimated storage cost",
+      "costHint": "Monthly estimate, at {price} per gigabyte: check it against Cloudflare’s price list.",
+      "revenue": "Collected",
+      "revenueHint": "{paid} payments, {refunded} refunded.",
+      "reports": "Open reports",
+      "alertOn": "E-mail alert above {threshold}.",
+      "alertOff": "No storage alert: set STORAGE_ALERT_GB to get one."
+    },
+    "events": {
+      "title": "Events",
+      "count": "{count, plural, =0 {No events} one {# event} other {# events}}",
+      "empty": "No event matches.",
+      "columns": {
+        "title": "Event",
+        "owner": "Organiser",
+        "status": "Status",
+        "plan": "Plan",
+        "date": "Date",
+        "media": "Media",
+        "size": "Size",
+        "reports": "Reports"
+      }
+    },
+    "organisers": {
+      "title": "Organisers",
+      "count": "{count, plural, =0 {No organisers} one {# organiser} other {# organisers}}",
+      "empty": "No organiser matches.",
+      "columns": {
+        "email": "E-mail address",
+        "name": "Name",
+        "events": "Events",
+        "paid": "Paid",
+        "created": "Signed up",
+        "status": "Status"
+      },
+      "deleting": "Deletion requested",
+      "admin": "Administrator"
+    },
+    "payments": {
+      "title": "Payments",
+      "count": "{count, plural, =0 {No payments} one {# payment} other {# payments}}",
+      "empty": "No payments yet.",
+      "columns": {
+        "date": "Date",
+        "owner": "Buyer",
+        "event": "Event",
+        "product": "Product",
+        "amount": "Amount",
+        "status": "Status"
+      },
+      "refund": "Refund in Stripe",
+      "refundHint": "Refunds are made in Stripe: they come back here through the webhook."
+    },
+    "reports": {
+      "title": "Open reports",
+      "empty": "No report to handle.",
+      "count": "{count, plural, one {# report} other {# reports}}",
+      "event": "Event",
+      "since": "First reported on {date}",
+      "noPicture": "No preview",
+      "hide": "Hide",
+      "delete": "Delete for good",
+      "dismiss": "Dismiss",
+      "reasons": {
+        "inappropriate": "Inappropriate content",
+        "private": "Privacy",
+        "other": "Other"
+      },
+      "done": "Done.",
+      "failed": "The action could not be completed.",
+      "deleteWarning": "The file is erased from storage, with no way back.",
+      "deleteConfirm": "Yes, delete"
+    },
+    "event": {
+      "back": "Back to events",
+      "owner": "Organiser",
+      "code": "Public code",
+      "created": "Created on {date}",
+      "expires": "Kept until {date}",
+      "noExpiry": "No end date",
+      "media": "{count} media",
+      "size": "Space used",
+      "suspend": "Suspend the event",
+      "unsuspend": "Lift the suspension",
+      "suspendHint": "Guests no longer see the event and cannot upload. Nothing is deleted.",
+      "extend": "Extend retention",
+      "extendOption": "{months, plural, one {# month} other {# months}}",
+      "extendSubmit": "Extend",
+      "extendHint": "Without payment, from the current end. Not possible for a Pro plan or an event being deleted.",
+      "payments": "Payments for this event",
+      "noPayments": "No payments.",
+      "reports": "Open reports",
+      "done": "Done.",
+      "failed": "Not possible in the event’s current state."
+    }
   }
 }

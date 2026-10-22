@@ -21,6 +21,11 @@ export interface ModerationDeps {
   admin: Client;
   storage: Storage;
   now?: () => Date;
+  /**
+   * The caller is an administrator, already checked by the server: they act on any existing event
+   * (not only an active one they own), and the audit lines say so (`admin.media.delete`...).
+   */
+  asAdmin?: boolean;
 }
 
 type Failure = { ok: false; status: number; code: ApiErrorCode };
@@ -43,6 +48,22 @@ async function ownsEvent(admin: Client, ownerId: string, eventId: string): Promi
     .maybeSingle();
   if (error) throw error;
   return data !== null;
+}
+
+/** An administrator may act on any event that still exists. */
+async function eventExists(admin: Client, eventId: string): Promise<boolean> {
+  const { data, error } = await admin.from("events").select("id").eq("id", eventId).maybeSingle();
+  if (error) throw error;
+  return data !== null;
+}
+
+/** Whether the caller may moderate this event: its active owner, or an administrator. */
+async function mayModerate(
+  deps: ModerationDeps,
+  callerId: string,
+  eventId: string,
+): Promise<boolean> {
+  return deps.asAdmin ? eventExists(deps.admin, eventId) : ownsEvent(deps.admin, callerId, eventId);
 }
 
 async function audit(
@@ -131,7 +152,7 @@ export async function listModeration(
   options: { filter: ModerationFilter; cursor?: string; limit?: number },
 ): Promise<ModerationResult<ModerationPage>> {
   const { admin, storage } = deps;
-  if (!(await ownsEvent(admin, ownerId, eventId))) return fail(404, "not_found");
+  if (!(await mayModerate(deps, ownerId, eventId))) return fail(404, "not_found");
   const limit = Math.min(options.limit ?? MODERATION_PAGE_SIZE, MODERATION_PAGE_SIZE);
   const cursor = options.cursor ? decodeCursor(options.cursor) : null;
   if (options.cursor && !cursor) return fail(400, "validation_failed");
@@ -257,7 +278,7 @@ export async function moderateMedia(
   const { admin, storage } = deps;
   const ids = [...new Set(mediaIds)];
   if (ids.length === 0 || ids.length > MAX_MODERATION_BATCH) return fail(400, "validation_failed");
-  if (!(await ownsEvent(admin, ownerId, eventId))) return fail(404, "not_found");
+  if (!(await mayModerate(deps, ownerId, eventId))) return fail(404, "not_found");
 
   let changedIds: string[] = [];
 
@@ -342,7 +363,7 @@ export async function moderateMedia(
     if (error) throw error;
   }
   if (changedIds.length > 0 && action !== "approve" && action !== "restore") {
-    await audit(admin, ownerId, `media.${action}`, eventId, {
+    await audit(admin, ownerId, `${deps.asAdmin ? "admin." : ""}media.${action}`, eventId, {
       count: changedIds.length,
       mediaIds: changedIds.slice(0, 50),
     });
@@ -359,7 +380,7 @@ export async function setGuestBlocked(
   blocked: boolean,
 ): Promise<ModerationResult<{ blocked: boolean }>> {
   const { admin } = deps;
-  if (!(await ownsEvent(admin, ownerId, eventId))) return fail(404, "not_found");
+  if (!(await mayModerate(deps, ownerId, eventId))) return fail(404, "not_found");
   const { data, error } = await admin
     .from("guests")
     .update({ blocked_at: blocked ? (deps.now?.() ?? new Date()).toISOString() : null })
@@ -368,7 +389,13 @@ export async function setGuestBlocked(
     .select("id");
   if (error) throw error;
   if ((data?.length ?? 0) === 0) return fail(404, "not_found");
-  await audit(admin, ownerId, blocked ? "guest.block" : "guest.unblock", eventId, { guestId });
+  await audit(
+    admin,
+    ownerId,
+    `${deps.asAdmin ? "admin." : ""}${blocked ? "guest.block" : "guest.unblock"}`,
+    eventId,
+    { guestId },
+  );
   return { ok: true, body: { blocked } };
 }
 
@@ -382,7 +409,7 @@ export async function dismissReports(
   const { admin } = deps;
   const ids = [...new Set(mediaIds)];
   if (ids.length === 0 || ids.length > MAX_MODERATION_BATCH) return fail(400, "validation_failed");
-  if (!(await ownsEvent(admin, ownerId, eventId))) return fail(404, "not_found");
+  if (!(await mayModerate(deps, ownerId, eventId))) return fail(404, "not_found");
   const { data: own, error: ownError } = await admin
     .from("media")
     .select("id")
@@ -454,7 +481,7 @@ export async function moderationFile(
   mediaId: string,
 ): Promise<ModerationResult<{ url: string | null; kind: "photo" | "video" }>> {
   const { admin, storage } = deps;
-  if (!(await ownsEvent(admin, ownerId, eventId))) return fail(404, "not_found");
+  if (!(await mayModerate(deps, ownerId, eventId))) return fail(404, "not_found");
   const { data, error } = await admin
     .from("media")
     .select("kind, key_display, key_original")

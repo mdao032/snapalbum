@@ -66,7 +66,7 @@ export function pageAlternates(siteUrl: string, locale: Locale, page: PublicPage
 const PRIVATE_UNPREFIXED = ["/api/", "/auth/", "/s/"] as const;
 
 /** Private pages that exist in every language: sign-in, organiser area, albums. */
-const PRIVATE_LOCALIZED = ["/login", "/events", "/account", "/e/", "/g/"] as const;
+const PRIVATE_LOCALIZED = ["/login", "/events", "/account", "/admin", "/e/", "/g/"] as const;
 
 /** Paths that must never be crawled or shown in search results: accounts, albums, APIs. */
 export function disallowedPaths(): string[] {

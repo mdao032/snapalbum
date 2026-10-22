@@ -8,6 +8,7 @@ import {
 } from "@snapalbum/shared";
 import type { Database } from "@snapalbum/shared/db-types";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
+import { notFound } from "next/navigation";
 import { redirect } from "@/i18n/navigation";
 import { createSupabaseServerClient } from "./supabase/server";
 import { checkRateLimit, LOGIN_RATE_LIMIT } from "./rate-limit";
@@ -134,4 +135,27 @@ export async function updateProfile(
   // RLS turns a refused update into zero rows rather than an error.
   if (error || !data || data.length === 0) return { ok: false, error: "failed" };
   return { ok: true, locale: parsed.data.locale };
+}
+
+/**
+ * The signed-in administrator, or null (F-090): the profile's role decides, read through the user's
+ * own session (the database lets nobody write `role`), and an account being deleted loses it.
+ */
+export async function getAdmin(supabase: Client): Promise<User | null> {
+  const user = await getOrganiser(supabase);
+  if (!user) return null;
+  const profile = await getProfile(supabase, user.id);
+  return profile?.role === "admin" && !profile.deleted_at ? user : null;
+}
+
+/**
+ * For the pages of the `(admin)` group: the administrator, or a plain "not found" for anyone else,
+ * so that the area is not even known to exist. Visitors without a session go to the login page
+ * (the proxy does it first). Server actions call `getAdmin` again: a page is not a guard.
+ */
+export async function requireAdmin(locale: Locale): Promise<{ supabase: Client; user: User }> {
+  const { supabase, user } = await requireOrganiser(locale);
+  const profile = await getProfile(supabase, user.id);
+  if (profile?.role !== "admin" || profile.deleted_at) notFound();
+  return { supabase, user };
 }

@@ -75,6 +75,10 @@ export function fakeAdmin(
         filters.push((row) => valueOf(row, column) !== value);
         return chain;
       },
+      gte(column: string, value: string) {
+        filters.push((row) => String(row[column]) >= value);
+        return chain;
+      },
       in(column: string, values: unknown[]) {
         filters.push((row) => values.includes(valueOf(row, column)));
         return chain;

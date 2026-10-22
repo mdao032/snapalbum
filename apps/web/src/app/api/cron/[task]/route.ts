@@ -1,3 +1,6 @@
+import { storageThresholdBytes } from "@snapalbum/shared";
+import { getServerEnv } from "@/config/env.server";
+import { checkStorageAlert } from "@/server/admin";
 import { apiError, apiJson, guarded } from "@/server/api-response";
 import { CRON_TASKS, isCronRequest, type CronTask } from "@/server/cron";
 import { getMailer } from "@/server/email/mailer";
@@ -35,8 +38,17 @@ export function GET(request: Request, context: { params: Promise<{ task: string 
         return apiJson({ task, ...(await cleanupUploads({ admin, storage: getStorage() })) });
       case "reminders":
         return apiJson({ task, ...(await sendExpiryReminders({ admin, mailer: getMailer() })) });
-      case "daily-recap":
-        return apiJson({ task, ...(await runDailyRecap({ admin, mailer: getMailer() })) });
+      case "daily-recap": {
+        const mailer = getMailer();
+        const recap = await runDailyRecap({ admin, mailer });
+        // SPEC 9.3: the administrators are warned when the stored volume passes the threshold.
+        const storageAlert = await checkStorageAlert({
+          admin,
+          mailer,
+          thresholdBytes: storageThresholdBytes(getServerEnv().STORAGE_ALERT_GB),
+        });
+        return apiJson({ task, ...recap, storageAlert });
+      }
     }
   });
 }
