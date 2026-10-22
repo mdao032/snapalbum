@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { LegalLinks } from "@/components/brand/legal-links";
 import { MadeWith } from "@/components/brand/made-with";
 import { EventCover } from "@/components/events/event-cover";
 import { Gallery } from "@/components/gallery/gallery";
@@ -45,6 +46,7 @@ export default async function SharedAlbumPage({ params }: PageProps<"/[locale]/g
         </header>
         <Gallery access={{ type: "share", token }} title={title} />
         <MadeWith mode={watermark} className="mt-auto" />
+        <LegalLinks />
       </div>
     </>
   );

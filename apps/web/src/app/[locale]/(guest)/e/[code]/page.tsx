@@ -3,6 +3,7 @@ import { hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { getPlan, type PlanId } from "@snapalbum/shared/plans";
+import { LegalLinks } from "@/components/brand/legal-links";
 import { MadeWith } from "@/components/brand/made-with";
 import { EventCover } from "@/components/events/event-cover";
 import { GuestExperience } from "@/components/guest/guest-experience";
@@ -59,6 +60,7 @@ export default async function GuestEventPage({ params }: PageProps<"/[locale]/e/
           maxVideoSeconds={plan.maxVideoSeconds}
         />
         <MadeWith mode={plan.watermark} className="mt-auto" />
+        <LegalLinks />
       </div>
     </>
   );

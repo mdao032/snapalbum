@@ -1,4 +1,6 @@
 import { LOCALES, DEFAULT_LOCALE, type Locale } from "@snapalbum/shared/messages";
+import { LEGAL_STATUS } from "@/content/legal-entity";
+import { LEGAL_PAGES, type LegalPage } from "./legal";
 import { USAGES, usageSlug } from "./usages";
 
 /**
@@ -9,13 +11,18 @@ export type PublicPage =
   | { kind: "home" }
   | { kind: "pricing" }
   | { kind: "demo" }
-  | { kind: "usage"; usage: (typeof USAGES)[number] };
+  | { kind: "usage"; usage: (typeof USAGES)[number] }
+  | { kind: "legal"; page: LegalPage };
 
 export const PUBLIC_PAGES: readonly PublicPage[] = [
   { kind: "home" },
   { kind: "pricing" },
   { kind: "demo" },
   ...USAGES.map((usage) => ({ kind: "usage", usage }) as const),
+  // Draft legal pages are not offered to search engines until a lawyer has validated them.
+  ...(LEGAL_STATUS.reviewedByLawyer
+    ? LEGAL_PAGES.map((page) => ({ kind: "legal", page }) as const)
+    : []),
 ];
 
 /** The path of a page in a language, without the language prefix (`/usages/mariage`). */
@@ -29,6 +36,8 @@ export function pagePath(page: PublicPage, locale: Locale): string {
       return "/demo";
     case "usage":
       return `/usages/${usageSlug(locale, page.usage)}`;
+    case "legal":
+      return `/legal/${page.page}`;
   }
 }
 

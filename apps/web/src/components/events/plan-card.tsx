@@ -69,6 +69,15 @@ export async function PlanCard({
                   })}
                 />
                 <p className="text-sm text-muted-foreground">{t("upgradeHint")}</p>
+                <p className="text-sm text-muted-foreground">
+                  {t.rich("salesNote", {
+                    sales: (chunks) => (
+                      <Link href="/legal/sales" className="underline hover:text-foreground">
+                        {chunks}
+                      </Link>
+                    ),
+                  })}
+                </p>
               </div>
             ) : null}
             {extend ? (

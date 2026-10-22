@@ -182,7 +182,13 @@
     "navHow": "Comment ça marche",
     "navDemo": "Démo",
     "footerProduct": "Le service",
-    "footerUses": "Pour chaque occasion"
+    "footerUses": "Pour chaque occasion",
+    "footerLegal": "Informations légales",
+    "legalNotice": "Mentions légales",
+    "legalTerms": "Conditions d’utilisation",
+    "legalSales": "Conditions de vente",
+    "legalPrivacy": "Confidentialité",
+    "legalCookies": "Cookies"
   },
   "language": {
     "label": "Langue",
@@ -206,7 +212,8 @@
       "google": "Continuer avec Google",
       "googleOpening": "Ouverture de Google…",
       "newHere": "Première visite ? Votre compte est créé automatiquement à la première connexion.",
-      "guestHint": "Vous êtes invité à un événement ? Scannez simplement le QR code, aucun compte n’est nécessaire."
+      "guestHint": "Vous êtes invité à un événement ? Scannez simplement le QR code, aucun compte n’est nécessaire.",
+      "legal": "En continuant, vous acceptez les <terms>conditions d’utilisation</terms> et la <privacy>politique de confidentialité</privacy>."
     },
     "checkEmail": {
       "title": "Vérifiez vos e-mails",
@@ -361,7 +368,7 @@
       "nameHint": "Il est montré à l’organisateur à côté de vos photos.",
       "codeLabel": "Code d’accès",
       "codeHint": "L’organisateur vous l’a communiqué.",
-      "termsLabel": "J’accepte que mes photos et vidéos soient conservées pendant l’événement et visibles de l’organisateur.",
+      "termsLabel": "J’accepte que mes photos et vidéos soient conservées pendant l’événement et visibles de l’organisateur, et j’accepte les conditions d’utilisation (en bas de page).",
       "termsRequired": "Cochez la case pour continuer.",
       "submit": "Participer",
       "submitting": "Un instant…",
@@ -594,7 +601,8 @@
       "upgrade": "Passer à l’offre Événement ({price})",
       "upgradeHint": "Paiement sécurisé par Stripe. Les quotas sont relevés tout de suite, avant, pendant ou après la fête.",
       "extend": "Prolonger de {months} mois ({price})",
-      "redirecting": "Ouverture du paiement…"
+      "redirecting": "Ouverture du paiement…",
+      "salesNote": "Le paiement est soumis aux <sales>conditions de vente</sales>."
     },
     "payment": {
       "confirming": "Nous confirmons votre paiement…",
@@ -1044,5 +1052,334 @@
     "reset": "Recommencer la démo",
     "cta": "Créer mon album",
     "ctaHint": "Gratuit, prêt en moins d’une minute."
+  },
+  "legal": {
+    "common": {
+      "draftTitle": "Brouillon",
+      "draftBody": "Ce texte n’a pas encore été relu par un juriste. Il décrit le fonctionnement actuel du service et peut changer avant son ouverture au public.",
+      "placeholder": "À compléter : {label}",
+      "lastUpdated": "Dernière mise à jour : {date}",
+      "contents": "Sommaire",
+      "otherPages": "Autres informations",
+      "fields": {
+        "company": "raison sociale",
+        "legalForm": "forme juridique",
+        "siret": "numéro SIRET",
+        "address": "adresse du siège",
+        "director": "directeur de la publication",
+        "contact": "adresse e-mail de contact",
+        "mediator": "médiateur de la consommation",
+        "court": "juridiction compétente",
+        "vatNumber": "numéro de TVA",
+        "hostAddress": "adresse de l’hébergeur"
+      }
+    },
+    "pages": {
+      "notice": {
+        "metaTitle": "Mentions légales",
+        "metaDescription": "Éditeur, hébergeurs et contact du service {appName}.",
+        "title": "Mentions légales",
+        "sections": {
+          "publisher": {
+            "title": "Éditeur du service",
+            "paragraphs": [
+              "Le service {appName} est édité par {company}, {legalForm}, immatriculée sous le numéro SIRET {siret}, dont le siège est situé {address}.",
+              "Directeur de la publication : {director}.",
+              "Contact : {contact}."
+            ]
+          },
+          "hosting": {
+            "title": "Hébergement",
+            "paragraphs": [
+              "Le site et l’application sont hébergés par Vercel Inc. ({hostAddress}).",
+              "Les photos et vidéos sont stockées chez Cloudflare (service R2). La base de données et l’authentification sont fournies par Supabase. Le détail de ces prestataires, de leur rôle et de leur localisation figure dans la politique de confidentialité."
+            ]
+          },
+          "content": {
+            "title": "Contenus des invités",
+            "paragraphs": [
+              "Les photos et vidéos d’un événement sont envoyées par ses invités. L’organisateur de l’événement est responsable de son album et des personnes qu’il invite à y participer ; chaque invité est responsable de ce qu’il envoie.",
+              "Un contenu manifestement illicite, ou qui porte atteinte à la vie privée d’une personne, peut être signalé depuis la visionneuse de l’album (bouton « Signaler ») ou par e-mail à l’adresse de contact ci-dessus. Il sera examiné et retiré si nécessaire."
+            ]
+          },
+          "ip": {
+            "title": "Propriété intellectuelle",
+            "paragraphs": [
+              "Le nom {appName}, le logo, les textes et les éléments graphiques du site sont protégés. Toute reproduction sans autorisation est interdite.",
+              "Les photos et vidéos envoyées par les invités restent leur propriété ; les droits d’usage accordés au service sont décrits dans les conditions d’utilisation."
+            ]
+          }
+        }
+      },
+      "terms": {
+        "metaTitle": "Conditions d’utilisation",
+        "metaDescription": "Les règles d’utilisation de {appName} par les organisateurs et par les invités.",
+        "title": "Conditions d’utilisation",
+        "sections": {
+          "purpose": {
+            "title": "À quoi servent ces conditions",
+            "paragraphs": [
+              "{appName} permet à l’organisateur d’un événement de réunir, dans un album partagé, les photos et vidéos envoyées par ses invités depuis leur téléphone, avec un QR code, sans appli ni compte pour les invités.",
+              "Ces conditions s’appliquent à toute personne qui utilise le service : l’organisateur, qui crée l’événement avec un compte, et l’invité, qui participe sans compte. En utilisant le service, vous les acceptez ; l’invité les accepte en cochant la case de participation."
+            ]
+          },
+          "organiser": {
+            "title": "L’organisateur",
+            "paragraphs": [
+              "L’organisateur crée son compte avec son adresse e-mail (lien de connexion ou compte Google). Il est responsable de son compte et de son événement.",
+              "Il décide de qui peut participer, de l’ouverture de la galerie aux invités, de la validation préalable des photos et du blocage d’un invité. Il s’engage à prévenir les personnes qu’il invite que leurs photos et vidéos seront visibles de lui et, s’il ouvre la galerie, des autres invités."
+            ]
+          },
+          "guest": {
+            "title": "L’invité",
+            "paragraphs": [
+              "L’invité peut envoyer des photos et vidéos à l’événement auquel il a accédé par le QR code ou le lien. Il peut indiquer un prénom, facultatif, qui est montré à l’organisateur à côté de ses photos.",
+              "L’invité peut supprimer à tout moment ses propres photos et vidéos depuis « Mes photos »."
+            ]
+          },
+          "rules": {
+            "title": "Ce que vous envoyez",
+            "paragraphs": [
+              "Vous ne devez envoyer que des contenus que vous avez le droit de partager. Sont interdits :"
+            ],
+            "items": [
+              "les contenus illicites, violents, haineux ou à caractère sexuel non consenti ;",
+              "les contenus qui portent atteinte à la vie privée, à l’image ou aux droits d’autrui ;",
+              "les fichiers qui ne sont pas des photos ou des vidéos, et tout ce qui vise à perturber le service."
+            ]
+          },
+          "licence": {
+            "title": "Vos droits sur vos contenus",
+            "paragraphs": [
+              "Vous restez propriétaire de vos photos et vidéos. Vous accordez à l’organisateur et à {appName} le droit de les stocker, d’en préparer des versions réduites, de les afficher dans l’album, le diaporama et les pages de partage de l’événement, et de les rendre téléchargeables, pour la seule durée de conservation de l’événement et pour faire fonctionner le service.",
+              "Pour le même fonctionnement, les versions d’affichage et les miniatures sont créées sans les coordonnées GPS. Les fichiers d’origine, conservés avec l’offre payante, restent tels que vous les avez envoyés et peuvent contenir leurs métadonnées, dont la position."
+            ]
+          },
+          "moderation": {
+            "title": "Modération et signalement",
+            "paragraphs": [
+              "L’organisateur peut masquer, refuser ou supprimer un contenu et bloquer un invité. Tout invité peut signaler un contenu. {appName} peut retirer un contenu, ou suspendre un événement ou un compte, en cas d’infraction à ces conditions ou à la loi."
+            ]
+          },
+          "availability": {
+            "title": "Disponibilité et conservation",
+            "paragraphs": [
+              "Le service est fourni tel quel, sans garantie de disponibilité permanente. Les albums sont conservés {freeDays} jours après l’événement avec l’offre gratuite et {eventMonths} mois avec l’offre Événement, puis supprimés définitivement, avec des rappels par e-mail à l’organisateur avant la fermeture et sept jours pour récupérer un album expiré en le prolongeant.",
+              "Nous vous conseillons de télécharger l’album avant la fin de la conservation : une suppression est définitive."
+            ]
+          },
+          "liability": {
+            "title": "Responsabilité",
+            "paragraphs": [
+              "{appName} met en œuvre les moyens raisonnables pour protéger et conserver vos contenus, sans pouvoir garantir l’absence de perte. Notre responsabilité ne peut être engagée pour les contenus envoyés par les invités ; elle est limitée dans la mesure permise par la loi.",
+              "[À faire valider par un juriste : limitation de responsabilité, clauses applicables aux consommateurs.]"
+            ]
+          },
+          "changes": {
+            "title": "Évolution des conditions et loi applicable",
+            "paragraphs": [
+              "Ces conditions peuvent évoluer ; la version en vigueur est celle de cette page. Elles sont soumises au droit français. En cas de litige, {court} est compétent, sous réserve des règles protégeant les consommateurs."
+            ]
+          }
+        }
+      },
+      "sales": {
+        "metaTitle": "Conditions de vente",
+        "metaDescription": "Prix, paiement, durée et remboursement des offres payantes de {appName}.",
+        "title": "Conditions de vente",
+        "sections": {
+          "seller": {
+            "title": "Vendeur",
+            "paragraphs": [
+              "Les offres payantes sont vendues par {company}, {legalForm}, SIRET {siret}, {address}. Contact : {contact}. Numéro de TVA : {vatNumber}."
+            ]
+          },
+          "offers": {
+            "title": "Offres et prix",
+            "paragraphs": [
+              "Le service propose une offre gratuite et des options payantes, achetées à l’unité, sans abonnement :"
+            ],
+            "items": [
+              "l’offre Événement : {eventPrice} TTC par événement, avec jusqu’à {eventMedia} photos et vidéos (usage raisonnable), la conservation des photos d’origine pour les envois faits après l’achat et la conservation de l’album {eventMonths} mois ;",
+              "la prolongation : {extensionPrice} TTC pour {extensionMonths} mois de conservation supplémentaires."
+            ]
+          },
+          "pro": {
+            "title": "Offre Pro",
+            "paragraphs": [
+              "Une offre Pro pour les professionnels est prévue ; elle n’est pas encore en vente. Ses conditions seront publiées avec son lancement."
+            ]
+          },
+          "payment": {
+            "title": "Paiement",
+            "paragraphs": [
+              "Le paiement est fait en ligne, par carte, sur la page sécurisée de Stripe : aucune donnée de carte ne passe par {appName}. Les prix sont indiqués en euros, toutes taxes comprises. Une facture est envoyée par Stripe à l’adresse e-mail de l’acheteur.",
+              "L’offre est appliquée dès la confirmation du paiement : les limites de l’événement sont relevées immédiatement. L’offre Événement peut être achetée avant, pendant ou après l’événement. Les originaux ne sont conservés que pour les photos envoyées après l’achat."
+            ]
+          },
+          "withdrawal": {
+            "title": "Droit de rétractation",
+            "paragraphs": [
+              "[À faire valider par un juriste : le service numérique est fourni immédiatement après l’achat ; le consommateur doit donner son accord exprès et reconnaître qu’il perd son droit de rétractation une fois le service exécuté. Prévoir la case correspondante au moment du paiement.]"
+            ]
+          },
+          "refund": {
+            "title": "Remboursement",
+            "paragraphs": [
+              "Par geste commercial, l’offre Événement est remboursée sur demande dans les {refundDays} jours suivant l’achat si moins de {refundMax} photos et vidéos ont été envoyées à l’événement. Écrivez-nous à {contact}. Le remboursement est fait sur le moyen de paiement utilisé ; l’événement revient alors à l’offre gratuite et les contenus déjà envoyés ne sont pas supprimés pour cause de quota."
+            ]
+          },
+          "expiry": {
+            "title": "Fin de conservation",
+            "paragraphs": [
+              "À la fin de la conservation, l’album est fermé aux invités puis supprimé définitivement sept jours plus tard. Pendant ces sept jours, l’achat de l’offre Événement ou d’une prolongation le remet en service. Des rappels sont envoyés à l’organisateur avant la fermeture."
+            ]
+          },
+          "disputes": {
+            "title": "Réclamations et litiges",
+            "paragraphs": [
+              "Pour toute réclamation, écrivez à {contact}. Le consommateur peut recourir gratuitement à un médiateur de la consommation : {mediator}.",
+              "Les présentes conditions sont soumises au droit français. {court} est compétent, sous réserve des règles protégeant les consommateurs."
+            ]
+          }
+        }
+      },
+      "privacy": {
+        "metaTitle": "Politique de confidentialité",
+        "metaDescription": "Quelles données {appName} collecte, pourquoi, combien de temps, et comment exercer vos droits.",
+        "title": "Politique de confidentialité",
+        "sections": {
+          "controller": {
+            "title": "Qui est responsable",
+            "paragraphs": [
+              "Pour les données de compte, de connexion et de paiement, le responsable du traitement est {company} ({address}), contact : {contact}.",
+              "Pour les photos et vidéos d’un événement, l’organisateur décide de leur utilisation ; {appName} les héberge pour lui, pour le fonctionnement du service. [À faire valider par un juriste : qualification des rôles entre {appName}, l’organisateur et les invités.]"
+            ]
+          },
+          "data": {
+            "title": "Les données que nous traitons",
+            "paragraphs": ["Selon votre usage :"],
+            "items": [
+              "organisateur : adresse e-mail, nom affiché facultatif, langue, événements créés et leurs réglages, achats (identifiants de paiement Stripe, montant, titre de l’événement) ;",
+              "connexion : jeton à usage unique envoyé par e-mail, et une empreinte (SHA-256) de l’adresse IP conservée 15 minutes pour limiter les abus ; avec Google, l’identité Google (e-mail, nom) ; vérification anti-robots Cloudflare Turnstile sur la demande de lien ;",
+              "invité : un identifiant anonyme créé à la participation, le prénom facultatif, la date d’acceptation des conditions, ses photos et vidéos ; l’adresse e-mail seulement si l’invité demande à être prévenu quand l’album est prêt, avec un consentement séparé ;",
+              "photos et vidéos : le fichier d’origine avec l’offre payante, une version d’affichage et une miniature sans coordonnées GPS, la date de prise de vue et l’auteur (invité) ;",
+              "signalements : un hachage salé de la session ou de l’adresse de la personne qui signale, jamais son identité ;",
+              "journaux techniques : erreurs (Sentry, sans données personnelles), journal des e-mails automatiques et journal d’audit des actions sensibles, sans nom."
+            ]
+          },
+          "purposes": {
+            "title": "Pourquoi et sur quelle base",
+            "paragraphs": ["Nous utilisons ces données pour :"],
+            "items": [
+              "fournir le service que vous demandez : compte, événements, albums, paiements, e-mails liés à votre événement (exécution du contrat) ;",
+              "protéger le service contre les abus et les robots, et suivre ses erreurs (intérêt légitime) ;",
+              "prévenir un invité quand l’album est prêt (consentement séparé, retirable à tout moment) ;",
+              "mesurer l’audience du site, uniquement si vous l’acceptez dans le bandeau des cookies (consentement) ;",
+              "respecter nos obligations comptables et légales (obligation légale)."
+            ]
+          },
+          "recipients": {
+            "title": "Qui reçoit vos données",
+            "paragraphs": [
+              "Nous faisons appel à des prestataires qui traitent des données pour notre compte :"
+            ],
+            "items": [
+              "Supabase : base de données et authentification ;",
+              "Cloudflare : stockage des photos et vidéos (R2) et vérification anti-robots (Turnstile) ;",
+              "Vercel : hébergement du site ;",
+              "Stripe : paiements ;",
+              "Resend : envoi des e-mails ;",
+              "Upstash : limitation du nombre de requêtes ;",
+              "Sentry : suivi des erreurs ;",
+              "Google : connexion avec Google, si vous la choisissez ;",
+              "PostHog : mesure d’audience, après votre accord."
+            ]
+          },
+          "transfers": {
+            "title": "Localisation et transferts",
+            "paragraphs": [
+              "Nous cherchons à héberger les données dans l’Union européenne. Certains prestataires (Stripe, Google, Vercel, Sentry) peuvent traiter des données hors de l’Union ; dans ce cas, ces transferts sont encadrés par des clauses contractuelles types ou une décision d’adéquation. [À compléter avant l’ouverture : région exacte de chaque prestataire, voir le registre des traitements.]"
+            ]
+          },
+          "retention": {
+            "title": "Combien de temps",
+            "paragraphs": ["Nous conservons les données :"],
+            "items": [
+              "photos, vidéos, invités et réglages d’un événement : selon l’offre ({freeDays} jours après l’événement en gratuit, {eventMonths} mois avec l’offre Événement), puis suppression définitive sous sept jours ;",
+              "adresses e-mail laissées par les invités pour être prévenus : effacées à l’expiration de l’événement ;",
+              "compte organisateur : tant que le compte existe ; sa suppression est effective sept jours après la demande ;",
+              "achats : le temps imposé par les obligations comptables, même après la suppression de l’événement ;",
+              "jeton de connexion : 1 heure ; empreinte d’adresse IP : 15 minutes."
+            ]
+          },
+          "rights": {
+            "title": "Vos droits",
+            "paragraphs": [
+              "Vous pouvez demander l’accès à vos données, leur rectification, leur effacement, leur portabilité, la limitation du traitement ou vous y opposer, et retirer un consentement à tout moment.",
+              "Un organisateur peut exporter les données de son compte et supprimer son compte depuis la page « Mon compte ». Un invité peut supprimer ses photos depuis « Mes photos » et retirer son adresse e-mail depuis la page de l’événement. Pour toute autre demande, écrivez à {contact}.",
+              "Vous pouvez aussi introduire une réclamation auprès de la CNIL (cnil.fr)."
+            ]
+          },
+          "security": {
+            "title": "Sécurité",
+            "paragraphs": [
+              "Les échanges sont chiffrés (HTTPS). L’accès aux données est limité par des règles de sécurité au niveau de la base, les fichiers sont servis par des adresses temporaires signées et ne transitent pas par nos serveurs d’application, et les clés sensibles ne sont utilisées que côté serveur.",
+              "Aucun système n’est infaillible : en cas de violation de données susceptible de vous exposer à un risque, nous vous en informerons ainsi que l’autorité compétente, comme la loi l’exige."
+            ]
+          },
+          "changes": {
+            "title": "Évolution de cette politique",
+            "paragraphs": [
+              "Cette politique peut évoluer ; la date de dernière mise à jour figure en haut de la page."
+            ]
+          }
+        }
+      },
+      "cookies": {
+        "metaTitle": "Politique de cookies",
+        "metaDescription": "Les cookies et stockages locaux utilisés par {appName}, et comment choisir.",
+        "title": "Politique de cookies",
+        "sections": {
+          "what": {
+            "title": "De quoi parle-t-on",
+            "paragraphs": [
+              "Un cookie, ou un stockage local du navigateur, est un petit fichier enregistré sur votre appareil. Certains sont nécessaires au fonctionnement du service ; d’autres servent à mesurer l’audience et ne sont utilisés qu’avec votre accord."
+            ]
+          },
+          "essential": {
+            "title": "Ce qui est nécessaire, sans accord",
+            "paragraphs": [
+              "Ces éléments ne servent pas à vous suivre et ne demandent pas de consentement :"
+            ],
+            "items": [
+              "la session de l’organisateur connecté et celle de l’invité (identifiant anonyme créé à la participation) ;",
+              "la langue choisie ;",
+              "votre choix dans le bandeau des cookies ;",
+              "sur l’appareil de l’invité, la file d’attente des photos à envoyer et un indicateur qui permet de reprendre l’envoi (stockage local et IndexedDB) ;",
+              "la vérification anti-robots Cloudflare Turnstile sur la page de connexion."
+            ]
+          },
+          "analytics": {
+            "title": "Mesure d’audience, avec votre accord",
+            "paragraphs": [
+              "Pour comprendre comment le site est utilisé et l’améliorer, nous pouvons utiliser PostHog (hébergé dans l’Union européenne). Il n’est chargé qu’après votre accord et n’est pas utilisé sur la page des invités d’un événement. Refuser est aussi simple qu’accepter, et le service fonctionne de la même façon."
+            ]
+          },
+          "choice": {
+            "title": "Choisir et changer d’avis",
+            "paragraphs": [
+              "Votre choix est enregistré sur votre appareil. Vous pouvez le modifier à tout moment avec le lien « Gérer les cookies » en bas de chaque page, ou en effaçant les données du site dans votre navigateur."
+            ]
+          },
+          "errors": {
+            "title": "Suivi des erreurs",
+            "paragraphs": [
+              "Les erreurs techniques peuvent être transmises à Sentry pour que nous puissions les corriger. Cela n’utilise pas de cookie et ne contient pas de données personnelles."
+            ]
+          }
+        }
+      }
+    }
   }
 }

@@ -6,6 +6,7 @@ import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 import { LoginForm } from "@/components/auth/login-form";
 import { clientEnv } from "@/config/env";
+import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { getOrganiser } from "@/server/auth";
 import { createSupabaseServerClient } from "@/server/supabase/server";
@@ -44,13 +45,31 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
   const user = await getOrganiser(await createSupabaseServerClient());
   if (user) redirect(target);
 
+  const t = await getTranslations("auth.login");
+
   return (
-    <LoginForm
-      locale={locale}
-      next={next ? target : undefined}
-      initialError={error}
-      googleEnabled={clientEnv.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === true}
-      turnstileSiteKey={clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-    />
+    <div className="flex flex-col gap-4">
+      <LoginForm
+        locale={locale}
+        next={next ? target : undefined}
+        initialError={error}
+        googleEnabled={clientEnv.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === true}
+        turnstileSiteKey={clientEnv.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+      />
+      <p className="px-2 text-center text-sm text-muted-foreground">
+        {t.rich("legal", {
+          terms: (chunks) => (
+            <Link href="/legal/terms" className="underline hover:text-foreground">
+              {chunks}
+            </Link>
+          ),
+          privacy: (chunks) => (
+            <Link href="/legal/privacy" className="underline hover:text-foreground">
+              {chunks}
+            </Link>
+          ),
+        })}
+      </p>
+    </div>
   );
 }

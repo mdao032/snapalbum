@@ -182,7 +182,13 @@
     "navHow": "How it works",
     "navDemo": "Demo",
     "footerProduct": "The service",
-    "footerUses": "For every occasion"
+    "footerUses": "For every occasion",
+    "footerLegal": "Legal information",
+    "legalNotice": "Legal notice",
+    "legalTerms": "Terms of use",
+    "legalSales": "Terms of sale",
+    "legalPrivacy": "Privacy",
+    "legalCookies": "Cookies"
   },
   "language": {
     "label": "Language",
@@ -206,7 +212,8 @@
       "google": "Continue with Google",
       "googleOpening": "Opening Google…",
       "newHere": "First visit? Your account is created automatically the first time you sign in.",
-      "guestHint": "Invited to an event? Just scan the QR code, no account needed."
+      "guestHint": "Invited to an event? Just scan the QR code, no account needed.",
+      "legal": "By continuing, you accept the <terms>terms of use</terms> and the <privacy>privacy policy</privacy>."
     },
     "checkEmail": {
       "title": "Check your email",
@@ -361,7 +368,7 @@
       "nameHint": "It is shown to the organiser next to your photos.",
       "codeLabel": "Access code",
       "codeHint": "The organiser gave it to you.",
-      "termsLabel": "I agree that my photos and videos are kept during the event and visible to the organiser.",
+      "termsLabel": "I agree that my photos and videos are kept during the event and visible to the organiser, and I accept the terms of use (at the bottom of the page).",
       "termsRequired": "Tick the box to continue.",
       "submit": "Join",
       "submitting": "One moment…",
@@ -594,7 +601,8 @@
       "upgrade": "Switch to the Event plan ({price})",
       "upgradeHint": "Secure payment by Stripe. The limits go up at once, before, during or after the party.",
       "extend": "Extend by {months} months ({price})",
-      "redirecting": "Opening the payment page…"
+      "redirecting": "Opening the payment page…",
+      "salesNote": "Payment is subject to the <sales>terms of sale</sales>."
     },
     "payment": {
       "confirming": "We are confirming your payment…",
@@ -1044,5 +1052,330 @@
     "reset": "Start the demo over",
     "cta": "Create my album",
     "ctaHint": "Free, ready in under a minute."
+  },
+  "legal": {
+    "common": {
+      "draftTitle": "Draft",
+      "draftBody": "This text has not yet been reviewed by a lawyer. It describes how the service works today and may change before it opens to the public.",
+      "placeholder": "To be completed: {label}",
+      "lastUpdated": "Last updated: {date}",
+      "contents": "Contents",
+      "otherPages": "More information",
+      "fields": {
+        "company": "company name",
+        "legalForm": "legal form",
+        "siret": "SIRET number",
+        "address": "registered address",
+        "director": "publication director",
+        "contact": "contact e-mail address",
+        "mediator": "consumer mediator",
+        "court": "competent court",
+        "vatNumber": "VAT number",
+        "hostAddress": "host’s address"
+      }
+    },
+    "pages": {
+      "notice": {
+        "metaTitle": "Legal notice",
+        "metaDescription": "Publisher, hosts and contact of the {appName} service.",
+        "title": "Legal notice",
+        "sections": {
+          "publisher": {
+            "title": "Publisher of the service",
+            "paragraphs": [
+              "The {appName} service is published by {company}, {legalForm}, registered under SIRET number {siret}, whose registered office is at {address}.",
+              "Publication director: {director}.",
+              "Contact: {contact}."
+            ]
+          },
+          "hosting": {
+            "title": "Hosting",
+            "paragraphs": [
+              "The website and the application are hosted by Vercel Inc. ({hostAddress}).",
+              "Photos and videos are stored with Cloudflare (R2 service). The database and authentication are provided by Supabase. These providers, their role and their location are detailed in the privacy policy."
+            ]
+          },
+          "content": {
+            "title": "Guests’ content",
+            "paragraphs": [
+              "The photos and videos of an event are sent by its guests. The organiser of the event is responsible for the album and for the people they invite to take part; each guest is responsible for what they send.",
+              "Content that is clearly unlawful, or that infringes someone’s privacy, can be reported from the album viewer (“Report” button) or by e-mail to the contact address above. It will be reviewed and removed if necessary."
+            ]
+          },
+          "ip": {
+            "title": "Intellectual property",
+            "paragraphs": [
+              "The {appName} name, the logo, the texts and the graphics of the site are protected. Any reproduction without permission is forbidden.",
+              "Photos and videos sent by guests remain their property; the rights of use granted to the service are described in the terms of use."
+            ]
+          }
+        }
+      },
+      "terms": {
+        "metaTitle": "Terms of use",
+        "metaDescription": "The rules for using {appName}, for organisers and for guests.",
+        "title": "Terms of use",
+        "sections": {
+          "purpose": {
+            "title": "What these terms are for",
+            "paragraphs": [
+              "{appName} lets the organiser of an event gather, in a shared album, the photos and videos sent by their guests from their phones, with a QR code, with no app and no account for guests.",
+              "These terms apply to anyone who uses the service: the organiser, who creates the event with an account, and the guest, who takes part without an account. By using the service you accept them; a guest accepts them by ticking the box when joining."
+            ]
+          },
+          "organiser": {
+            "title": "The organiser",
+            "paragraphs": [
+              "The organiser creates their account with their e-mail address (sign-in link or Google account). They are responsible for their account and their event.",
+              "They decide who can take part, whether the gallery is opened to guests, whether photos must be approved first and whether a guest is blocked. They agree to tell the people they invite that their photos and videos will be visible to them and, if they open the gallery, to the other guests."
+            ]
+          },
+          "guest": {
+            "title": "The guest",
+            "paragraphs": [
+              "A guest can send photos and videos to the event they reached through the QR code or the link. They may give a first name, which is optional and is shown to the organiser next to their photos.",
+              "A guest can delete their own photos and videos at any time from “My photos”."
+            ]
+          },
+          "rules": {
+            "title": "What you send",
+            "paragraphs": [
+              "You must only send content you have the right to share. The following is forbidden:"
+            ],
+            "items": [
+              "unlawful, violent or hateful content, or sexual content shared without consent;",
+              "content that infringes someone’s privacy, image or rights;",
+              "files that are not photos or videos, and anything meant to disrupt the service."
+            ]
+          },
+          "licence": {
+            "title": "Your rights over your content",
+            "paragraphs": [
+              "You remain the owner of your photos and videos. You grant the organiser and {appName} the right to store them, to prepare reduced versions, to show them in the event’s album, slideshow and sharing pages, and to make them downloadable, only for the retention period of the event and to run the service.",
+              "For the same purpose, display versions and thumbnails are created without GPS coordinates. Original files, kept with the paid plan, stay as you sent them and may contain their metadata, including location."
+            ]
+          },
+          "moderation": {
+            "title": "Moderation and reporting",
+            "paragraphs": [
+              "The organiser can hide, refuse or delete content and block a guest. Any guest can report content. {appName} may remove content, or suspend an event or an account, if these terms or the law are breached."
+            ]
+          },
+          "availability": {
+            "title": "Availability and retention",
+            "paragraphs": [
+              "The service is provided as is, with no guarantee of permanent availability. Albums are kept {freeDays} days after the event on the free plan and {eventMonths} months on the Event plan, then permanently deleted, with e-mail reminders to the organiser before the album closes and seven days to recover an expired album by extending it.",
+              "We advise you to download the album before the end of the retention period: a deletion is final."
+            ]
+          },
+          "liability": {
+            "title": "Liability",
+            "paragraphs": [
+              "{appName} uses reasonable means to protect and keep your content, but cannot guarantee that nothing will be lost. We cannot be held liable for content sent by guests; our liability is limited to the extent the law allows.",
+              "[To be validated by a lawyer: limitation of liability, clauses applying to consumers.]"
+            ]
+          },
+          "changes": {
+            "title": "Changes to the terms and applicable law",
+            "paragraphs": [
+              "These terms may change; the version in force is the one on this page. They are governed by French law. In case of a dispute, {court} has jurisdiction, subject to the rules protecting consumers."
+            ]
+          }
+        }
+      },
+      "sales": {
+        "metaTitle": "Terms of sale",
+        "metaDescription": "Prices, payment, duration and refunds for {appName}’s paid plans.",
+        "title": "Terms of sale",
+        "sections": {
+          "seller": {
+            "title": "Seller",
+            "paragraphs": [
+              "The paid plans are sold by {company}, {legalForm}, SIRET {siret}, {address}. Contact: {contact}. VAT number: {vatNumber}."
+            ]
+          },
+          "offers": {
+            "title": "Plans and prices",
+            "paragraphs": [
+              "The service offers a free plan and paid options, bought one at a time, with no subscription:"
+            ],
+            "items": [
+              "the Event plan: {eventPrice} including VAT per event, with up to {eventMedia} photos and videos (fair use), original photos kept for uploads made after the purchase and the album kept for {eventMonths} months;",
+              "the extension: {extensionPrice} including VAT for {extensionMonths} more months of retention."
+            ]
+          },
+          "pro": {
+            "title": "Pro plan",
+            "paragraphs": [
+              "A Pro plan for professionals is planned; it is not on sale yet. Its terms will be published when it launches."
+            ]
+          },
+          "payment": {
+            "title": "Payment",
+            "paragraphs": [
+              "Payment is made online, by card, on Stripe’s secure page: no card data goes through {appName}. Prices are in euros, all taxes included. Stripe sends an invoice to the buyer’s e-mail address.",
+              "The plan applies as soon as payment is confirmed: the event’s limits are raised immediately. The Event plan can be bought before, during or after the event. Originals are only kept for photos sent after the purchase."
+            ]
+          },
+          "withdrawal": {
+            "title": "Right of withdrawal",
+            "paragraphs": [
+              "[To be validated by a lawyer: the digital service is provided immediately after purchase; the consumer must expressly agree and acknowledge losing the right of withdrawal once the service is performed. Provide the matching checkbox at payment.]"
+            ]
+          },
+          "refund": {
+            "title": "Refunds",
+            "paragraphs": [
+              "As a goodwill gesture, the Event plan is refunded on request within {refundDays} days of purchase if fewer than {refundMax} photos and videos have been sent to the event. Write to us at {contact}. The refund goes back to the payment method used; the event then returns to the free plan and content already sent is not deleted because of the quota."
+            ]
+          },
+          "expiry": {
+            "title": "End of retention",
+            "paragraphs": [
+              "At the end of the retention period, the album is closed to guests and permanently deleted seven days later. During those seven days, buying the Event plan or an extension brings it back. Reminders are sent to the organiser before it closes."
+            ]
+          },
+          "disputes": {
+            "title": "Complaints and disputes",
+            "paragraphs": [
+              "For any complaint, write to {contact}. Consumers may use a consumer mediator free of charge: {mediator}.",
+              "These terms are governed by French law. {court} has jurisdiction, subject to the rules protecting consumers."
+            ]
+          }
+        }
+      },
+      "privacy": {
+        "metaTitle": "Privacy policy",
+        "metaDescription": "What data {appName} collects, why, for how long, and how to exercise your rights.",
+        "title": "Privacy policy",
+        "sections": {
+          "controller": {
+            "title": "Who is responsible",
+            "paragraphs": [
+              "For account, sign-in and payment data, the data controller is {company} ({address}), contact: {contact}.",
+              "For the photos and videos of an event, the organiser decides how they are used; {appName} hosts them on the organiser’s behalf to run the service. [To be validated by a lawyer: roles of {appName}, the organiser and the guests.]"
+            ]
+          },
+          "data": {
+            "title": "The data we process",
+            "paragraphs": ["Depending on how you use the service:"],
+            "items": [
+              "organiser: e-mail address, optional display name, language, events created and their settings, purchases (Stripe payment identifiers, amount, event title);",
+              "sign-in: a single-use token sent by e-mail, and a fingerprint (SHA-256) of the IP address kept for 15 minutes to limit abuse; with Google, the Google identity (e-mail, name); Cloudflare Turnstile anti-bot check on the link request;",
+              "guest: an anonymous identifier created when joining, the optional first name, the date the terms were accepted, their photos and videos; an e-mail address only if the guest asks to be told when the album is ready, with a separate consent;",
+              "photos and videos: the original file with the paid plan, a display version and a thumbnail without GPS coordinates, the date taken and the author (guest);",
+              "reports: a salted hash of the session or address of the person reporting, never their identity;",
+              "technical logs: errors (Sentry, with no personal data), the log of automatic e-mails and the audit log of sensitive actions, with no names."
+            ]
+          },
+          "purposes": {
+            "title": "Why, and on what basis",
+            "paragraphs": ["We use this data to:"],
+            "items": [
+              "provide the service you ask for: account, events, albums, payments, e-mails related to your event (performance of the contract);",
+              "protect the service against abuse and bots, and follow its errors (legitimate interest);",
+              "tell a guest when the album is ready (separate consent, which can be withdrawn at any time);",
+              "measure the site’s audience, only if you accept it in the cookie banner (consent);",
+              "meet our accounting and legal obligations (legal obligation)."
+            ]
+          },
+          "recipients": {
+            "title": "Who receives your data",
+            "paragraphs": ["We use providers that process data on our behalf:"],
+            "items": [
+              "Supabase: database and authentication;",
+              "Cloudflare: storage of photos and videos (R2) and anti-bot check (Turnstile);",
+              "Vercel: hosting of the site;",
+              "Stripe: payments;",
+              "Resend: sending e-mails;",
+              "Upstash: limiting the number of requests;",
+              "Sentry: error tracking;",
+              "Google: sign-in with Google, if you choose it;",
+              "PostHog: audience measurement, after your consent."
+            ]
+          },
+          "transfers": {
+            "title": "Location and transfers",
+            "paragraphs": [
+              "We aim to host data in the European Union. Some providers (Stripe, Google, Vercel, Sentry) may process data outside the Union; such transfers are covered by standard contractual clauses or an adequacy decision. [To be completed before opening: exact region of each provider, see the record of processing activities.]"
+            ]
+          },
+          "retention": {
+            "title": "How long",
+            "paragraphs": ["We keep data:"],
+            "items": [
+              "photos, videos, guests and settings of an event: according to the plan ({freeDays} days after the event on the free plan, {eventMonths} months on the Event plan), then permanent deletion within seven days;",
+              "e-mail addresses left by guests to be notified: erased when the event expires;",
+              "organiser account: as long as the account exists; its deletion takes effect seven days after the request;",
+              "purchases: for as long as accounting obligations require, even after the event is deleted;",
+              "sign-in token: 1 hour; IP address fingerprint: 15 minutes."
+            ]
+          },
+          "rights": {
+            "title": "Your rights",
+            "paragraphs": [
+              "You can ask for access to your data, its correction, its erasure, its portability, the restriction of processing, or object to it, and withdraw a consent at any time.",
+              "An organiser can export their account data and delete their account from the “My account” page. A guest can delete their photos from “My photos” and remove their e-mail address from the event page. For any other request, write to {contact}.",
+              "You can also lodge a complaint with the CNIL (cnil.fr)."
+            ]
+          },
+          "security": {
+            "title": "Security",
+            "paragraphs": [
+              "Traffic is encrypted (HTTPS). Access to data is limited by security rules at database level, files are served through temporary signed addresses and do not pass through our application servers, and sensitive keys are only used on the server side.",
+              "No system is infallible: if a data breach is likely to put you at risk, we will tell you and the competent authority, as the law requires."
+            ]
+          },
+          "changes": {
+            "title": "Changes to this policy",
+            "paragraphs": [
+              "This policy may change; the date of the last update is at the top of the page."
+            ]
+          }
+        }
+      },
+      "cookies": {
+        "metaTitle": "Cookie policy",
+        "metaDescription": "The cookies and local storage used by {appName}, and how to choose.",
+        "title": "Cookie policy",
+        "sections": {
+          "what": {
+            "title": "What we are talking about",
+            "paragraphs": [
+              "A cookie, or local browser storage, is a small file saved on your device. Some are needed for the service to work; others measure the audience and are only used with your consent."
+            ]
+          },
+          "essential": {
+            "title": "What is necessary, with no consent",
+            "paragraphs": ["These items are not used to track you and do not require consent:"],
+            "items": [
+              "the session of the signed-in organiser and that of the guest (anonymous identifier created when joining);",
+              "the chosen language;",
+              "your choice in the cookie banner;",
+              "on the guest’s device, the queue of photos to upload and a flag that lets the upload resume (local storage and IndexedDB);",
+              "the Cloudflare Turnstile anti-bot check on the sign-in page."
+            ]
+          },
+          "analytics": {
+            "title": "Audience measurement, with your consent",
+            "paragraphs": [
+              "To understand how the site is used and improve it, we may use PostHog (hosted in the European Union). It is only loaded after you accept and is not used on an event’s guest page. Refusing is as easy as accepting, and the service works the same way."
+            ]
+          },
+          "choice": {
+            "title": "Choosing and changing your mind",
+            "paragraphs": [
+              "Your choice is saved on your device. You can change it at any time with the “Manage cookies” link at the bottom of every page, or by clearing the site’s data in your browser."
+            ]
+          },
+          "errors": {
+            "title": "Error tracking",
+            "paragraphs": [
+              "Technical errors may be sent to Sentry so that we can fix them. This does not use a cookie and contains no personal data."
+            ]
+          }
+        }
+      }
+    }
   }
 }
