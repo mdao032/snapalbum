@@ -56,7 +56,21 @@ function world(extra: Record<string, Row[]> = {}, insertErrors = {}) {
     ...extra,
   };
   const deps: ModerationDeps = {
-    admin: fakeAdmin(tables, {}, insertErrors),
+    admin: fakeAdmin(
+      tables,
+      {
+        moderation_guest_counts: () => {
+          const counts = new Map<string, number>();
+          for (const row of tables.media ?? []) {
+            if (row.event_id !== EVENT || !["ready", "hidden"].includes(String(row.status)))
+              continue;
+            counts.set(String(row.guest_id), (counts.get(String(row.guest_id)) ?? 0) + 1);
+          }
+          return [...counts].map(([guest_id, media_count]) => ({ guest_id, media_count }));
+        },
+      },
+      insertErrors,
+    ),
     storage,
     now: () => NOW,
   };
