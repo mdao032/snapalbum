@@ -40,16 +40,36 @@ export type Database = {
                   Relationships: [
                     
                   ]
-                },"events": {
+                },"email_log": {
                   Row: {
-                    "accent_color": string | null,"bytes_used": number,"cover_media_key": string | null,"created_at": string,"deleted_at": string | null,"event_date": string,"expires_at": string | null,"id": string,"locale": string,"media_count": number,"owner_id": string,"plan": string,"public_code": string,"settings": NonNullable<Json>,"status": string,"title": string,"type": string,"updated_at": string,"welcome_message": string | null
+                    "created_at": string,"event_id": string,"id": string,"kind": string,"provider": string | null,"recipient_key": string,"sent_at": string | null,"status": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "accent_color"?: string | null,"bytes_used"?: number,"cover_media_key"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"event_date": string,"expires_at"?: string | null,"id"?: string,"locale"?: string,"media_count"?: number,"owner_id": string,"plan"?: string,"public_code": string,"settings"?: NonNullable<Json>,"status"?: string,"title": string,"type": string,"updated_at"?: string,"welcome_message"?: string | null
+                    "created_at"?: string,"event_id": string,"id"?: string,"kind": string,"provider"?: string | null,"recipient_key": string,"sent_at"?: string | null,"status"?: string,"updated_at"?: string
                   }
                   Update: {
-                    "accent_color"?: string | null,"bytes_used"?: number,"cover_media_key"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"event_date"?: string,"expires_at"?: string | null,"id"?: string,"locale"?: string,"media_count"?: number,"owner_id"?: string,"plan"?: string,"public_code"?: string,"settings"?: NonNullable<Json>,"status"?: string,"title"?: string,"type"?: string,"updated_at"?: string,"welcome_message"?: string | null
+                    "created_at"?: string,"event_id"?: string,"id"?: string,"kind"?: string,"provider"?: string | null,"recipient_key"?: string,"sent_at"?: string | null,"status"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "email_log_event_id_fkey"
+      columns: ["event_id"]
+isOneToOne: false
+      referencedRelation: "events"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"events": {
+                  Row: {
+                    "accent_color": string | null,"bytes_used": number,"cover_media_key": string | null,"created_at": string,"deleted_at": string | null,"deletion_reason": string | null,"event_date": string,"expires_at": string | null,"id": string,"locale": string,"media_count": number,"owner_id": string,"plan": string,"public_code": string,"settings": NonNullable<Json>,"status": string,"title": string,"type": string,"updated_at": string,"welcome_message": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "accent_color"?: string | null,"bytes_used"?: number,"cover_media_key"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"deletion_reason"?: string | null,"event_date": string,"expires_at"?: string | null,"id"?: string,"locale"?: string,"media_count"?: number,"owner_id": string,"plan"?: string,"public_code": string,"settings"?: NonNullable<Json>,"status"?: string,"title": string,"type": string,"updated_at"?: string,"welcome_message"?: string | null
+                  }
+                  Update: {
+                    "accent_color"?: string | null,"bytes_used"?: number,"cover_media_key"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"deletion_reason"?: string | null,"event_date"?: string,"expires_at"?: string | null,"id"?: string,"locale"?: string,"media_count"?: number,"owner_id"?: string,"plan"?: string,"public_code"?: string,"settings"?: NonNullable<Json>,"status"?: string,"title"?: string,"type"?: string,"updated_at"?: string,"welcome_message"?: string | null
                   }
                   Relationships: [
                     
@@ -220,6 +240,9 @@ isOneToOne: true
 "apply_refund":
 { Args: { "p_free_expires_at": string,"p_months": number,"p_payment_intent": string,"p_stripe_event_id": string,"p_stripe_event_type": string }; Returns: Json
                            },
+"claim_email":
+{ Args: { "p_event_id": string,"p_kind": string,"p_recipient": string,"p_stale_minutes": number }; Returns: boolean
+                           },
 "event_gallery_is_open":
 { Args: { "p_event_id": string }; Returns: boolean
                            },
@@ -227,6 +250,12 @@ isOneToOne: true
 { Args: { "p_settings": Json }; Returns: {
               "closes_at": string,"opens_at": string
             }[]
+                           },
+"expire_due_events":
+{ Args: { "p_now": string }; Returns: Json
+                           },
+"finish_email":
+{ Args: { "p_event_id": string,"p_kind": string,"p_provider": string,"p_recipient": string }; Returns: undefined
                            },
 "gallery_guests":
 { Args: { "p_event_id": string }; Returns: {
@@ -246,6 +275,12 @@ isOneToOne: true
 { Args: { "p_event_id": string }; Returns: {
               "guest_id": string,"media_count": number
             }[]
+                           },
+"purge_event":
+{ Args: { "p_event_id": string }; Returns: Json
+                           },
+"release_email":
+{ Args: { "p_event_id": string,"p_kind": string,"p_recipient": string }; Returns: undefined
                            },
 "reserve_media_slot":
 { Args: { "p_bytes_display": number,"p_bytes_original": number,"p_bytes_thumb": number,"p_duration_s": number,"p_event_id": string,"p_height": number,"p_key_display": string,"p_key_original": string,"p_key_thumb": string,"p_kind": string,"p_max_media": number,"p_max_videos": number,"p_media_id": string,"p_mime_type": string,"p_sha256": string,"p_taken_at": string,"p_user_id": string,"p_width": number }; Returns: Json

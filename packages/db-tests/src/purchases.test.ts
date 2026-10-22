@@ -154,7 +154,10 @@ describe("NF-012: un webhook rejoué deux fois n'a qu'un effet", () => {
       expect((await eventRow(db, event)).expires_at!.toISOString()).toBe(
         "2100-03-15T00:00:00.000Z",
       );
-      const { rows } = await db.query("select count(*)::int as n from public.purchases");
+      const { rows } = await db.query(
+        "select count(*)::int as n from public.purchases where user_id = $1",
+        [owner],
+      );
       expect(rows[0]!.n).toBe(1);
     }));
 
@@ -169,7 +172,10 @@ describe("NF-012: un webhook rejoué deux fois n'a qu'un effet", () => {
         (await purchase(db, { eventId: event, userId: owner, sessionId, stripeEventId: "evt_2" }))
           .result,
       ).toBe("already_applied");
-      const { rows } = await db.query("select count(*)::int as n from public.purchases");
+      const { rows } = await db.query(
+        "select count(*)::int as n from public.purchases where user_id = $1",
+        [owner],
+      );
       expect(rows[0]!.n).toBe(1);
       // The journal still remembers the webhook event: replaying it changes nothing.
       expect(
@@ -181,13 +187,18 @@ describe("NF-012: un webhook rejoué deux fois n'a qu'un effet", () => {
   it("un paiement pour un événement disparu est gardé dans le journal d'audit, pour un remboursement à la main", () =>
     withTestDb(async (db) => {
       const owner = await db.createUser();
-      const answer = await purchase(db, { eventId: randomUUID(), userId: owner });
+      const gone = randomUUID();
+      const answer = await purchase(db, { eventId: gone, userId: owner });
       expect(answer).toEqual({ ok: false, reason: "event_not_found" });
       const { rows } = await db.query(
-        "select action from public.audit_log where action = 'purchase_orphan'",
+        "select action from public.audit_log where action = 'purchase_orphan' and target_id = $1",
+        [gone],
       );
       expect(rows).toHaveLength(1);
-      const none = await db.query("select count(*)::int as n from public.purchases");
+      const none = await db.query(
+        "select count(*)::int as n from public.purchases where user_id = $1",
+        [owner],
+      );
       expect(none.rows[0]!.n).toBe(0);
     }));
 
@@ -198,7 +209,10 @@ describe("NF-012: un webhook rejoué deux fois n'a qu'un effet", () => {
         ok: false,
         reason: "invalid_input",
       });
-      const { rows } = await db.query("select count(*)::int as n from public.purchases");
+      const { rows } = await db.query(
+        "select count(*)::int as n from public.purchases where user_id = $1",
+        [owner],
+      );
       expect(rows[0]!.n).toBe(0);
     }));
 });
@@ -229,7 +243,8 @@ describe("R6: un remboursement complet reprend ses effets", () => {
       expect(rows[0]).toMatchObject({ status: "refunded" });
       expect(rows[0]!.refunded_at).not.toBeNull();
       const audit = await db.query(
-        "select metadata from public.audit_log where action = 'purchase_refunded'",
+        "select metadata from public.audit_log where action = 'purchase_refunded' and target_id = $1",
+        [event],
       );
       expect(audit.rows).toHaveLength(1);
     }));
@@ -266,7 +281,10 @@ describe("S-001: droits sur les achats", () => {
 
       const count = (actor: Parameters<typeof db.as>[0]) =>
         db.as(actor, async (q) => {
-          const { rows } = await q.query("select count(*)::int as n from public.purchases");
+          const { rows } = await q.query(
+            "select count(*)::int as n from public.purchases where event_id = $1",
+            [event],
+          );
           return rows[0]!.n as number;
         });
       expect(await count({ kind: "user", id: owner })).toBe(1);
