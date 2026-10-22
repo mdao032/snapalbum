@@ -270,4 +270,43 @@ test.describe("phase 2 : envois de bout en bout", () => {
     await expect(guest.locator("li[data-status='sent']")).toHaveCount(1, { timeout: 30_000 });
     await guest.context().close();
   });
+
+  test("R1, R2: l'organisateur passe en payant : les fichiers restés sur l'appareil partent tout seuls, avec leur original", async ({
+    page,
+    browser,
+  }) => {
+    const { code, id } = await createEvent(page);
+    await setEventColumns(id, { media_count: 200 });
+    const guest = await newVisitor(browser);
+    await guest.clock.install();
+    await guest.goto(`/e/${code}`);
+    await chooseFromGallery(guest, [
+      { name: "IMG_0021.png", buffer: samplePhoto(21) },
+      { name: "IMG_0022.png", buffer: samplePhoto(22) },
+      { name: "IMG_0023.png", buffer: samplePhoto(23) },
+    ]);
+    await join(guest);
+    await expect(guest.locator("li[data-status='waiting_quota']")).toHaveCount(3, {
+      timeout: 30_000,
+    });
+    await expect(guest.getByText(/reprendra tout seul si l’organisateur l’agrandit/)).toHaveCount(
+      3,
+    );
+
+    // Before the minute is over, nothing is asked again.
+    await guest.clock.fastForward(30_000);
+    await expect(guest.locator("li[data-status='waiting_quota']")).toHaveCount(3);
+
+    // The organiser pays: nobody touches the guest's phone.
+    await setEventColumns(id, { plan: "event", media_count: 0 });
+    await guest.clock.fastForward(40_000);
+    await expect(guest.locator("li[data-status='sent']")).toHaveCount(3, { timeout: 30_000 });
+    await expect(guest.locator("li[data-status='waiting_quota']")).toHaveCount(0);
+
+    // The photos sent after the upgrade keep their original (R2).
+    const rows = await getRows("media", `event_id=eq.${id}&select=key_original,status`);
+    expect(rows).toHaveLength(3);
+    expect(rows.every((row) => row.status === "ready" && row.key_original !== null)).toBe(true);
+    await guest.context().close();
+  });
 });

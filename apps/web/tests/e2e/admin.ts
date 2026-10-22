@@ -71,6 +71,47 @@ export async function patchRows(
   if (!response.ok) throw new Error(`Could not update ${table}: ${response.status}`);
 }
 
+/** A guest-style anonymous account and its access token, as the apps get them (local database only). */
+export async function createAnonymousUser(): Promise<{ id: string; token: string }> {
+  const env = localEnv();
+  const response = await fetch(`${env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/signup`, {
+    method: "POST",
+    headers: {
+      apikey: env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+      "Content-Type": "application/json",
+    },
+    body: "{}",
+  });
+  if (!response.ok) throw new Error(`Could not sign in anonymously: ${response.status}`);
+  const body = (await response.json()) as { access_token: string; user: { id: string } };
+  return { id: body.user.id, token: body.access_token };
+}
+
+/** An account with a confirmed e-mail address, created by the service role (local database only). */
+export async function createConfirmedUser(email: string): Promise<string> {
+  const env = localEnv();
+  const response = await fetch(`${env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/admin/users`, {
+    method: "POST",
+    headers: {
+      apikey: env.SUPABASE_SERVICE_ROLE_KEY ?? "",
+      Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, email_confirm: true }),
+  });
+  if (!response.ok) throw new Error(`Could not create the user: ${response.status}`);
+  return ((await response.json()) as { id: string }).id;
+}
+
+/** The address of the local Supabase API and its public key, for tests that attack it directly. */
+export function supabaseEndpoint(): { url: string; anonKey: string } {
+  const env = localEnv();
+  return {
+    url: env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+    anonKey: env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+  };
+}
+
 /** Inserts rows with the service role, in chunks, and returns them (local test database only). */
 export async function insertRows(
   table: string,
