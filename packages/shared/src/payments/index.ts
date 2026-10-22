@@ -34,8 +34,12 @@ export function canBuy(input: {
   product: CheckoutProduct;
   plan: PlanId;
   status: string;
+  /** Why the event waits for its purge, if it does (`events.deletion_reason`). */
+  deletionReason?: string | null;
 }): { ok: true } | { ok: false; reason: PurchaseRefusal } {
-  if (input.status !== "active") return { ok: false, reason: "not_active" };
+  // An album that expired can be brought back during its 7 days; one the organiser deleted cannot.
+  const expired = input.status === "pending_deletion" && input.deletionReason === "expired";
+  if (input.status !== "active" && !expired) return { ok: false, reason: "not_active" };
   if (input.plan === "pro") return { ok: false, reason: "plan_not_sold" };
   if (input.product === "event" && input.plan !== "free") {
     return { ok: false, reason: "already_upgraded" };

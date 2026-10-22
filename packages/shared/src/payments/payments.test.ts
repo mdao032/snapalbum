@@ -45,6 +45,25 @@ describe("R2, R4: qui peut acheter quoi", () => {
     expect(canBuy({ product: "extension", plan: "free", status: "active" })).toEqual({ ok: true });
   });
 
+  it("un album expiré, en attente de sa purge, se rachète ; celui que l'organisateur a supprimé non", () => {
+    expect(
+      canBuy({
+        product: "extension",
+        plan: "free",
+        status: "pending_deletion",
+        deletionReason: "expired",
+      }),
+    ).toEqual({ ok: true });
+    expect(
+      canBuy({
+        product: "event",
+        plan: "free",
+        status: "pending_deletion",
+        deletionReason: "user",
+      }),
+    ).toMatchObject({ reason: "not_active" });
+  });
+
   it("un événement suspendu ou en suppression ne vend rien, l'offre Pro non plus", () => {
     expect(canBuy({ product: "event", plan: "free", status: "suspended" })).toMatchObject({
       reason: "not_active",

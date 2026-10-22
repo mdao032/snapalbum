@@ -496,6 +496,10 @@
       "late": "Votre paiement est en cours de validation. Votre album sera mis à jour dans quelques instants.",
       "failed": "Nous n’avons pas pu confirmer votre paiement. S’il a été débité, votre album sera mis à jour automatiquement sous peu ; sinon, vous pouvez réessayer.",
       "cancelled": "Paiement annulé : rien n’a été débité."
+    },
+    "expired": {
+      "title": "Cet album a expiré",
+      "text": "Il est fermé aux invités et ses fichiers seront supprimés définitivement le {date}. Payez avant cette date pour le récupérer."
     }
   },
   "gallery": {
@@ -713,6 +717,80 @@
     "notes": {
       "vat": "Prix TTC. Paiement sécurisé par Stripe : aucune donnée de carte ne passe par {appName}.",
       "refund": "Remboursement possible sous {days} jours si moins de {max} photos ont été envoyées."
+    }
+  },
+  "emails": {
+    "preheaderSeparator": " · ",
+    "greeting": "Bonjour,",
+    "footerOrganiser": "Vous recevez cet e-mail parce que vous utilisez {appName} pour votre événement.",
+    "footerGuest": "Vous recevez cet e-mail parce que vous avez demandé à être prévenu quand l’album serait prêt. Votre adresse ne sert qu’à cet envoi et est effacée à la fin de la conservation de l’album.",
+    "welcome": {
+      "subject": "Bienvenue sur {appName} : votre album est prêt",
+      "preview": "Voici le QR code à faire scanner à vos invités.",
+      "title": "Votre album « {title} » est prêt",
+      "intro": "Voici son QR code. Imprimez-le ou affichez-le le jour J : vos invités le scannent et envoient leurs photos et vidéos, sans appli ni compte.",
+      "qrAlt": "QR code de l’album « {title} »",
+      "linkLabel": "Le lien à partager, si vous préférez :",
+      "next": "Dans votre tableau de bord, vous pouvez personnaliser la page de vos invités, imprimer des cartes avec le QR code et suivre les envois en direct.",
+      "cta": "Ouvrir mon tableau de bord"
+    },
+    "quotaReached": {
+      "subject": "L’album « {title} » est plein",
+      "preview": "Vos invités ne peuvent plus envoyer de photos pour le moment.",
+      "title": "L’album « {title} » est plein",
+      "free": "Il a atteint sa limite de {max} photos et vidéos : vos invités ne peuvent plus en ajouter. Les photos déjà envoyées sont conservées, rien n’est supprimé.",
+      "offer": "Avec l’offre Événement ({price}), la limite passe à {newMax} photos et vidéos et les photos sont conservées en pleine qualité. Les photos que vos invités ont encore sur leur téléphone partent toutes seules dès que vous avez payé.",
+      "paid": "Il a atteint sa limite de {max} photos et vidéos : vos invités ne peuvent plus en ajouter. Les photos déjà envoyées sont conservées, rien n’est supprimé.",
+      "cta": "Passer à l’offre Événement",
+      "ctaPaid": "Ouvrir mon tableau de bord"
+    },
+    "paymentConfirmed": {
+      "subject": "Paiement confirmé : {product}",
+      "preview": "Merci ! Votre album est à jour.",
+      "title": "Merci, votre paiement est confirmé",
+      "body": "Nous avons bien reçu {amount} pour « {title} » ({product}).",
+      "keptUntil": "Votre album est conservé jusqu’au {date}.",
+      "invoice": "Stripe vous envoie la facture dans un e-mail séparé.",
+      "cta": "Ouvrir mon tableau de bord"
+    },
+    "expiryReminder": {
+      "subject": "Votre album « {title} » ferme le {date}",
+      "preview": "Téléchargez vos photos ou prolongez l’album.",
+      "title": "Votre album « {title} » ferme le {date}",
+      "intro": "{days, plural, one {Plus qu’un jour : } other {Il reste {days} jours : }}passé cette date, l’album n’est plus accessible à vos invités, et ses photos et vidéos sont effacées définitivement {graceDays} jours plus tard.",
+      "download": "Téléchargez-le dès maintenant depuis votre tableau de bord : vous gardez ainsi tous vos souvenirs.",
+      "extend": "Vous préférez le garder en ligne ? Prolongez-le de {months} mois pour {price}.",
+      "cta": "Télécharger ou prolonger l’album"
+    },
+    "recap": {
+      "subject": "« {title} » : {count, plural, =0 {aucune photo pour le moment} one {# photo ou vidéo envoyée} other {# photos et vidéos envoyées}}",
+      "preview": "Le récapitulatif du lendemain de votre événement.",
+      "title": "Le lendemain de « {title} »",
+      "count": "{count, plural, =0 {Vos invités n’ont pas encore envoyé de fichier.} one {Vos invités ont envoyé 1 photo ou vidéo.} other {Vos invités ont envoyé # photos et vidéos.}}",
+      "next": "C’est le moment de parcourir l’album, de masquer ce qui doit l’être, puis de le déclarer prêt pour que vos invités reçoivent son lien.",
+      "cta": "Ouvrir l’album"
+    },
+    "albumReady": {
+      "subject": "L’album « {title} » est prêt",
+      "preview": "Retrouvez les photos et vidéos de l’événement.",
+      "title": "L’album « {title} » est prêt",
+      "intro": "Les photos et vidéos de l’événement sont rassemblées au même endroit.",
+      "cta": "Voir l’album"
+    },
+    "deletion": {
+      "subject": "Suppression de « {title} » programmée",
+      "preview": "Vous pouvez encore annuler.",
+      "title": "La suppression de « {title} » est programmée",
+      "intro": "Vous avez demandé la suppression de cet album. Elle sera définitive le {date} : photos, vidéos et invités seront alors effacés.",
+      "cancel": "Un clic suffit pour annuler jusque-là.",
+      "cta": "Annuler la suppression"
+    },
+    "cohost": {
+      "subject": "{inviter} vous invite à gérer l’album « {title} »",
+      "preview": "Vous avez les mêmes droits que l’organisateur, sauf la suppression.",
+      "title": "Gérer l’album « {title} » avec {inviter}",
+      "intro": "{inviter} vous invite à gérer cet album avec lui : vous pourrez modérer les photos, les télécharger et suivre les envois. La suppression de l’événement reste réservée à l’organisateur.",
+      "cta": "Accepter l’invitation"
     }
   }
 }

@@ -496,6 +496,10 @@
       "late": "Your payment is being validated. Your album will be updated in a few moments.",
       "failed": "We could not confirm your payment. If it was charged, your album will be updated automatically shortly; otherwise you can try again.",
       "cancelled": "Payment cancelled: nothing was charged."
+    },
+    "expired": {
+      "title": "This album has expired",
+      "text": "It is closed to guests and its files will be permanently deleted on {date}. Pay before then to bring it back."
     }
   },
   "gallery": {
@@ -713,6 +717,80 @@
     "notes": {
       "vat": "Prices include VAT. Secure payment by Stripe: no card data goes through {appName}.",
       "refund": "Refund possible within {days} days if fewer than {max} photos were sent."
+    }
+  },
+  "emails": {
+    "preheaderSeparator": " · ",
+    "greeting": "Hello,",
+    "footerOrganiser": "You receive this e-mail because you use {appName} for your event.",
+    "footerGuest": "You receive this e-mail because you asked to be told when the album is ready. Your address is only used for this message and is erased when the album’s retention ends.",
+    "welcome": {
+      "subject": "Welcome to {appName}: your album is ready",
+      "preview": "Here is the QR code for your guests to scan.",
+      "title": "Your album “{title}” is ready",
+      "intro": "Here is its QR code. Print it or show it on the day: your guests scan it and send their photos and videos, with no app and no account.",
+      "qrAlt": "QR code of the album “{title}”",
+      "linkLabel": "The link to share, if you prefer:",
+      "next": "In your dashboard you can customise your guests’ page, print cards with the QR code and follow uploads live.",
+      "cta": "Open my dashboard"
+    },
+    "quotaReached": {
+      "subject": "The album “{title}” is full",
+      "preview": "Your guests cannot send photos for now.",
+      "title": "The album “{title}” is full",
+      "free": "It reached its limit of {max} photos and videos: your guests cannot add more. The photos already sent are kept, nothing is deleted.",
+      "offer": "With the Event plan ({price}), the limit goes up to {newMax} photos and videos and photos are kept in full quality. The photos your guests still have on their phones are sent by themselves as soon as you have paid.",
+      "paid": "It reached its limit of {max} photos and videos: your guests cannot add more. The photos already sent are kept, nothing is deleted.",
+      "cta": "Switch to the Event plan",
+      "ctaPaid": "Open my dashboard"
+    },
+    "paymentConfirmed": {
+      "subject": "Payment confirmed: {product}",
+      "preview": "Thank you! Your album is up to date.",
+      "title": "Thank you, your payment is confirmed",
+      "body": "We received {amount} for “{title}” ({product}).",
+      "keptUntil": "Your album is kept until {date}.",
+      "invoice": "Stripe sends you the invoice in a separate e-mail.",
+      "cta": "Open my dashboard"
+    },
+    "expiryReminder": {
+      "subject": "Your album “{title}” closes on {date}",
+      "preview": "Download your photos or extend the album.",
+      "title": "Your album “{title}” closes on {date}",
+      "intro": "{days, plural, one {One day left: } other {{days} days left: }}after that date the album is no longer available to your guests, and its photos and videos are permanently erased {graceDays} days later.",
+      "download": "Download it now from your dashboard to keep every memory.",
+      "extend": "Rather keep it online? Extend it by {months} months for {price}.",
+      "cta": "Download or extend the album"
+    },
+    "recap": {
+      "subject": "“{title}”: {count, plural, =0 {no photos yet} one {# photo or video sent} other {# photos and videos sent}}",
+      "preview": "The day-after summary of your event.",
+      "title": "The day after “{title}”",
+      "count": "{count, plural, =0 {Your guests have not sent any file yet.} one {Your guests sent 1 photo or video.} other {Your guests sent # photos and videos.}}",
+      "next": "Time to browse the album, hide what needs hiding, then declare it ready so your guests receive its link.",
+      "cta": "Open the album"
+    },
+    "albumReady": {
+      "subject": "The album “{title}” is ready",
+      "preview": "Find the photos and videos of the event.",
+      "title": "The album “{title}” is ready",
+      "intro": "The photos and videos of the event are gathered in one place.",
+      "cta": "See the album"
+    },
+    "deletion": {
+      "subject": "Deletion of “{title}” scheduled",
+      "preview": "You can still cancel.",
+      "title": "The deletion of “{title}” is scheduled",
+      "intro": "You asked for this album to be deleted. It becomes final on {date}: photos, videos and guests are then erased.",
+      "cancel": "One click is enough to cancel until then.",
+      "cta": "Cancel the deletion"
+    },
+    "cohost": {
+      "subject": "{inviter} invites you to manage the album “{title}”",
+      "preview": "You get the same rights as the organiser, except deletion.",
+      "title": "Manage the album “{title}” with {inviter}",
+      "intro": "{inviter} invites you to manage this album together: you can moderate photos, download them and follow uploads. Deleting the event stays reserved to the organiser.",
+      "cta": "Accept the invitation"
     }
   }
 }
