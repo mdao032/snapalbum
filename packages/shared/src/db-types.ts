@@ -26,7 +26,21 @@ export type Database = {
           }
         },"public": {
           Tables: {
-            "events": {
+            "audit_log": {
+                  Row: {
+                    "action": string,"actor_id": string | null,"created_at": string,"id": string,"metadata": NonNullable<Json>,"target_id": string | null,"target_type": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "action": string,"actor_id"?: string | null,"created_at"?: string,"id"?: string,"metadata"?: NonNullable<Json>,"target_id"?: string | null,"target_type": string
+                  }
+                  Update: {
+                    "action"?: string,"actor_id"?: string | null,"created_at"?: string,"id"?: string,"metadata"?: NonNullable<Json>,"target_id"?: string | null,"target_type"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"events": {
                   Row: {
                     "accent_color": string | null,"bytes_used": number,"cover_media_key": string | null,"created_at": string,"deleted_at": string | null,"event_date": string,"expires_at": string | null,"id": string,"locale": string,"media_count": number,"owner_id": string,"plan": string,"public_code": string,"settings": NonNullable<Json>,"status": string,"title": string,"type": string,"updated_at": string,"welcome_message": string | null
                   }
@@ -99,6 +113,26 @@ isOneToOne: false
                   }
                   Relationships: [
                     
+                  ]
+                },"reports": {
+                  Row: {
+                    "created_at": string,"id": string,"media_id": string,"reason": string,"reporter_fingerprint": string,"resolved_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"media_id": string,"reason": string,"reporter_fingerprint": string,"resolved_at"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"media_id"?: string,"reason"?: string,"reporter_fingerprint"?: string,"resolved_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "reports_media_id_fkey"
+      columns: ["media_id"]
+isOneToOne: false
+      referencedRelation: "media"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"share_links": {
                   Row: {
