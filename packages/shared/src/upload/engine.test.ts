@@ -53,7 +53,7 @@ const flush = async () => {
 function setup(
   options: {
     prepare?: (file: FakeFile) => Promise<PreparedMedia<FakeBlob>>;
-    reserve?: () => Promise<unknown>;
+    reserve?: (request: { kind: string }) => Promise<unknown>;
     put?: (target: SignedTarget, body: FakeBlob) => Promise<void>;
     multipart?: (body: { action: string; partNumber?: number }) => Promise<unknown>;
     complete?: () => Promise<unknown>;
@@ -141,7 +141,7 @@ describe("SPEC 8.1: classement des échecs", () => {
     [new PrepareError("unsupported_format"), "reject", "unsupported_format"],
     [new PrepareError("corrupted"), "reject", "corrupted"],
     [new ApiError(409, "album_full"), "wait_quota", "album_full"],
-    [new ApiError(409, "video_limit_reached"), "reject", "video_limit_reached"],
+    [new ApiError(409, "video_limit_reached"), "wait_quota", "video_limit_reached"],
     [new ApiError(422, "video_too_long"), "reject", "video_too_long"],
     [new ApiError(413, "file_too_large"), "reject", "file_too_large"],
     [new ApiError(415, "unsupported_format"), "reject", "unsupported_format"],
@@ -348,19 +348,46 @@ describe("SPEC 8.3: refus et attentes", () => {
     expect(engine.getSummary()).toMatchObject({ sent: 1, rejected: 1 });
   });
 
-  it("R1: album plein : le fichier reste sur l'appareil en attente de place, sans réessai automatique", async () => {
+  it("R1: album plein : le fichier reste sur l'appareil, un seul fichier retente toutes les minutes", async () => {
     const { engine, advance, reserve } = setup({
       reserve: async () => {
         throw new ApiError(409, "album_full");
       },
     });
-    engine.add([file()]);
+    engine.add([file("a.jpg"), file("b.jpg")]);
     await flush();
-    expect(engine.getItems()[0]).toMatchObject({ status: "waiting_quota", reason: "album_full" });
-    advance(10 * 60_000);
+    expect(engine.getItems().map((item) => item.status)).toEqual([
+      "waiting_quota",
+      "waiting_quota",
+    ]);
+    expect(reserve).toHaveBeenCalledTimes(2);
+    advance(30_000);
     await flush();
-    expect(reserve).toHaveBeenCalledTimes(1);
-    expect(engine.getSummary().waitingQuota).toBe(1);
+    expect(reserve).toHaveBeenCalledTimes(2);
+    advance(30_000);
+    await flush();
+    expect(reserve).toHaveBeenCalledTimes(3);
+    advance(60_000);
+    await flush();
+    expect(reserve).toHaveBeenCalledTimes(4);
+    expect(engine.getSummary().waitingQuota).toBe(2);
+  });
+
+  it("R2: dès que l'album s'agrandit, le fichier sonde passe et libère tous les autres sans action de personne", async () => {
+    let full = true;
+    const { engine, advance } = setup({
+      reserve: async () => {
+        if (full) throw new ApiError(409, "album_full");
+        return { status: "already_received", mediaId: MEDIA };
+      },
+    });
+    engine.add([file("a.jpg"), file("b.jpg"), file("c.jpg")]);
+    await flush();
+    expect(engine.getSummary().waitingQuota).toBe(3);
+    full = false;
+    advance(60_000);
+    await flush();
+    expect(engine.getSummary()).toMatchObject({ sent: 3, waitingQuota: 0 });
   });
 
   it("R1: quand l'organisateur passe en payant, retryNow renvoie les fichiers en attente", async () => {
@@ -379,7 +406,7 @@ describe("SPEC 8.3: refus et attentes", () => {
     expect(engine.getItems()[0]?.status).toBe("sent");
   });
 
-  it("R1: la limite de vidéos refuse cette vidéo pour de bon, sans bloquer les photos", async () => {
+  it("R1: la limite de vidéos met cette vidéo en attente, sans bloquer les photos", async () => {
     const { engine } = setup({
       prepare: async (f) =>
         f.name.endsWith(".mp4")
@@ -392,16 +419,45 @@ describe("SPEC 8.3: refus et attentes", () => {
               sha256: "b".repeat(64),
             })
           : photo(),
-      reserve: vi
-        .fn()
-        .mockRejectedValueOnce(new ApiError(409, "video_limit_reached"))
-        .mockResolvedValue({ status: "already_received", mediaId: MEDIA }),
+      reserve: async (request) => {
+        if (request.kind === "video") throw new ApiError(409, "video_limit_reached");
+        return { status: "already_received", mediaId: MEDIA };
+      },
     });
     engine.add([file("clip.mp4"), file("photo.jpg")]);
     await flush();
     const byName = Object.fromEntries(engine.getItems().map((i) => [i.name, i]));
-    expect(byName["clip.mp4"]).toMatchObject({ status: "rejected", reason: "video_limit_reached" });
+    expect(byName["clip.mp4"]).toMatchObject({
+      status: "waiting_quota",
+      reason: "video_limit_reached",
+    });
     expect(byName["photo.jpg"]?.status).toBe("sent");
+  });
+
+  it("R2: après le passage en payant, une vidéo plus longue que l'ancienne limite est acceptée", async () => {
+    const long = photo({
+      kind: "video",
+      mimeType: "video/mp4",
+      extension: "mp4",
+      display: undefined,
+      displayBytes: undefined,
+      durationSeconds: 120,
+      bytes: 5 * MB,
+      original: blob(5 * MB, "original"),
+    });
+    const { engine, reserve } = setup({
+      plan: "free",
+      prepare: async () => long,
+      reserve: async () => ({ status: "already_received", mediaId: MEDIA }),
+    });
+    engine.add([file("long.mp4")]);
+    await flush();
+    expect(engine.getItems()[0]).toMatchObject({ status: "rejected", reason: "video_too_long" });
+    expect(reserve).not.toHaveBeenCalled();
+    engine.setPlan("event");
+    engine.add([file("long2.mp4")]);
+    await flush();
+    expect(engine.getItems()[1]?.status).toBe("sent");
   });
 
   it("S-002: un fichier jugé invalide par le serveur est refusé définitivement", async () => {

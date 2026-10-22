@@ -71,7 +71,10 @@
     "homeLink": "{appName}, retour à l’accueil",
     "createAlbum": "Créer mon album",
     "footerTagline": "Les souvenirs de votre événement, tous au même endroit.",
-    "copyright": "© {year} {appName}"
+    "copyright": "© {year} {appName}",
+    "madeWith": "Créé avec {appName}",
+    "pricingLink": "Tarifs",
+    "footerNav": "Liens du pied de page"
   },
   "language": {
     "label": "Langue",
@@ -266,11 +269,12 @@
       "reasons": {
         "unsupported_format": "Ce format n’est pas pris en charge sur cet appareil.",
         "corrupted": "Ce fichier semble abîmé.",
-        "album_full": "L’album est plein pour le moment.",
+        "album_full": "L’album est plein pour le moment. L’envoi reprendra tout seul si l’organisateur l’agrandit.",
         "video_too_long": "Cette vidéo est trop longue : {seconds} secondes au maximum.",
         "file_too_large": "Ce fichier est trop lourd pour cet album.",
         "upload_failed": "L’envoi a échoué, nouvel essai bientôt.",
-        "network_error": "Connexion perdue, nouvel essai bientôt."
+        "network_error": "Connexion perdue, nouvel essai bientôt.",
+        "video_limit_reached": "Le nombre de vidéos est atteint pour le moment. L’envoi reprendra tout seul si l’organisateur agrandit l’album."
       },
       "retry": "Réessayer maintenant",
       "resumed": "{count, plural, one {Reprise de # envoi laissé en cours.} other {Reprise de # envois laissés en cours.}}",
@@ -458,6 +462,14 @@
       "sizeGb": "{value} Go",
       "sizeMb": "{value} Mo",
       "sizeKb": "{value} Ko"
+    },
+    "plan": {
+      "title": "Votre offre",
+      "name": "Offre {plan}",
+      "keptUntil": "Album conservé jusqu’au {date}.",
+      "limits": "{count} photos et vidéos au plus.",
+      "optimizedOnly": "{count, plural, one {# photo envoyée avant le passage à l’offre Événement n’a que sa version optimisée.} other {# photos envoyées avant le passage à l’offre Événement n’ont que leur version optimisée.}}",
+      "seeOffers": "Voir les offres"
     }
   },
   "gallery": {
@@ -615,6 +627,66 @@
       "inappropriate": "Contenu inapproprié",
       "private": "Atteinte à la vie privée",
       "other": "Autre"
+    }
+  },
+  "plans": {
+    "names": {
+      "free": "Gratuit",
+      "event": "Événement",
+      "pro": "Pro"
+    },
+    "qualityLine": "Offre gratuite : photos optimisées — originaux avec l’offre Événement.",
+    "qualityNoticeDetail": "Vos photos sont conservées en version optimisée ({px} px au plus). Les photos et vidéos d’origine sont conservées avec l’offre Événement, pour les envois faits après le passage à cette offre.",
+    "seeOffers": "Voir les offres"
+  },
+  "pricing": {
+    "metaTitle": "Tarifs",
+    "metaDescription": "Commencez gratuitement, passez à l’offre Événement quand vous le souhaitez. Prix clairs, sans abonnement.",
+    "title": "Un tarif simple, sans abonnement",
+    "subtitle": "Commencez gratuitement. Passez à l’offre Événement quand vous voulez : avant, pendant ou après la fête.",
+    "perEvent": "par événement, TTC",
+    "free": {
+      "tagline": "Pour essayer ou pour une petite fête.",
+      "cta": "Créer mon album gratuit"
+    },
+    "event": {
+      "tagline": "Pour garder tous les souvenirs en pleine qualité.",
+      "cta": "Créer mon album",
+      "badge": "Recommandée"
+    },
+    "pro": {
+      "tagline": "Pour les photographes et les lieux de réception.",
+      "soon": "Bientôt disponible",
+      "price": "{monthly} par mois, ou {yearly} par an (TTC)"
+    },
+    "features": {
+      "media": "{count} photos et vidéos par événement",
+      "mediaReasonable": "{count} photos et vidéos par événement (usage raisonnable)",
+      "guests": "Invités illimités, sans appli et sans compte",
+      "videosLimited": "Jusqu’à {count} vidéos de {duration} au plus",
+      "videos": "Vidéos de {duration} au plus, {size} par fichier",
+      "qualityFree": "Photos optimisées ({px} px au plus), originaux non conservés",
+      "qualityPaid": "Photos d’origine conservées, avec leur version optimisée",
+      "retentionDays": "Album conservé {days} jours après l’événement",
+      "retentionMonths": "Album conservé {months} mois",
+      "retentionSubscribed": "Album conservé tant que l’abonnement est actif, puis {days} jours",
+      "live": "Diaporama en direct",
+      "zipDisplay": "Téléchargement de l’album : photos optimisées",
+      "zipOriginals": "Téléchargement de l’album : photos et vidéos d’origine",
+      "watermarkVisible": "Mention « Créé avec {appName} » visible",
+      "watermarkDiscreet": "Mention « Créé avec {appName} » discrète",
+      "watermarkNone": "Sans mention (marque blanche)",
+      "oneActiveEvent": "Un événement actif à la fois",
+      "manyActiveEvents": "Autant d’événements actifs que vous voulez"
+    },
+    "originalsRule": "Les originaux sont conservés pour les photos envoyées après le passage à l’offre Événement. Celles envoyées avant restent en version optimisée.",
+    "extension": {
+      "title": "Besoin de plus de temps ?",
+      "text": "Prolongez la conservation de votre album de {months} mois pour {price}."
+    },
+    "notes": {
+      "vat": "Prix TTC. Paiement sécurisé par Stripe : aucune donnée de carte ne passe par {appName}.",
+      "refund": "Remboursement possible sous {days} jours si moins de {max} photos ont été envoyées."
     }
   }
 }

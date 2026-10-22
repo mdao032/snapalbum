@@ -71,7 +71,10 @@
     "homeLink": "{appName}, back to home",
     "createAlbum": "Create my album",
     "footerTagline": "Every memory from your event, all in one place.",
-    "copyright": "© {year} {appName}"
+    "copyright": "© {year} {appName}",
+    "madeWith": "Made with {appName}",
+    "pricingLink": "Pricing",
+    "footerNav": "Footer links"
   },
   "language": {
     "label": "Language",
@@ -266,11 +269,12 @@
       "reasons": {
         "unsupported_format": "This format is not supported on this device.",
         "corrupted": "This file seems damaged.",
-        "album_full": "The album is full for now.",
+        "album_full": "The album is full for now. Sending will resume by itself if the organiser enlarges it.",
         "video_too_long": "This video is too long: {seconds} seconds at most.",
         "file_too_large": "This file is too large for this album.",
         "upload_failed": "Sending failed, trying again soon.",
-        "network_error": "Connection lost, trying again soon."
+        "network_error": "Connection lost, trying again soon.",
+        "video_limit_reached": "The video limit is reached for now. Sending will resume by itself if the organiser enlarges the album."
       },
       "retry": "Try again now",
       "resumed": "{count, plural, one {Resuming # upload left in progress.} other {Resuming # uploads left in progress.}}",
@@ -458,6 +462,14 @@
       "sizeGb": "{value} GB",
       "sizeMb": "{value} MB",
       "sizeKb": "{value} KB"
+    },
+    "plan": {
+      "title": "Your plan",
+      "name": "{plan} plan",
+      "keptUntil": "Album kept until {date}.",
+      "limits": "{count} photos and videos at most.",
+      "optimizedOnly": "{count, plural, one {# photo sent before switching to the Event plan only has its optimised version.} other {# photos sent before switching to the Event plan only have their optimised version.}}",
+      "seeOffers": "See the plans"
     }
   },
   "gallery": {
@@ -615,6 +627,66 @@
       "inappropriate": "Inappropriate content",
       "private": "Privacy concern",
       "other": "Other"
+    }
+  },
+  "plans": {
+    "names": {
+      "free": "Free",
+      "event": "Event",
+      "pro": "Pro"
+    },
+    "qualityLine": "Free plan: optimised photos — originals with the Event plan.",
+    "qualityNoticeDetail": "Your photos are kept as optimised versions ({px} px at most). Original photos and videos are kept with the Event plan, for what is sent after switching to it.",
+    "seeOffers": "See the plans"
+  },
+  "pricing": {
+    "metaTitle": "Pricing",
+    "metaDescription": "Start for free, switch to the Event plan whenever you like. Clear prices, no subscription.",
+    "title": "Simple pricing, no subscription",
+    "subtitle": "Start for free. Switch to the Event plan whenever you want: before, during or after the party.",
+    "perEvent": "per event, VAT included",
+    "free": {
+      "tagline": "To try it out or for a small party.",
+      "cta": "Create my free album"
+    },
+    "event": {
+      "tagline": "To keep every memory in full quality.",
+      "cta": "Create my album",
+      "badge": "Recommended"
+    },
+    "pro": {
+      "tagline": "For photographers and venues.",
+      "soon": "Coming soon",
+      "price": "{monthly} a month, or {yearly} a year (VAT included)"
+    },
+    "features": {
+      "media": "{count} photos and videos per event",
+      "mediaReasonable": "{count} photos and videos per event (fair use)",
+      "guests": "Unlimited guests, no app and no account",
+      "videosLimited": "Up to {count} videos of {duration} at most",
+      "videos": "Videos of {duration} at most, {size} per file",
+      "qualityFree": "Optimised photos ({px} px at most), originals not kept",
+      "qualityPaid": "Original photos kept, with their optimised version",
+      "retentionDays": "Album kept {days} days after the event",
+      "retentionMonths": "Album kept {months} months",
+      "retentionSubscribed": "Album kept while the subscription is active, then {days} days",
+      "live": "Live slideshow",
+      "zipDisplay": "Album download: optimised photos",
+      "zipOriginals": "Album download: original photos and videos",
+      "watermarkVisible": "“Made with {appName}” notice, visible",
+      "watermarkDiscreet": "“Made with {appName}” notice, discreet",
+      "watermarkNone": "No notice (white label)",
+      "oneActiveEvent": "One active event at a time",
+      "manyActiveEvents": "As many active events as you like"
+    },
+    "originalsRule": "Originals are kept for photos sent after switching to the Event plan. Those sent earlier stay as optimised versions.",
+    "extension": {
+      "title": "Need more time?",
+      "text": "Extend your album’s retention by {months} months for {price}."
+    },
+    "notes": {
+      "vat": "Prices include VAT. Secure payment by Stripe: no card data goes through {appName}.",
+      "refund": "Refund possible within {days} days if fewer than {max} photos were sent."
     }
   }
 }

@@ -12,6 +12,7 @@ import {
   markWaitingQuota,
   MAX_CONCURRENT_UPLOADS,
   pickNextItems,
+  QUOTA_RECHECK_MS,
   resetForRetry,
   summarizeQueue,
   type QueueItem,
@@ -127,6 +128,8 @@ export interface UploadEngine<F> {
   restore(): Promise<number>;
   /** Tries every waiting or failed file again now (connection back, album enlarged). */
   retryNow(): void;
+  /** The event moved to another plan (R2): the limits applied before sending follow it. */
+  setPlan(plan: PlanId): void;
   /** Starts again after the guest has joined the event. */
   resumeAfterJoin(): void;
   getItems(): readonly UploadItem[];
@@ -142,7 +145,6 @@ export type FailureDecision =
   | { action: "join" };
 
 const PERMANENT_API_ERRORS: readonly ApiErrorCode[] = [
-  "video_limit_reached",
   "video_too_long",
   "file_too_large",
   "unsupported_format",
@@ -159,7 +161,10 @@ export function classifyFailure(error: unknown): FailureDecision {
   if (error instanceof PrepareError) return { action: "reject", reason: error.reason };
   if (error instanceof ApiError) {
     const code = error.code;
-    if (code === "album_full") return { action: "wait_quota", reason: code };
+    // Both limits go away when the organiser upgrades (R1, R2): the file waits, it is not lost.
+    if (code === "album_full" || code === "video_limit_reached") {
+      return { action: "wait_quota", reason: code };
+    }
     if (code === "unauthorized" || code === "forbidden" || code === "terms_required") {
       return { action: "join" };
     }
@@ -201,6 +206,8 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
   const held = new Set<string>();
   let paused = false;
   let cancelWake: (() => void) | null = null;
+  let cancelProbe: (() => void) | null = null;
+  let plan = options.plan;
 
   function emit() {
     // A new array each time: React-style consumers compare by identity.
@@ -211,6 +218,38 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
   function update(id: string, change: (item: UploadItem) => UploadItem) {
     items = items.map((item) => (item.id === id ? change(item) : item));
     emit();
+  }
+
+  /** Waits a minute, then lets the oldest file kept for lack of room try its luck (R1, R2). */
+  function scheduleProbe() {
+    if (cancelProbe) return;
+    cancelProbe = schedule(() => {
+      cancelProbe = null;
+      const oldest = items
+        .filter((item) => item.status === "waiting_quota")
+        .sort((a, b) => a.addedAt - b.addedAt)[0];
+      if (!oldest) return;
+      update(oldest.id, (item) => ({ ...resetForRetry(item), reason: undefined }));
+      pump();
+    }, QUOTA_RECHECK_MS);
+  }
+
+  /**
+   * One file went through: what stopped the others is lifted too, so they try right away. A photo
+   * proves the album has room; only a video proves the video limit is not reached.
+   */
+  function releaseWaiting(kind: "photo" | "video") {
+    const frees = (item: UploadItem) =>
+      item.status === "waiting_quota" &&
+      (item.reason === "album_full" || (kind === "video" && item.reason === "video_limit_reached"));
+    if (!items.some(frees)) return;
+    cancelProbe?.();
+    cancelProbe = null;
+    items = items.map((item) =>
+      frees(item) ? { ...resetForRetry(item), reason: undefined } : item,
+    );
+    emit();
+    if (items.some((item) => item.status === "waiting_quota")) scheduleProbe();
   }
 
   function pump() {
@@ -332,9 +371,9 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
         const previewUrl = io.previewUrl?.(media);
         if (previewUrl) update(id, (item) => ({ ...item, previewUrl }));
       }
-      if (options.plan) {
+      if (plan) {
         const limit = checkFileLimits({
-          plan: options.plan,
+          plan,
           kind: media.kind,
           bytes: media.bytes,
           durationSeconds: media.durationSeconds,
@@ -347,6 +386,7 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
       // Confirmed by the server: the local copy can go (NF-010).
       forget(id);
       update(id, (item) => ({ ...markSent(item), progress: 1, mediaId, reason: undefined }));
+      releaseWaiting(media.kind);
     } catch (error) {
       const decision = classifyFailure(error);
       switch (decision.action) {
@@ -361,6 +401,7 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
           break;
         case "wait_quota":
           update(id, (item) => ({ ...markWaitingQuota(item), reason: decision.reason }));
+          scheduleProbe();
           break;
         case "retry":
           update(id, (item) => ({ ...markFailed(item, now()), reason: decision.reason }));
@@ -404,7 +445,12 @@ export function createUploadEngine<F extends { name: string }, B extends { size:
       }
       return left.length;
     },
+    setPlan(next) {
+      plan = next;
+    },
     retryNow() {
+      cancelProbe?.();
+      cancelProbe = null;
       items = items.map((item) =>
         item.status === "failed" || item.status === "waiting_quota"
           ? { ...resetForRetry(item), reason: undefined }

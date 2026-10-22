@@ -3,6 +3,12 @@ import { backoffDelayMs } from "./backoff";
 /** Maximum simultaneous uploads per device (NF-003). */
 export const MAX_CONCURRENT_UPLOADS = 3;
 
+/**
+ * A file kept for lack of room (R1) is tried again this often, one file at a time, so that an
+ * organiser who upgrades the plan sees the guests' waiting files go out without anyone acting.
+ */
+export const QUOTA_RECHECK_MS = 60_000;
+
 export type QueueItemStatus =
   | "queued"
   | "uploading"
