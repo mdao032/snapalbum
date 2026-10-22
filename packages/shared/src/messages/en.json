@@ -428,6 +428,36 @@
       "pending": "{count, plural, =0 {No photo to approve.} one {# photo to approve.} other {# photos to approve.}}",
       "reported": "{count, plural, =0 {No report.} one {# photo reported.} other {# photos reported.}}",
       "open": "Open moderation"
+    },
+    "downloadCard": {
+      "title": "Download the album",
+      "subtitle": "All the photos and videos visible in the album, in ZIP files of 2 GB at most. The ZIPs are built in your browser, straight from the storage: your photos go through no server.",
+      "prepare": "Prepare the download",
+      "preparing": "Preparing…",
+      "prepareFailed": "Could not prepare the download. Try again in a moment.",
+      "empty": "There is no photo to download yet.",
+      "summary": "{count, plural, one {# file} other {# files}}, {size}, in {parts, plural, one {# part} other {# parts}}.",
+      "variantLabel": "What the files contain",
+      "variants": {
+        "originals": "Original photos and videos (full quality)",
+        "optimized": "Optimised versions (lighter)"
+      },
+      "freeHint": "The free plan downloads the optimised versions. Original files are included in the Event plan.",
+      "partLabel": "Part {part} of {total}",
+      "partInfo": "{count, plural, one {# file} other {# files}}, {size}",
+      "download": "Download",
+      "retry": "Retry",
+      "downloadAll": "Download everything",
+      "running": "Part {part}: {done} of {total} files ({size})",
+      "progressLabel": "Download progress",
+      "done": "Done",
+      "failed": "Part {part} failed. You can retry it, the others are not affected.",
+      "stop": "Stop",
+      "stopped": "Download stopped.",
+      "memoryHint": "This browser keeps each part in memory before saving it. For a large album, use Chrome or Edge on a computer.",
+      "sizeGb": "{value} GB",
+      "sizeMb": "{value} MB",
+      "sizeKb": "{value} KB"
     }
   },
   "gallery": {

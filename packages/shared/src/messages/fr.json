@@ -428,6 +428,36 @@
       "pending": "{count, plural, =0 {Aucune photo à valider.} one {# photo à valider.} other {# photos à valider.}}",
       "reported": "{count, plural, =0 {Aucun signalement.} one {# photo signalée.} other {# photos signalées.}}",
       "open": "Ouvrir la modération"
+    },
+    "downloadCard": {
+      "title": "Télécharger l’album",
+      "subtitle": "Toutes les photos et vidéos visibles dans l’album, en fichiers ZIP de 2 Go au plus. Les ZIP sont préparés dans votre navigateur, directement depuis le stockage : vos photos ne passent par aucun serveur.",
+      "prepare": "Préparer le téléchargement",
+      "preparing": "Préparation…",
+      "prepareFailed": "Impossible de préparer le téléchargement. Réessayez dans un instant.",
+      "empty": "Il n’y a encore aucune photo à télécharger.",
+      "summary": "{count, plural, one {# fichier} other {# fichiers}}, {size}, en {parts, plural, one {# partie} other {# parties}}.",
+      "variantLabel": "Contenu des fichiers",
+      "variants": {
+        "originals": "Photos et vidéos d’origine (pleine qualité)",
+        "optimized": "Versions optimisées (plus légères)"
+      },
+      "freeHint": "L’offre gratuite télécharge les versions optimisées. Les fichiers d’origine sont inclus dans l’offre Événement.",
+      "partLabel": "Partie {part} sur {total}",
+      "partInfo": "{count, plural, one {# fichier} other {# fichiers}}, {size}",
+      "download": "Télécharger",
+      "retry": "Relancer",
+      "downloadAll": "Tout télécharger",
+      "running": "Partie {part} : {done} sur {total} fichiers ({size})",
+      "progressLabel": "Avancement du téléchargement",
+      "done": "Terminé",
+      "failed": "La partie {part} a échoué. Vous pouvez la relancer, les autres ne sont pas touchées.",
+      "stop": "Arrêter",
+      "stopped": "Téléchargement arrêté.",
+      "memoryHint": "Ce navigateur garde chaque partie en mémoire avant de l’enregistrer. Pour un gros album, utilisez Chrome ou Edge sur un ordinateur.",
+      "sizeGb": "{value} Go",
+      "sizeMb": "{value} Mo",
+      "sizeKb": "{value} Ko"
     }
   },
   "gallery": {
