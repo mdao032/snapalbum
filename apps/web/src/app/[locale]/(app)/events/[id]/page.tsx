@@ -16,6 +16,7 @@ import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { AlbumReady } from "@/components/events/album-ready";
+import { LiveCard } from "@/components/events/live-card";
 import { DeleteEvent } from "@/components/events/delete-event";
 import { EventCover } from "@/components/events/event-cover";
 import { EventStatsPanel } from "@/components/events/event-stats";
@@ -122,6 +123,8 @@ export default async function EventPage({ params }: PageProps<"/[locale]/events/
               title={event.title}
               link={buildShortLink(clientEnv.NEXT_PUBLIC_SHORT_LINK_BASE, event.public_code)}
             />
+
+            <LiveCard code={event.public_code} />
 
             <AlbumReady
               waitingCount={notifyCount}
