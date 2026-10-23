@@ -94,6 +94,26 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"feedback": {
+                  Row: {
+                    "audience": string,"created_at": string,"event_id": string | null,"handled_at": string | null,"id": string,"locale": string,"message": string,"rating": number,"user_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "audience": string,"created_at"?: string,"event_id"?: string | null,"handled_at"?: string | null,"id"?: string,"locale": string,"message"?: string,"rating": number,"user_id"?: string | null
+                  }
+                  Update: {
+                    "audience"?: string,"created_at"?: string,"event_id"?: string | null,"handled_at"?: string | null,"id"?: string,"locale"?: string,"message"?: string,"rating"?: number,"user_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "feedback_event_id_fkey"
+      columns: ["event_id"]
+isOneToOne: false
+      referencedRelation: "events"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"guests": {
                   Row: {
                     "auth_user_id": string,"blocked_at": string | null,"created_at": string,"display_name": string | null,"event_id": string,"id": string,"notify_consent_at": string | null,"notify_email": string | null,"terms_accepted_at": string | null,"terms_version": string | null,"updated_at": string
@@ -266,6 +286,9 @@ isOneToOne: true
 "admin_list_events":
 { Args: { "p_limit": number,"p_offset": number,"p_query": string }; Returns: Json
                            },
+"admin_list_feedback":
+{ Args: { "p_limit": number,"p_offset": number }; Returns: Json
+                           },
 "admin_list_organisers":
 { Args: { "p_limit": number,"p_offset": number,"p_query": string }; Returns: Json
                            },
@@ -277,6 +300,9 @@ isOneToOne: true
                            },
 "admin_set_event_suspended":
 { Args: { "p_actor": string,"p_event_id": string,"p_suspended": boolean }; Returns: Json
+                           },
+"admin_set_feedback_handled":
+{ Args: { "p_actor": string,"p_handled": boolean,"p_id": string }; Returns: Json
                            },
 "apply_purchase":
 { Args: { "p_amount_cents": number,"p_currency": string,"p_event_id": string,"p_months": number,"p_payment_intent": string,"p_product": string,"p_session_id": string,"p_stripe_event_id": string,"p_stripe_event_type": string,"p_user_id": string }; Returns: Json

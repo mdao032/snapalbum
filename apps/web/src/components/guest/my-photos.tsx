@@ -4,6 +4,7 @@ import { ApiError, createApiClient } from "@snapalbum/shared/api-client";
 import type { MyMediaItem } from "@snapalbum/shared/schemas";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { FeedbackForm } from "@/components/feedback/feedback-form";
 import { Button } from "@/components/ui/button";
 
 const api = createApiClient({ baseUrl: "" });
@@ -22,6 +23,8 @@ export function MyPhotos({ eventCode, refreshKey }: { eventCode: string; refresh
   const [state, setState] = useState<State>({ status: "loading" });
   const [asking, setAsking] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const tFeedback = useTranslations("feedback");
 
   // Bumped to load again (retry button, a photo already gone elsewhere).
   const [attempt, setAttempt] = useState(0);
@@ -152,6 +155,26 @@ export function MyPhotos({ eventCode, refreshKey }: { eventCode: string; refresh
             );
           })}
         </ul>
+      ) : null}
+
+      {/* Offered once something was sent, and only here: nothing is added to the first screen. */}
+      {state.status === "ready" && state.items.length > 0 ? (
+        <div className="flex flex-col gap-3 border-t border-border/60 pt-4">
+          <Button
+            variant="secondary"
+            aria-expanded={feedbackOpen}
+            onClick={() => setFeedbackOpen(!feedbackOpen)}
+          >
+            {tFeedback("guest.open")}
+          </Button>
+          {feedbackOpen ? (
+            <FeedbackForm
+              audience="guest"
+              eventCode={eventCode}
+              onDone={() => setFeedbackOpen(false)}
+            />
+          ) : null}
+        </div>
       ) : null}
     </section>
   );

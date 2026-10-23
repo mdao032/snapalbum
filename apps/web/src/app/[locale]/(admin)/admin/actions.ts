@@ -7,6 +7,7 @@ import { redirect } from "@/i18n/navigation";
 import { extendEvent, setEventSuspended } from "@/server/admin";
 import { getAdmin } from "@/server/auth";
 import { createBetaInvitation, revokeBetaInvitation } from "@/server/beta";
+import { setFeedbackHandled } from "@/server/feedback";
 import { dismissReports, moderateMedia } from "@/server/moderation";
 import { getStorage } from "@/server/storage";
 import { createSupabaseAdminClient } from "@/server/supabase/admin";
@@ -24,7 +25,7 @@ const text = (formData: FormData, name: string) => {
 };
 
 const RETURN_PATHS =
-  /^\/admin(\/(events(\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?|organisers|payments|reports|beta))?$/;
+  /^\/admin(\/(events(\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?|organisers|payments|reports|beta|feedback))?$/;
 
 /** Where to come back to: a page of the administrator area, never an address from elsewhere. */
 function returnPath(formData: FormData): string {
@@ -107,5 +108,19 @@ export async function revokeBetaInvitationAction(formData: FormData): Promise<vo
   const id = uuidSchema.safeParse(text(formData, "invitationId"));
   if (!admin || !id.success) return comeBack(formData, "failed");
   const result = await revokeBetaInvitation(createSupabaseAdminClient(), admin.id, id.data);
+  return comeBack(formData, result.ok ? "done" : "failed");
+}
+
+/** Marks a piece of feedback as handled, or opens it again (step 6.2). */
+export async function handleFeedbackAction(formData: FormData): Promise<void> {
+  const admin = await getAdmin(await createSupabaseServerClient());
+  const id = uuidSchema.safeParse(text(formData, "feedbackId"));
+  if (!admin || !id.success) return comeBack(formData, "failed");
+  const result = await setFeedbackHandled(
+    createSupabaseAdminClient(),
+    admin.id,
+    id.data,
+    text(formData, "handled") === "true",
+  );
   return comeBack(formData, result.ok ? "done" : "failed");
 }

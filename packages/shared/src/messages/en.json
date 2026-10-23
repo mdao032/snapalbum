@@ -972,6 +972,13 @@
       "title": "Storage is over the alert threshold",
       "intro": "The stored volume is {used}, for a threshold of {threshold}. You will not get another alert for a week.",
       "cta": "Open the admin area"
+    },
+    "feedbackDigest": {
+      "subject": "New feedback on Snapalbum",
+      "preview": "Organisers or guests have given their feedback.",
+      "title": "New feedback to read",
+      "intro": "{count, plural, one {# new piece of feedback has not been handled yet.} other {# new pieces of feedback have not been handled yet.}} Average rating of all feedback: {average} out of 5.",
+      "cta": "Read the feedback"
     }
   },
   "usages": {
@@ -1462,7 +1469,8 @@
       "organisers": "Organisers",
       "payments": "Payments",
       "reports": "Reports",
-      "beta": "Beta"
+      "beta": "Beta",
+      "feedback": "Feedback"
     },
     "search": {
       "label": "Search",
@@ -1615,6 +1623,43 @@
         "revoked": "Cancelled"
       },
       "revoke": "Cancel"
+    },
+    "feedback": {
+      "title": "User feedback",
+      "summary": "{total, plural, =0 {No feedback} one {# piece of feedback} other {# pieces of feedback}} · {open} to handle · average rating: {average} out of 5",
+      "empty": "No feedback yet.",
+      "rating": "{value} out of 5",
+      "audience": {
+        "organiser": "Organiser",
+        "guest": "Guest"
+      },
+      "noMessage": "No comment.",
+      "markHandled": "Mark as handled",
+      "reopen": "Reopen",
+      "done": "Done.",
+      "failed": "The action could not be done."
     }
+  },
+  "feedback": {
+    "organiser": {
+      "title": "Your feedback helps",
+      "intro": "Snapalbum is being tested with a few organisers. Tell us how it is going, in two minutes.",
+      "question": "Overall, are you satisfied?",
+      "message": "What got in the way, and what did you like?"
+    },
+    "guest": {
+      "open": "Give my feedback",
+      "question": "Did sending your photos go well?",
+      "message": "A word on what got in the way or what you liked"
+    },
+    "option": "{value} out of 5",
+    "scale": "1: not at all · 5: perfect",
+    "optional": "Optional. Write as you like, we read everything.",
+    "ratingMissing": "Please choose a rating from 1 to 5.",
+    "submit": "Send my feedback",
+    "sending": "Sending…",
+    "thanks": "Thank you! Your feedback helps us improve the service.",
+    "failed": "We could not send your feedback. Please try again in a moment.",
+    "close": "Close"
   }
 }

@@ -26,6 +26,9 @@ vi.mock("@/server/notifications", () => ({ sendExpiryReminders, runDailyRecap })
 const checkStorageAlert = vi.fn(async () => "skipped");
 vi.mock("@/server/admin", () => ({ checkStorageAlert }));
 
+const sendFeedbackDigest = vi.fn(async () => ({ result: "skipped", count: 0 }));
+vi.mock("@/server/feedback", () => ({ sendFeedbackDigest }));
+
 vi.mock("@/server/email/mailer", () => ({ getMailer: () => ({ mailer: true }) }));
 vi.mock("@/server/storage", () => ({ getStorage: () => ({ storage: true }) }));
 vi.mock("@/server/supabase/admin", () => ({ createSupabaseAdminClient: () => ({ admin: true }) }));
@@ -96,7 +99,10 @@ describe("SPEC 9.2, 14: chaque tâche appelle son travail", () => {
     expect(await (await call("daily-recap", auth)).json()).toMatchObject({
       albumReady: { sent: 5 },
       storageAlert: "skipped",
+      feedbackDigest: { result: "skipped", count: 0 },
     });
+    // Step 6.2: the same daily task also tells the administrators about unread feedback.
+    expect(sendFeedbackDigest).toHaveBeenCalledTimes(1);
     // SPEC 9.3: no threshold configured, no alert is asked for.
     expect(checkStorageAlert).toHaveBeenCalledWith(
       expect.objectContaining({ thresholdBytes: null }),

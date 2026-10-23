@@ -35,6 +35,7 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
         "share",
         "dashboard",
         "moderation",
+        "feedback",
         "apiErrors",
       ])}
     >

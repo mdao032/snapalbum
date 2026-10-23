@@ -94,6 +94,13 @@ export const BETA_REDEEM_RATE_LIMIT: RateLimitRule = {
   windowSeconds: 10 * 60,
 };
 
+/** Feedback (step 6.2): 5 per hour per person. */
+export const FEEDBACK_RATE_LIMIT: RateLimitRule = {
+  name: "feedback",
+  limit: 5,
+  windowSeconds: 60 * 60,
+};
+
 type Fetcher = typeof fetch;
 
 const memoryWindows = new Map<string, { count: number; resetAt: number }>();

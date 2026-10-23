@@ -307,6 +307,27 @@ export function StorageAlertEmail({
   );
 }
 
+/** Step 6.2: new feedback was left since the last digest. For the administrators. */
+export function FeedbackDigestEmail({
+  t,
+  count,
+  average,
+  adminUrl,
+}: {
+  t: Translate;
+  count: number;
+  average: string;
+  adminUrl: string;
+}) {
+  return (
+    <Layout t={t} preview={t("feedbackDigest.preview")} footer="footerOrganiser">
+      <Text style={styles.title}>{t("feedbackDigest.title")}</Text>
+      <Text style={styles.text}>{t("feedbackDigest.intro", { count, average })}</Text>
+      <Cta href={adminUrl}>{t("feedbackDigest.cta")}</Cta>
+    </Layout>
+  );
+}
+
 /** Ready for the co-organisers of F-005; nothing sends it until that feature exists. */
 export function CohostInvitationEmail({
   t,

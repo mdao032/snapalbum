@@ -23,6 +23,7 @@ import { ModerationCard } from "@/components/events/moderation-card";
 import { DeleteEvent } from "@/components/events/delete-event";
 import { DownloadAlbum } from "@/components/events/download-album";
 import { EventCover } from "@/components/events/event-cover";
+import { OrganiserFeedback } from "@/components/feedback/organiser-feedback";
 import { EventStatsPanel } from "@/components/events/event-stats";
 import { BetaDone } from "@/components/events/beta-code-form";
 import { PaymentReturn } from "@/components/events/payment-return";
@@ -274,6 +275,8 @@ export default async function EventPage({
                 accentColor: event.accent_color,
               }}
             />
+
+            <OrganiserFeedback eventCode={event.public_code} />
 
             <DeleteEvent eventId={event.id} title={event.title} />
           </>

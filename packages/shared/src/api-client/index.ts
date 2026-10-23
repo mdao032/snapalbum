@@ -2,6 +2,7 @@ import type { z } from "zod";
 import {
   apiErrorBodySchema,
   completeUploadResponseSchema,
+  feedbackResponseSchema,
   galleryResponseSchema,
   joinEventResponseSchema,
   multipartResponseSchema,
@@ -12,6 +13,8 @@ import {
   type ApiErrorCode,
   type CompleteUploadRequest,
   type CompleteUploadResponse,
+  type FeedbackRequest,
+  type FeedbackResponse,
   type GalleryRequest,
   type GalleryResponse,
   type JoinEventRequest,
@@ -59,6 +62,8 @@ export interface ApiClient {
   myMedia(body: MyMediaRequest): Promise<MyMediaResponse>;
   /** A guest asks to be told when the album is ready, or takes it back (F-044). */
   notify(body: NotifyRequest): Promise<NotifyResponse>;
+  /** An organiser or a guest leaves feedback during the field beta (step 6.2). */
+  feedback(body: FeedbackRequest): Promise<FeedbackResponse>;
   /** A visitor of the album reports a photo (F-073). */
   report(body: ReportRequest): Promise<ReportResponse>;
   /** The album: a page of thumbnails, fresh addresses, or the files of the viewer (F-039, F-050 to F-054). */
@@ -112,6 +117,7 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
     multipart: (body) => post("/api/uploads/multipart", body, multipartResponseSchema),
     myMedia: (body) => post("/api/uploads/mine", body, myMediaResponseSchema),
     notify: (body) => post("/api/guests/notify", body, notifyResponseSchema),
+    feedback: (body) => post("/api/feedback", body, feedbackResponseSchema),
     report: (body) => post("/api/gallery/report", body, reportResponseSchema),
     gallery: (body) => post("/api/gallery", body, galleryResponseSchema),
   };

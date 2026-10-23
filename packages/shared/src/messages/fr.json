@@ -972,6 +972,13 @@
       "title": "Le stockage dépasse le seuil d’alerte",
       "intro": "Le volume stocké est de {used}, pour un seuil de {threshold}. Vous ne recevrez pas d’autre alerte avant une semaine.",
       "cta": "Ouvrir l’espace administrateur"
+    },
+    "feedbackDigest": {
+      "subject": "Nouveaux avis sur Snapalbum",
+      "preview": "Des organisateurs ou des invités ont donné leur avis.",
+      "title": "Nouveaux avis à lire",
+      "intro": "{count, plural, one {# nouvel avis n’a pas encore été traité.} other {# nouveaux avis n’ont pas encore été traités.}} Note moyenne de tous les avis : {average} sur 5.",
+      "cta": "Lire les avis"
     }
   },
   "usages": {
@@ -1466,7 +1473,8 @@
       "organisers": "Organisateurs",
       "payments": "Paiements",
       "reports": "Signalements",
-      "beta": "Bêta"
+      "beta": "Bêta",
+      "feedback": "Avis"
     },
     "search": {
       "label": "Rechercher",
@@ -1619,6 +1627,43 @@
         "revoked": "Annulé"
       },
       "revoke": "Annuler"
+    },
+    "feedback": {
+      "title": "Avis des utilisateurs",
+      "summary": "{total, plural, =0 {Aucun avis} one {# avis} other {# avis}} · {open} à traiter · note moyenne : {average} sur 5",
+      "empty": "Aucun avis pour le moment.",
+      "rating": "{value} sur 5",
+      "audience": {
+        "organiser": "Organisateur",
+        "guest": "Invité"
+      },
+      "noMessage": "Pas de commentaire.",
+      "markHandled": "Marquer comme traité",
+      "reopen": "Rouvrir",
+      "done": "C’est fait.",
+      "failed": "L’action n’a pas pu être faite."
     }
+  },
+  "feedback": {
+    "organiser": {
+      "title": "Votre avis nous aide",
+      "intro": "Snapalbum est en test auprès de quelques organisateurs. Dites-nous comment cela se passe, en deux minutes.",
+      "question": "Dans l’ensemble, êtes-vous satisfait ?",
+      "message": "Qu’est-ce qui a bloqué, qu’est-ce qui vous a plu ?"
+    },
+    "guest": {
+      "open": "Donner mon avis",
+      "question": "Cet envoi de photos s’est-il bien passé ?",
+      "message": "Un mot sur ce qui a bloqué ou plu"
+    },
+    "option": "{value} sur 5",
+    "scale": "1 : pas du tout · 5 : parfait",
+    "optional": "Facultatif. Écrivez comme vous voulez, nous lisons tout.",
+    "ratingMissing": "Choisissez une note de 1 à 5.",
+    "submit": "Envoyer mon avis",
+    "sending": "Envoi…",
+    "thanks": "Merci ! Votre avis nous aide à améliorer le service.",
+    "failed": "Nous n’avons pas pu envoyer votre avis. Réessayez dans un instant.",
+    "close": "Fermer"
   }
 }

@@ -4,6 +4,7 @@ import { checkStorageAlert } from "@/server/admin";
 import { apiError, apiJson, guarded } from "@/server/api-response";
 import { CRON_TASKS, isCronRequest, type CronTask } from "@/server/cron";
 import { getMailer } from "@/server/email/mailer";
+import { sendFeedbackDigest } from "@/server/feedback";
 import { cleanupUploads, expireEvents, purgeDueAccounts, purgeDueEvents } from "@/server/lifecycle";
 import { runDailyRecap, sendExpiryReminders } from "@/server/notifications";
 import { getStorage } from "@/server/storage";
@@ -47,7 +48,9 @@ export function GET(request: Request, context: { params: Promise<{ task: string 
           mailer,
           thresholdBytes: storageThresholdBytes(getServerEnv().STORAGE_ALERT_GB),
         });
-        return apiJson({ task, ...recap, storageAlert });
+        // Step 6.2: and of the feedback nobody has read yet.
+        const feedbackDigest = await sendFeedbackDigest({ admin, mailer });
+        return apiJson({ task, ...recap, storageAlert, feedbackDigest });
       }
     }
   });

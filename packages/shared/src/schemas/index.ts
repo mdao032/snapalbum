@@ -3,5 +3,6 @@ export * from "./event";
 export * from "./upload";
 export * from "./gallery";
 export * from "./form-errors";
+export * from "./feedback";
 export * from "./guest";
 export * from "./moderation";

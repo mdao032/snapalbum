@@ -7,6 +7,7 @@ import { createTranslator } from "next-intl";
 import type { ReactElement } from "react";
 import {
   AccountDeletionEmail,
+  FeedbackDigestEmail,
   StorageAlertEmail,
   AlbumReadyEmail,
   CohostInvitationEmail,
@@ -162,6 +163,24 @@ export function composeStorageAlert(input: {
       t={t}
       used={formatBytes(input.bytes, input.locale)}
       threshold={formatBytes(input.thresholdBytes, input.locale)}
+      adminUrl={input.adminUrl}
+    />,
+  );
+}
+
+export function composeFeedbackDigest(input: {
+  locale: Locale;
+  count: number;
+  average: string;
+  adminUrl: string;
+}) {
+  const t = emailTranslator(input.locale);
+  return build(
+    t("feedbackDigest.subject"),
+    <FeedbackDigestEmail
+      t={t}
+      count={input.count}
+      average={input.average}
       adminUrl={input.adminUrl}
     />,
   );
