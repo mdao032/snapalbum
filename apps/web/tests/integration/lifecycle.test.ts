@@ -366,10 +366,12 @@ describe("SPEC 9.2: nettoyage des envois abandonnés", () => {
     expect(await storage.head(`events/${id}/display/${recent}.webp`)).not.toBeNull();
     const { data: counters } = await admin
       .from("events")
-      .select("media_count")
+      .select("media_count, uploads_abandoned")
       .eq("id", id)
       .single();
     expect(counters?.media_count).toBe(1);
+    // Step 6.3: the dropped reservation is counted, for the beta's send success rate.
+    expect(counters?.uploads_abandoned).toBe(1);
   });
 
   it("un envoi en plusieurs parties dont l'expiration est passée est abandonné côté stockage et en base", async () => {

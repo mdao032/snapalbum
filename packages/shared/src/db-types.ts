@@ -82,14 +82,14 @@ isOneToOne: false
                   ]
                 },"events": {
                   Row: {
-                    "accent_color": string | null,"bytes_used": number,"cover_media_key": string | null,"created_at": string,"deleted_at": string | null,"deletion_reason": string | null,"event_date": string,"expires_at": string | null,"id": string,"locale": string,"media_count": number,"owner_id": string,"plan": string,"public_code": string,"settings": NonNullable<Json>,"status": string,"title": string,"type": string,"updated_at": string,"welcome_message": string | null
+                    "accent_color": string | null,"bytes_used": number,"cover_media_key": string | null,"created_at": string,"deleted_at": string | null,"deletion_reason": string | null,"event_date": string,"expires_at": string | null,"id": string,"locale": string,"media_count": number,"owner_id": string,"plan": string,"public_code": string,"settings": NonNullable<Json>,"status": string,"title": string,"type": string,"updated_at": string,"uploads_abandoned": number,"welcome_message": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "accent_color"?: string | null,"bytes_used"?: number,"cover_media_key"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"deletion_reason"?: string | null,"event_date": string,"expires_at"?: string | null,"id"?: string,"locale"?: string,"media_count"?: number,"owner_id": string,"plan"?: string,"public_code": string,"settings"?: NonNullable<Json>,"status"?: string,"title": string,"type": string,"updated_at"?: string,"welcome_message"?: string | null
+                    "accent_color"?: string | null,"bytes_used"?: number,"cover_media_key"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"deletion_reason"?: string | null,"event_date": string,"expires_at"?: string | null,"id"?: string,"locale"?: string,"media_count"?: number,"owner_id": string,"plan"?: string,"public_code": string,"settings"?: NonNullable<Json>,"status"?: string,"title": string,"type": string,"updated_at"?: string,"uploads_abandoned"?: number,"welcome_message"?: string | null
                   }
                   Update: {
-                    "accent_color"?: string | null,"bytes_used"?: number,"cover_media_key"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"deletion_reason"?: string | null,"event_date"?: string,"expires_at"?: string | null,"id"?: string,"locale"?: string,"media_count"?: number,"owner_id"?: string,"plan"?: string,"public_code"?: string,"settings"?: NonNullable<Json>,"status"?: string,"title"?: string,"type"?: string,"updated_at"?: string,"welcome_message"?: string | null
+                    "accent_color"?: string | null,"bytes_used"?: number,"cover_media_key"?: string | null,"created_at"?: string,"deleted_at"?: string | null,"deletion_reason"?: string | null,"event_date"?: string,"expires_at"?: string | null,"id"?: string,"locale"?: string,"media_count"?: number,"owner_id"?: string,"plan"?: string,"public_code"?: string,"settings"?: NonNullable<Json>,"status"?: string,"title"?: string,"type"?: string,"updated_at"?: string,"uploads_abandoned"?: number,"welcome_message"?: string | null
                   }
                   Relationships: [
                     
@@ -309,6 +309,9 @@ isOneToOne: true
                            },
 "apply_refund":
 { Args: { "p_free_expires_at": string,"p_months": number,"p_payment_intent": string,"p_stripe_event_id": string,"p_stripe_event_type": string }; Returns: Json
+                           },
+"bump_uploads_abandoned":
+{ Args: { "p_count": number,"p_event_id": string }; Returns: undefined
                            },
 "cancel_account_deletion":
 { Args: { "p_grace_days": number,"p_now": string,"p_user_id": string }; Returns: Json

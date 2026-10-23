@@ -1509,7 +1509,9 @@
       "reports": "Signalements ouverts",
       "alertOn": "Alerte par e-mail au-dessus de {threshold}.",
       "alertOff": "Aucune alerte de stockage : renseignez STORAGE_ALERT_GB pour en recevoir.",
-      "beta": "Événements de la bêta"
+      "beta": "Événements de la bêta",
+      "betaSends": "Réussite des envois (bêta)",
+      "betaSendsHint": "{delivered} livrés, {failed} refusés ou jamais confirmés. Objectif : plus de {target}. Seuls les envois arrivés jusqu’au serveur sont vus."
     },
     "events": {
       "title": "Événements",

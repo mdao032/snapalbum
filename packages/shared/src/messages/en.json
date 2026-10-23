@@ -1505,7 +1505,9 @@
       "reports": "Open reports",
       "alertOn": "E-mail alert above {threshold}.",
       "alertOff": "No storage alert: set STORAGE_ALERT_GB to get one.",
-      "beta": "Beta events"
+      "beta": "Beta events",
+      "betaSends": "Send success (beta)",
+      "betaSendsHint": "{delivered} delivered, {failed} refused or never confirmed. Target: over {target}. Only sends that reached the server are seen."
     },
     "events": {
       "title": "Events",

@@ -249,11 +249,13 @@ export async function cleanupUploads(deps: LifecycleDeps): Promise<CleanupReport
   const cutoff = new Date(now.getTime() - PENDING_MAX_AGE_MS).toISOString();
   const { data: stale, error: staleError } = await deps.admin
     .from("media")
-    .select("id, key_original, key_display, key_thumb")
+    .select("id, event_id, key_original, key_display, key_thumb")
     .eq("status", "pending")
     .lt("created_at", cutoff)
     .limit(500);
   if (staleError) throw staleError;
+  // Counted per event before they disappear: the beta's send success rate needs them (step 6.3).
+  const abandoned = new Map<string, number>();
   for (const media of stale) {
     const keys = [media.key_original, media.key_display, media.key_thumb].filter(
       (key): key is string => Boolean(key),
@@ -266,6 +268,16 @@ export async function cleanupUploads(deps: LifecycleDeps): Promise<CleanupReport
       .eq("status", "pending");
     if (error) throw error;
     report.mediaRemoved += 1;
+    abandoned.set(media.event_id, (abandoned.get(media.event_id) ?? 0) + 1);
+  }
+  for (const [eventId, count] of abandoned) {
+    const { error } = await (
+      deps.admin.rpc as unknown as (
+        name: string,
+        args: Record<string, unknown>,
+      ) => PromiseLike<{ error: unknown }>
+    )("bump_uploads_abandoned", { p_event_id: eventId, p_count: count });
+    if (error) throw error;
   }
   return report;
 }

@@ -62,3 +62,21 @@ export function stripePaymentUrl(paymentIntentId: string): string {
   // Keys are test keys only for now (`env.server.ts` refuses others): the test dashboard.
   return `https://dashboard.stripe.com/test/payments/${encodeURIComponent(paymentIntentId)}`;
 }
+
+/**
+ * The gate of the field beta (ROADMAP phase 6): three events without a blocking incident, more than
+ * 99.5 % of the sends that reached the server delivered, and at least half of the beta organisers
+ * saying they would have paid.
+ */
+export const BETA_GATE = { events: 3, sendSuccessRate: 0.995, wouldPayShare: 0.5 } as const;
+
+/**
+ * Share of the sends that reached the server and were delivered, 0 to 1 (`delivered` over
+ * `delivered + failed`); null with nothing to measure. A file the guest's phone never managed to
+ * send is not visible here: the phone keeps retrying until the file is sent (NF-013).
+ */
+export function sendSuccessRate(delivered: number, failed: number): number | null {
+  const total = delivered + failed;
+  if (total <= 0) return null;
+  return Math.min(1, Math.max(0, delivered / total));
+}

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  BETA_GATE,
   conversionRate,
+  sendSuccessRate,
   estimateStorageCostCents,
   shouldAlertStorage,
   storageThresholdBytes,
@@ -77,5 +79,20 @@ describe("SPEC 9.3: alerte de stockage", () => {
     for (const value of [undefined, null, 0, -3, Number.NaN]) {
       expect(storageThresholdBytes(value)).toBeNull();
     }
+  });
+});
+
+describe("6.3: réussite des envois de la bêta", () => {
+  it("6.3: part des envois arrivés au serveur qui ont été livrés ; rien à mesurer, rien", () => {
+    expect(sendSuccessRate(995, 5)).toBe(0.995);
+    expect(sendSuccessRate(10, 0)).toBe(1);
+    expect(sendSuccessRate(0, 4)).toBe(0);
+    expect(sendSuccessRate(0, 0)).toBeNull();
+  });
+
+  it("6.3: la porte de la phase 6 : trois événements, plus de 99,5 %, la moitié prête à payer", () => {
+    expect(BETA_GATE).toEqual({ events: 3, sendSuccessRate: 0.995, wouldPayShare: 0.5 });
+    expect(sendSuccessRate(994, 6)! >= BETA_GATE.sendSuccessRate).toBe(false);
+    expect(sendSuccessRate(996, 4)! >= BETA_GATE.sendSuccessRate).toBe(true);
   });
 });

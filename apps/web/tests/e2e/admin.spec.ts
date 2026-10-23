@@ -121,6 +121,7 @@ test.describe("F-092: aperçu", () => {
       "stat-storage",
       "stat-cost",
       "stat-revenue",
+      "stat-beta-sends",
       "stat-organisers",
       "stat-reports",
     ]) {

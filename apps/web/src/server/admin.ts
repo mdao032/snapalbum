@@ -45,6 +45,9 @@ export interface Overview {
   events_paid: number;
   /** Events that received the Event plan with a beta invitation code (step 6.1). */
   events_beta: number;
+  /** Sends of the beta events that reached the album, and those refused or never confirmed (6.3). */
+  beta_uploads_delivered: number;
+  beta_uploads_failed: number;
   organisers_total: number;
   media_total: number;
   media_30d: number;

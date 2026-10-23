@@ -1,5 +1,7 @@
 import {
+  BETA_GATE,
   conversionRate,
+  sendSuccessRate,
   estimateStorageCostCents,
   formatPrice,
   STORAGE_EUR_PER_GB_MONTH,
@@ -98,6 +100,31 @@ export default async function AdminOverviewPage({ params }: PageProps<"/[locale]
           hint={t("revenueHint", {
             paid: overview.purchases_paid,
             refunded: overview.purchases_refunded,
+          })}
+        />
+        <StatCard
+          testId="stat-beta-sends"
+          label={t("betaSends")}
+          value={(() => {
+            const rate = sendSuccessRate(
+              overview.beta_uploads_delivered,
+              overview.beta_uploads_failed,
+            );
+            return rate === null
+              ? "-"
+              : new Intl.NumberFormat(locale, {
+                  style: "percent",
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                }).format(rate);
+          })()}
+          hint={t("betaSendsHint", {
+            delivered: number.format(overview.beta_uploads_delivered),
+            failed: number.format(overview.beta_uploads_failed),
+            target: new Intl.NumberFormat(locale, {
+              style: "percent",
+              minimumFractionDigits: 1,
+            }).format(BETA_GATE.sendSuccessRate),
           })}
         />
         <StatCard
