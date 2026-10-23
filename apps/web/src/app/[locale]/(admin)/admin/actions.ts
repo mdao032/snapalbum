@@ -2,9 +2,11 @@
 
 import { ADMIN_EXTEND_MONTHS, uuidSchema } from "@snapalbum/shared";
 import { getLocale } from "next-intl/server";
+import { z } from "zod";
 import { redirect } from "@/i18n/navigation";
 import { extendEvent, setEventSuspended } from "@/server/admin";
 import { getAdmin } from "@/server/auth";
+import { createBetaInvitation, revokeBetaInvitation } from "@/server/beta";
 import { dismissReports, moderateMedia } from "@/server/moderation";
 import { getStorage } from "@/server/storage";
 import { createSupabaseAdminClient } from "@/server/supabase/admin";
@@ -22,7 +24,7 @@ const text = (formData: FormData, name: string) => {
 };
 
 const RETURN_PATHS =
-  /^\/admin(\/(events(\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?|organisers|payments|reports))?$/;
+  /^\/admin(\/(events(\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?|organisers|payments|reports|beta))?$/;
 
 /** Where to come back to: a page of the administrator area, never an address from elsewhere. */
 function returnPath(formData: FormData): string {
@@ -82,5 +84,28 @@ export async function handleReportAction(formData: FormData): Promise<void> {
       : await moderateMedia(deps, admin.id, eventId.data, action as "hide" | "delete", [
           mediaId.data,
         ]);
+  return comeBack(formData, result.ok ? "done" : "failed");
+}
+
+/** Field beta (step 6.1): makes an invitation code for an organiser's address. */
+export async function createBetaInvitationAction(formData: FormData): Promise<void> {
+  const admin = await getAdmin(await createSupabaseServerClient());
+  const email = z.email().safeParse(text(formData, "email").trim());
+  const locale = await getLocale();
+  const back = (outcome: string) =>
+    redirect({ href: `${returnPath(formData)}?${outcome}`, locale });
+  if (!admin) return back("failed=failed");
+  if (!email.success) return back("failed=invalid_email");
+
+  const result = await createBetaInvitation(createSupabaseAdminClient(), admin.id, email.data);
+  return back(result.ok ? "done=1" : `failed=${result.reason}`);
+}
+
+/** Cancels an invitation code that has not been used. */
+export async function revokeBetaInvitationAction(formData: FormData): Promise<void> {
+  const admin = await getAdmin(await createSupabaseServerClient());
+  const id = uuidSchema.safeParse(text(formData, "invitationId"));
+  if (!admin || !id.success) return comeBack(formData, "failed");
+  const result = await revokeBetaInvitation(createSupabaseAdminClient(), admin.id, id.data);
   return comeBack(formData, result.ok ? "done" : "failed");
 }

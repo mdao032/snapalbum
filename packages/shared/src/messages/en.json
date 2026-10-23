@@ -629,7 +629,27 @@
       "upgradeHint": "Secure payment by Stripe. The limits go up at once, before, during or after the party.",
       "extend": "Extend by {months} months ({price})",
       "redirecting": "Opening the payment page…",
-      "salesNote": "Payment is subject to the <sales>terms of sale</sales>."
+      "salesNote": "Payment is subject to the <sales>terms of sale</sales>.",
+      "beta": {
+        "title": "Do you have an invitation code?",
+        "hint": "During the beta, a code gives you the Event plan for free. Enter it here.",
+        "label": "Invitation code",
+        "placeholder": "ABCDE-FGHJK",
+        "submit": "Use my code",
+        "working": "Checking…",
+        "done": "Your code is accepted: your album now has the Event plan, at no charge.",
+        "errors": {
+          "invalid_code": "This code is not valid for your account. Check it or ask for a new one.",
+          "malformed": "This code is incomplete. It has 10 letters and digits, for example ABCDE-FGHJK.",
+          "already_used": "This code has already been used.",
+          "revoked": "This code was cancelled. Ask for a new one.",
+          "event_not_found": "We could not find this event in your account.",
+          "not_free": "This event already has a paid plan.",
+          "event_not_active": "This event is no longer active: the code cannot be applied to it.",
+          "beta_off": "The beta is over: invitation codes are no longer accepted.",
+          "rate_limited": "Too many attempts. Please wait a few minutes before trying again."
+        }
+      }
     },
     "payment": {
       "confirming": "We are confirming your payment…",
@@ -1441,7 +1461,8 @@
       "events": "Events",
       "organisers": "Organisers",
       "payments": "Payments",
-      "reports": "Reports"
+      "reports": "Reports",
+      "beta": "Beta"
     },
     "search": {
       "label": "Search",
@@ -1475,7 +1496,8 @@
       "revenueHint": "{paid} payments, {refunded} refunded.",
       "reports": "Open reports",
       "alertOn": "E-mail alert above {threshold}.",
-      "alertOff": "No storage alert: set STORAGE_ALERT_GB to get one."
+      "alertOff": "No storage alert: set STORAGE_ALERT_GB to get one.",
+      "beta": "Beta events"
     },
     "events": {
       "title": "Events",
@@ -1520,7 +1542,8 @@
         "status": "Status"
       },
       "refund": "Refund in Stripe",
-      "refundHint": "Refunds are made in Stripe: they come back here through the webhook."
+      "refundHint": "Refunds are made in Stripe: they come back here through the webhook.",
+      "beta": "Beta gift"
     },
     "reports": {
       "title": "Open reports",
@@ -1563,6 +1586,35 @@
       "reports": "Open reports",
       "done": "Done.",
       "failed": "Not possible in the event’s current state."
+    },
+    "beta": {
+      "title": "Field beta",
+      "off": "The beta is closed: BETA_MODE is not enabled. Existing codes are no longer accepted and no new code can be made.",
+      "done": "Done.",
+      "failures": {
+        "already_invited": "This address already has an open invitation. Cancel it before making another.",
+        "invalid_email": "This e-mail address is not valid.",
+        "beta_off": "The beta is closed: enable BETA_MODE to make codes.",
+        "failed": "The action could not be done."
+      },
+      "emailLabel": "Organiser’s e-mail address",
+      "emailHint": "The code only works for the account that signs in with this address. Give it to the organiser yourself.",
+      "create": "Make a code",
+      "count": "{count, plural, =0 {No invitations} one {# invitation} other {# invitations}}",
+      "empty": "No invitations yet.",
+      "columns": {
+        "created": "Created",
+        "email": "Organiser",
+        "code": "Code",
+        "state": "State",
+        "event": "Event"
+      },
+      "states": {
+        "open": "Waiting",
+        "redeemed": "Used",
+        "revoked": "Cancelled"
+      },
+      "revoke": "Cancel"
     }
   }
 }

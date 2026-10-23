@@ -8,7 +8,11 @@ import { Link } from "@/i18n/navigation";
 import { formatInstantDate } from "@/lib/events";
 import { CheckoutButton } from "./checkout-button";
 import { QualityNotice } from "./quality-notice";
-import type { CheckoutState } from "@/app/[locale]/(app)/events/[id]/payment/actions";
+import { BetaCodeForm } from "./beta-code-form";
+import type {
+  BetaCodeState,
+  CheckoutState,
+} from "@/app/[locale]/(app)/events/[id]/payment/actions";
 
 /**
  * The plan of the event, what it includes and until when the album is kept (F-045). On the free
@@ -21,6 +25,7 @@ export async function PlanCard({
   optimizedOnlyCount,
   upgrade,
   extend,
+  redeemBeta,
 }: {
   plan: PlanId;
   expiresAt: string | null;
@@ -29,6 +34,8 @@ export async function PlanCard({
   upgrade: ((previous: CheckoutState) => Promise<CheckoutState>) | null;
   /** Opens the payment page for an extension; null when this event cannot buy one. */
   extend: ((previous: CheckoutState) => Promise<CheckoutState>) | null;
+  /** Enters a beta invitation code (step 6.1); null when the beta is closed or the event cannot take one. */
+  redeemBeta: ((previous: BetaCodeState, formData: FormData) => Promise<BetaCodeState>) | null;
 }) {
   const t = await getTranslations("dashboard.plan");
   const tPlans = await getTranslations("plans");
@@ -93,6 +100,8 @@ export async function PlanCard({
             ) : null}
           </div>
         ) : null}
+
+        {redeemBeta ? <BetaCodeForm action={redeemBeta} /> : null}
 
         <Link href="/pricing" className={`${buttonVariants({ variant: "secondary" })} self-start`}>
           {t("seeOffers")}

@@ -24,6 +24,7 @@ import { DeleteEvent } from "@/components/events/delete-event";
 import { DownloadAlbum } from "@/components/events/download-album";
 import { EventCover } from "@/components/events/event-cover";
 import { EventStatsPanel } from "@/components/events/event-stats";
+import { BetaDone } from "@/components/events/beta-code-form";
 import { PaymentReturn } from "@/components/events/payment-return";
 import { PlanCard } from "@/components/events/plan-card";
 import { PersonalizeForm } from "@/components/events/personalize-form";
@@ -37,6 +38,7 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { eventDisplayStatus, formatEventDate, formatInstantDate } from "@/lib/events";
 import { requireOrganiser } from "@/server/auth";
+import { isBetaMode } from "@/server/beta";
 import {
   countNotifyGuests,
   countOptimizedOnlyPhotos,
@@ -53,7 +55,7 @@ import {
   revokeShareLinkAction,
 } from "./actions";
 import { planAlbumAction, signAlbumFilesAction } from "./download/actions";
-import { checkoutAction, confirmPaymentAction } from "./payment/actions";
+import { checkoutAction, confirmPaymentAction, redeemBetaCodeAction } from "./payment/actions";
 
 export const metadata: Metadata = { robots: { index: false } };
 
@@ -63,7 +65,9 @@ export default async function EventPage({
 }: PageProps<"/[locale]/events/[id]">) {
   const { locale, id } = await params;
   // Where Stripe sends the organiser back to (SPEC 13); anything else is ignored.
-  const payment = paymentReturnSchema.safeParse(await searchParams);
+  const query = await searchParams;
+  const payment = paymentReturnSchema.safeParse(query);
+  const betaDone = query.beta === "done";
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const { supabase, user } = await requireOrganiser(locale);
@@ -174,6 +178,8 @@ export default async function EventPage({
           />
         ) : null}
 
+        {betaDone ? <BetaDone /> : null}
+
         <PlanCard
           plan={event.plan as PlanId}
           expiresAt={event.expires_at}
@@ -186,6 +192,17 @@ export default async function EventPage({
               deletionReason: event.deletion_reason,
             }).ok
               ? checkoutAction.bind(null, event.id, "event")
+              : null
+          }
+          redeemBeta={
+            isBetaMode() &&
+            canBuy({
+              product: "event",
+              plan: event.plan as PlanId,
+              status: event.status,
+              deletionReason: event.deletion_reason,
+            }).ok
+              ? redeemBetaCodeAction.bind(null, event.id)
               : null
           }
           extend={

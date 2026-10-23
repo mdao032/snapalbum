@@ -63,7 +63,7 @@ export default async function AdminOverviewPage({ params }: PageProps<"/[locale]
           testId="stat-conversion"
           label={t("conversion")}
           value={percent.format(conversionRate(overview.events_paid, overview.events_total))}
-          hint={`${t("paid")} : ${number.format(overview.events_paid)}. ${t("conversionHint")}`}
+          hint={`${t("paid")} : ${number.format(overview.events_paid)} · ${t("beta")} : ${number.format(overview.events_beta ?? 0)}. ${t("conversionHint")}`}
         />
         <StatCard
           testId="stat-media"

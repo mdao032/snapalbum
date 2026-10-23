@@ -40,6 +40,26 @@ export type Database = {
                   Relationships: [
                     
                   ]
+                },"beta_invitations": {
+                  Row: {
+                    "code": string,"created_at": string,"created_by": string | null,"email": string,"event_id": string | null,"event_title": string | null,"id": string,"redeemed_at": string | null,"redeemed_by": string | null,"revoked_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "code": string,"created_at"?: string,"created_by"?: string | null,"email": string,"event_id"?: string | null,"event_title"?: string | null,"id"?: string,"redeemed_at"?: string | null,"redeemed_by"?: string | null,"revoked_at"?: string | null
+                  }
+                  Update: {
+                    "code"?: string,"created_at"?: string,"created_by"?: string | null,"email"?: string,"event_id"?: string | null,"event_title"?: string | null,"id"?: string,"redeemed_at"?: string | null,"redeemed_by"?: string | null,"revoked_at"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "beta_invitations_event_id_fkey"
+      columns: ["event_id"]
+isOneToOne: false
+      referencedRelation: "events"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"email_log": {
                   Row: {
                     "created_at": string,"event_id": string,"id": string,"kind": string,"provider": string | null,"recipient_key": string,"sent_at": string | null,"status": string,"updated_at": string
@@ -240,6 +260,9 @@ isOneToOne: true
 "admin_extend_event":
 { Args: { "p_actor": string,"p_event_id": string,"p_months": number,"p_now": string }; Returns: Json
                            },
+"admin_list_beta_invitations":
+{ Args: { "p_limit": number,"p_offset": number }; Returns: Json
+                           },
 "admin_list_events":
 { Args: { "p_limit": number,"p_offset": number,"p_query": string }; Returns: Json
                            },
@@ -266,6 +289,9 @@ isOneToOne: true
                            },
 "claim_email":
 { Args: { "p_event_id": string,"p_kind": string,"p_recipient": string,"p_stale_minutes": number }; Returns: boolean
+                           },
+"create_beta_invitation":
+{ Args: { "p_actor": string,"p_code": string,"p_email": string }; Returns: Json
                            },
 "event_gallery_is_open":
 { Args: { "p_event_id": string }; Returns: boolean
@@ -309,6 +335,9 @@ isOneToOne: true
 "purge_event":
 { Args: { "p_event_id": string }; Returns: Json
                            },
+"redeem_beta_invitation":
+{ Args: { "p_code": string,"p_event_id": string,"p_months": number,"p_user_id": string }; Returns: Json
+                           },
 "release_email":
 { Args: { "p_event_id": string,"p_kind": string,"p_recipient": string }; Returns: undefined
                            },
@@ -317,6 +346,9 @@ isOneToOne: true
                            },
 "reserve_media_slot":
 { Args: { "p_bytes_display": number,"p_bytes_original": number,"p_bytes_thumb": number,"p_duration_s": number,"p_event_id": string,"p_height": number,"p_key_display": string,"p_key_original": string,"p_key_thumb": string,"p_kind": string,"p_max_media": number,"p_max_videos": number,"p_media_id": string,"p_mime_type": string,"p_sha256": string,"p_taken_at": string,"p_user_id": string,"p_width": number }; Returns: Json
+                           },
+"revoke_beta_invitation":
+{ Args: { "p_actor": string,"p_id": string }; Returns: Json
                            }
           }
           Enums: {

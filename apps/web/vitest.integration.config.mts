@@ -19,6 +19,7 @@ export default defineConfig({
     hookTimeout: 60_000,
     env: {
       SUPABASE_SERVICE_ROLE_KEY: "integration-test",
+      BETA_MODE: "true",
       // Read by the modules that build the addresses written in e-mails.
       NEXT_PUBLIC_SITE_URL: "http://localhost:3000",
       NEXT_PUBLIC_SHORT_LINK_BASE: "http://localhost:3000",

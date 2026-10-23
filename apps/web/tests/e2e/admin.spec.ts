@@ -90,6 +90,7 @@ test.describe("F-090: accès réservé", () => {
       "/admin/organisers",
       "/admin/payments",
       "/admin/reports",
+      "/admin/beta",
     ]) {
       const response = await organiser.goto(path);
       expect(response?.status(), path).toBe(404);

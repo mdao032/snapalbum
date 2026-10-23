@@ -11,3 +11,4 @@ export * from "./storage";
 export * from "./download";
 export * from "./payments";
 export * from "./admin";
+export * from "./beta";

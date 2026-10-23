@@ -75,7 +75,11 @@ export default async function AdminPaymentsPage({
               <Cell>
                 {tProducts(`products.${row.product === "extension" ? "extension" : "event"}`)}
               </Cell>
-              <Cell numeric>{formatPrice(row.amount_cents, locale)}</Cell>
+              <Cell numeric>
+                {row.source === "beta_invitation"
+                  ? t("beta")
+                  : formatPrice(row.amount_cents, locale)}
+              </Cell>
               <Cell>{tProducts(`status.${row.status === "refunded" ? "refunded" : "paid"}`)}</Cell>
               <Cell>
                 {row.stripe_payment_intent_id && row.status === "paid" ? (

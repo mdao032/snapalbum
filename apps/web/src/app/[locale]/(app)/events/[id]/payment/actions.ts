@@ -5,11 +5,13 @@ import {
   checkoutSessionIdSchema,
   uuidSchema,
   type ApiErrorCode,
+  type BetaRedeemFailure,
 } from "@snapalbum/shared";
 import { redirect as redirectTo } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { clientEnv } from "@/config/env";
 import { redirect } from "@/i18n/navigation";
+import { redeemBetaInvitation } from "@/server/beta";
 import { schedulePaymentConfirmed } from "@/server/notify-after";
 import { getOrganiser } from "@/server/auth";
 import {
@@ -18,11 +20,46 @@ import {
   startCheckout,
   type ConfirmResult,
 } from "@/server/payments";
-import { checkRateLimit, CHECKOUT_RATE_LIMIT } from "@/server/rate-limit";
+import { BETA_REDEEM_RATE_LIMIT, checkRateLimit, CHECKOUT_RATE_LIMIT } from "@/server/rate-limit";
 import { createSupabaseAdminClient } from "@/server/supabase/admin";
 import { createSupabaseServerClient } from "@/server/supabase/server";
 
 export type CheckoutState = { status: "idle" } | { status: "error"; code: ApiErrorCode };
+
+export type BetaCodeState =
+  | { status: "idle" }
+  | { status: "error"; reason: BetaRedeemFailure | "beta_off" | "malformed" | "rate_limited" };
+
+/**
+ * Field beta (step 6.1): the organiser enters the invitation code an administrator gave them. The
+ * database decides whether it fits this organiser and this event; here we only check who is asking,
+ * slow down guessing, and send the organiser back to the event with the new plan.
+ */
+export async function redeemBetaCodeAction(
+  eventId: string,
+  _previous: BetaCodeState,
+  formData: FormData,
+): Promise<BetaCodeState> {
+  const locale = await getLocale();
+  const supabase = await createSupabaseServerClient();
+  const user = await getOrganiser(supabase);
+  if (!user) return redirect({ href: "/login", locale });
+  if (!uuidSchema.safeParse(eventId).success) return { status: "error", reason: "event_not_found" };
+
+  const limit = await checkRateLimit(BETA_REDEEM_RATE_LIMIT, user.id);
+  if (!limit.allowed) return { status: "error", reason: "rate_limited" };
+
+  const code = formData.get("code");
+  const result = await redeemBetaInvitation(
+    createSupabaseAdminClient(),
+    user.id,
+    eventId,
+    typeof code === "string" ? code : "",
+  );
+  if (!result.ok) return { status: "error", reason: result.reason };
+  // Outside any try: a redirect is an exception that must not be caught.
+  return redirect({ href: `/events/${eventId}?beta=done`, locale });
+}
 
 /**
  * Opens the payment page for an event (R2, R4). Everything is re-checked here: the signed-in

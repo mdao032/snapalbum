@@ -629,7 +629,27 @@
       "upgradeHint": "Paiement sécurisé par Stripe. Les quotas sont relevés tout de suite, avant, pendant ou après la fête.",
       "extend": "Prolonger de {months} mois ({price})",
       "redirecting": "Ouverture du paiement…",
-      "salesNote": "Le paiement est soumis aux <sales>conditions de vente</sales>."
+      "salesNote": "Le paiement est soumis aux <sales>conditions de vente</sales>.",
+      "beta": {
+        "title": "Vous avez un code d’invitation ?",
+        "hint": "Pendant la bêta, ce code vous donne l’offre Événement sans payer. Saisissez-le ici.",
+        "label": "Code d’invitation",
+        "placeholder": "ABCDE-FGHJK",
+        "submit": "Utiliser mon code",
+        "working": "Vérification…",
+        "done": "Votre code est accepté : votre album passe à l’offre Événement, sans paiement.",
+        "errors": {
+          "invalid_code": "Ce code n’est pas valide pour votre compte. Vérifiez-le ou demandez-en un nouveau.",
+          "malformed": "Ce code est incomplet. Il compte 10 lettres et chiffres, par exemple ABCDE-FGHJK.",
+          "already_used": "Ce code a déjà servi.",
+          "revoked": "Ce code a été annulé. Demandez-en un nouveau.",
+          "event_not_found": "Nous n’avons pas trouvé cet événement dans votre compte.",
+          "not_free": "Cet événement a déjà une offre payante.",
+          "event_not_active": "Cet événement n’est plus actif : le code ne peut pas lui être appliqué.",
+          "beta_off": "La bêta est terminée : les codes d’invitation ne sont plus acceptés.",
+          "rate_limited": "Trop d’essais. Patientez quelques minutes avant de réessayer."
+        }
+      }
     },
     "payment": {
       "confirming": "Nous confirmons votre paiement…",
@@ -1445,7 +1465,8 @@
       "events": "Événements",
       "organisers": "Organisateurs",
       "payments": "Paiements",
-      "reports": "Signalements"
+      "reports": "Signalements",
+      "beta": "Bêta"
     },
     "search": {
       "label": "Rechercher",
@@ -1479,7 +1500,8 @@
       "revenueHint": "{paid} paiements, {refunded} remboursés.",
       "reports": "Signalements ouverts",
       "alertOn": "Alerte par e-mail au-dessus de {threshold}.",
-      "alertOff": "Aucune alerte de stockage : renseignez STORAGE_ALERT_GB pour en recevoir."
+      "alertOff": "Aucune alerte de stockage : renseignez STORAGE_ALERT_GB pour en recevoir.",
+      "beta": "Événements de la bêta"
     },
     "events": {
       "title": "Événements",
@@ -1524,7 +1546,8 @@
         "status": "État"
       },
       "refund": "Rembourser dans Stripe",
-      "refundHint": "Le remboursement se fait dans Stripe : il est repris ici par le webhook."
+      "refundHint": "Le remboursement se fait dans Stripe : il est repris ici par le webhook.",
+      "beta": "Cadeau de la bêta"
     },
     "reports": {
       "title": "Signalements ouverts",
@@ -1567,6 +1590,35 @@
       "reports": "Signalements ouverts",
       "done": "C’est fait.",
       "failed": "Impossible dans l’état actuel de l’événement."
+    },
+    "beta": {
+      "title": "Bêta terrain",
+      "off": "La bêta est fermée : BETA_MODE n’est pas activé. Les codes existants ne sont plus acceptés et aucun nouveau code ne peut être créé.",
+      "done": "C’est fait.",
+      "failures": {
+        "already_invited": "Cette adresse a déjà une invitation ouverte. Annulez-la avant d’en créer une autre.",
+        "invalid_email": "Cette adresse e-mail n’est pas valide.",
+        "beta_off": "La bêta est fermée : activez BETA_MODE pour créer des codes.",
+        "failed": "L’action n’a pas pu être faite."
+      },
+      "emailLabel": "Adresse e-mail de l’organisateur",
+      "emailHint": "Le code ne fonctionnera que pour le compte qui se connecte avec cette adresse. Transmettez-le à l’organisateur vous-même.",
+      "create": "Créer un code",
+      "count": "{count, plural, =0 {Aucune invitation} one {# invitation} other {# invitations}}",
+      "empty": "Aucune invitation pour le moment.",
+      "columns": {
+        "created": "Créée le",
+        "email": "Organisateur",
+        "code": "Code",
+        "state": "État",
+        "event": "Événement"
+      },
+      "states": {
+        "open": "En attente",
+        "redeemed": "Utilisé",
+        "revoked": "Annulé"
+      },
+      "revoke": "Annuler"
     }
   }
 }

@@ -32,3 +32,6 @@ Thumbs.db
 .vitest/
 
 tests/load/state.json
+
+# Local notes with real credentials: never in the repository
+environnement.txt

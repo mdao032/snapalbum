@@ -21,7 +21,11 @@ type Client = SupabaseClient<Database>;
  * functions (`admin_*`): they join the sign-in accounts, which the API does not expose.
  */
 
-async function rpcJson<T>(admin: Client, name: string, args: Record<string, unknown>): Promise<T> {
+export async function rpcJson<T>(
+  admin: Client,
+  name: string,
+  args: Record<string, unknown>,
+): Promise<T> {
   const { data, error } = await (
     admin.rpc as unknown as (
       name: string,
@@ -39,6 +43,8 @@ export interface Overview {
   events_suspended: number;
   events_pending_deletion: number;
   events_paid: number;
+  /** Events that received the Event plan with a beta invitation code (step 6.1). */
+  events_beta: number;
   organisers_total: number;
   media_total: number;
   media_30d: number;
@@ -91,6 +97,8 @@ export interface AdminPurchaseRow {
   event_id: string | null;
   event_title: string;
   product: string;
+  /** `stripe`, or `beta_invitation` for a plan given by an invitation code (step 6.1). */
+  source: string;
   amount_cents: number;
   currency: string;
   status: string;

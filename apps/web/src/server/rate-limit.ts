@@ -87,6 +87,13 @@ export const ACCESS_CODE_RATE_LIMIT: RateLimitRule = {
   windowSeconds: 10 * 60,
 };
 
+/** Entering a beta invitation code (step 6.1): 5 attempts per 10 minutes per organiser. */
+export const BETA_REDEEM_RATE_LIMIT: RateLimitRule = {
+  name: "beta-redeem",
+  limit: 5,
+  windowSeconds: 10 * 60,
+};
+
 type Fetcher = typeof fetch;
 
 const memoryWindows = new Map<string, { count: number; resetAt: number }>();

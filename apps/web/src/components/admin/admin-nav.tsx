@@ -8,6 +8,7 @@ const SECTIONS = [
   { href: "/admin/organisers", key: "organisers" },
   { href: "/admin/payments", key: "payments" },
   { href: "/admin/reports", key: "reports" },
+  { href: "/admin/beta", key: "beta" },
 ] as const;
 
 /** The sections of the administrator area (F-090). `current` is the href of the open one. */

@@ -14,6 +14,7 @@
     "./lifecycle": "./src/events/lifecycle.ts",
     "./plans": "./src/plans.ts",
     "./payments": "./src/payments/index.ts",
+    "./beta": "./src/beta/index.ts",
     "./schemas": "./src/schemas/index.ts",
     "./api-client": "./src/api-client/index.ts",
     "./upload": "./src/upload/index.ts",

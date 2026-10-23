@@ -73,6 +73,8 @@ export default defineConfig({
         // A made-up key turns the audience measurement and its banner on; the tests intercept
         // every request to PostHog, none reaches it.
         POSTHOG_KEY: "phc_e2e_key_that_is_not_real",
+        // Field beta (step 6.1): invitation codes can be made and used.
+        BETA_MODE: "true",
       },
     },
   ],

@@ -37,6 +37,8 @@ const serverSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_").optional(),
   /** Stored volume, in gigabytes, above which the administrators are warned (SPEC 9.3). */
   STORAGE_ALERT_GB: z.coerce.number().positive().optional(),
+  /** Field beta (step 6.1): organisers may enter an invitation code to get the Event plan for free. */
+  BETA_MODE: z.stringbool().optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;
